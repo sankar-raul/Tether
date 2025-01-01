@@ -2,7 +2,6 @@ import { Router } from "express"
 import db from "../../db/connection.js"
 const auth = Router()
 
-
 // endpoint to register new user -> POST auth/register
 auth.post('/register', async (req, res) => {
     const { email, username, password } = req.body // destructure email, username, password from request body
@@ -65,6 +64,7 @@ auth.put('/update/:what', async (req, res) => {
     }
 })
 
+
 auth.put('/forgot', (req, res) => {
     res.end("ok")
 })
@@ -86,6 +86,7 @@ auth.delete('/delete', async (req, res) => {
     }
 })
 
+// handle all /auth/* route || /auth/* endpoint fallback
 auth.use((req, res) => {
     res.status(404).json({success: false, msg: "invalid endpoint!"})
 })
