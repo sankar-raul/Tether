@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>Chat App</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    Chating
+    <br>
+    <form id="chatForm">
+        <input type="text" id="msg" autofocus><br>
+        <input type="submit" value="Send"/>
+    </form>
+    <ul id="msgContainer">
+
+    </ul>
+<script>
+    const msg = document.getElementById('msg')
+    const chatForm = document.getElementById("chatForm")
+    const msgContainter = document.getElementById('msgContainer')
+    const socket = io()
+    
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        socket.emit("message:send", msg.value.trim())
+        msg.value = ""
+    })
+    
+    socket.on('message:recive', (...msgs) => {
+        console.log(...msgs)
+        const newMsg = document.createElement('li')
+        newMsg.innerText = msgs[0].userId
+        const text = document.createElement('ul')
+        const li2 = document.createElement('li')
+        li2.innerText = msgs[0].msg
+        text.appendChild(li2)
+        newMsg.appendChild(text)
+        msgContainter.appendChild(newMsg)
+    })
+</script>
+</body>
+</html>
