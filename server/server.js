@@ -7,24 +7,11 @@ const app = express()
 const server = http.createServer(app)
 
 app.use(express.json())
-
 app.use('/auth', auth)
-
-
-
-
-
-
-
-
-
 
 app.use((req, res) => {
     res.status(404).json({success: false, msg: "invalid endpoint!"})
 })
-
-
-
 
 // Socket.io
 const io = new Server(server)
