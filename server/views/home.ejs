@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bro Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Bro Chat</h1>
+    <a href="/logout">
+        <button>Logout</button>
+    </a>
+    <ul id="messages"></ul>
+    <form id="inputForm">
+        <input type="text" id="inputBox" required autofocus placeholder="Enter your message">
+        <br>
+        <label for="sendTo">
+            Send To
+        <select name="users" id="sendTo" required>
+            <% users.forEach(item => { %>
+                <option value=<%= item.id %>><%= item.username %></option>
+            <% }) %>
+        </select>
+        </label>
+        <input required type="submit" value="Send">
+    </form>
+    <script>
+        const socket = new io()
+        const userMsg = document.getElementById("inputBox")
+        const sendTo = document.getElementById("sendTo")
+        const msgForm = document.getElementById("inputForm")
+        const messages = document.getElementById("messages")
+        const registerSocket = async () => {
+            const { value: secret } = await cookieStore.get("secret")
+            if (!secret) location.href = '/'
+            socket.emit("register:user", {secret})
+        }
+        registerSocket() // register socket
+
+        msgForm.onsubmit = e => {
+            e.preventDefault()
+            const msgLi = document.createElement('li')
+            msgLi.innerText = `you sent - ${userMsg.value}`
+            messages.appendChild(msgLi)
+            socket.emit("message:send", {
+                to: sendTo.value,
+                msg: userMsg.value
+            })
+            userMsg.value = ''
+        }
+
+        socket.on('message:recive', (...args) => {
+            const { from, msg } = args[0]
+            console.log(from, msg)
+            const msgLi = document.createElement('li')
+            msgLi.innerText = `${from} sent - ${msg}`
+            messages.appendChild(msgLi)
+        }) 
+
+        socket.on("waited:messages", (...args) => {
+            const msgs = args[0]
+            console.log(msgs)
+        })
+
+
+        socket.on()
+    </script>
+</body>
+</html>

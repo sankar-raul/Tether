@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <p style="color: rgb(193, 3, 3); font-weight: 900;">
+        
+    </p>
+    <form action="/auth/login" method="post">
+        <label for="email">
+            Email
+            <input id="email" autocomplete="email" placeholder="email" type="email" name="email">
+        </label>
+        <br>
+        <label for="password">
+            Password
+            <input type="password" id="password" name="password">
+        </label>
+        <br>
+        <br>
+        <input type="submit" value="Login">
+        <br>
+        <br>
+        <a href="/register">Register</a>
+    </form>
+
+    <script>
+        const form = document.querySelector("form")
+        const email = document.getElementById("email")
+        const password = document.getElementById("password")
+
+        form.onsubmit = async (e) => {
+            e.preventDefault()
+            const info = {
+                email: email.value,
+                password: password.value
+            }
+            try {
+            const response = await fetch("/auth/login", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(info)
+            })
+            const data = await response.json()
+            if (data.success) {
+                location.href = '/'
+            } else {
+                console.log(data.msg)
+            }
+        } catch (error) {
+            console.log("Error:", error)
+        }
+        }
+    </script>
+</body>
+</html>
