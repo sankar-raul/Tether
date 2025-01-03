@@ -1,0 +1,15 @@
+.navbar {
+    height: 56px;
+    border-bottom: 1px solid #fff2;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.appLogo {
+    height: 70%;
+    /* background-color: red; */
+    object-fit: contain;
+    object-position: center center;
+    opacity: 1;
+}
