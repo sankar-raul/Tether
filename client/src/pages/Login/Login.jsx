@@ -7,14 +7,20 @@ const Login = () => {
         <NetBackground>
         <div className={styles.login}>
             <h1 className={styles.wellcome}>
-                Happy to see you again
+                Login
             </h1>
             <form className={styles.form}>
                 <div className={styles.inputBox}>
-                    <label htmlFor='email'>
-                        email
-                        <input type="text" id='email' autoComplete='email' />
-                    </label>
+                    <div className={styles['input-wraper']}>
+                        <input required type="text" id='email' autoComplete='email' />
+                        <label htmlFor='email'>Email</label>
+                    </div>
+                </div>
+                <div className={styles.inputBox}>
+                    <div className={styles['input-wraper']}>
+                        <input required type="password" id='password' />
+                        <label htmlFor='password'>Password</label>
+                    </div>
                 </div>
                <div className={styles.submitBtn}>
                     <input type="submit" value="Login"/>

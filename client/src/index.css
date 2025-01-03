@@ -17,6 +17,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+html {
+  cursor: url('/svg/cursor.svg') 10 10, auto;
+}
 html, body, #root {
   height: 100%;
 }
