@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import NetBackground from '../../components/NetBackground/NetBackground'
 import styles from './login.module.css'
 
@@ -22,9 +23,12 @@ const Login = () => {
                         <label htmlFor='password'>Password</label>
                     </div>
                 </div>
-               <div className={styles.submitBtn}>
+                <div className={styles.submitBtn}>
                     <input type="submit" value="Login"/>
-               </div>
+                </div>
+                <div className={styles.submitBtn + " " + styles.help}>
+                    <p>Have no account. <Link to='/signup'>create an account</Link></p>
+                </div>
             </form>
         </div>
         </NetBackground>

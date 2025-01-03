@@ -4,7 +4,6 @@
                 linear-gradient(to top left, rgba(127, 3, 84, 0.162), transparent 60%),
                 linear-gradient(to top right, rgba(0, 55, 255, 0.1), transparent 80%),
                 linear-gradient(to top, rgba(73, 1, 69, 0.1), transparent 40%);
-    
     height: 100%;
     width: 100%;
 }

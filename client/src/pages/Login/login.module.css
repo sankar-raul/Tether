@@ -107,7 +107,17 @@
     cursor: pointer;
     font-size: 1.1rem;
 }
-
+.help {
+    text-align: center;
+}
+.help a {
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+    &:hover {
+        text-decoration: none;
+    }
+}
 @media screen and (max-width: 850px) {
     .login {
         width: clamp(300px, 90%, 600px);
