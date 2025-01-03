@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Bro Chat</h1>
+    <h2>Hello <%= username %></h2>
     <a href="/logout">
         <button>Logout</button>
     </a>
@@ -36,35 +37,44 @@
             if (!secret) location.href = '/'
             socket.emit("register:user", {secret})
         }
-        registerSocket() // register socket
+        // registerSocket() // register socket
 
         msgForm.onsubmit = e => {
             e.preventDefault()
-            const msgLi = document.createElement('li')
-            msgLi.innerText = `you sent - ${userMsg.value}`
-            messages.appendChild(msgLi)
+            newMsg({from: "you", msg: userMsg.value})
             socket.emit("message:send", {
                 to: sendTo.value,
                 msg: userMsg.value
             })
             userMsg.value = ''
         }
-
+        socket.on('connect', () => {
+            console.log("connected")
+            registerSocket()
+        })
         socket.on('message:recive', (...args) => {
             const { from, msg } = args[0]
             console.log(from, msg)
-            const msgLi = document.createElement('li')
-            msgLi.innerText = `${from} sent - ${msg}`
-            messages.appendChild(msgLi)
+           newMsg({from, msg})
         }) 
 
         socket.on("waited:messages", (...args) => {
             const msgs = args[0]
             console.log(msgs)
+            msgs.forEach(item => {
+                newMsg({from: item.msg_from, msg: item.msg})
+            })
         })
 
-
-        socket.on()
+        const newMsg = ({from, msg}) => {
+            if (from != "you") {
+                let users = JSON.parse("<%= JSON.stringify(users) %>".replace(/&#34;/g, '"'))
+                from = users.find(item => item.id == from)?.username
+            }
+            const msgLi = document.createElement('li')
+            msgLi.innerText = `${from} sent - ${msg}`
+            messages.appendChild(msgLi)
+        }
     </script>
 </body>
 </html>

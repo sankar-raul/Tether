@@ -1,5 +1,6 @@
 import pool from "../db/pool.js"
 import { setUser } from "../service/auth.js"
+import { hash, varify } from '../service/crypt.js'
 
 export const register = async (req, res) => {
     const { email, username, password } = req.body // destructure email, username, password from request body
@@ -10,7 +11,8 @@ export const register = async (req, res) => {
     if (user[0] != '') { // check is user with same email is exists
         return res.status(405).json({success: false, msg: "user already exists"})
     }
-    const data = await pool.execute("insert into users (email, username, password) value (?, ?, ?)", [email, username, password])
+    const hashedPassword = await hash(password)
+    const data = await pool.execute("insert into users (email, username, password) value (?, ?, ?)", [email, username, hashedPassword])
     const token = setUser({
         id: data[0].insertId,
         email,
@@ -20,7 +22,7 @@ export const register = async (req, res) => {
     res.status(201).json({success: true, msg: "success", data: {id: data[0].insertId}})
 } catch (error) {
     console.log("Error:", error)
-    res.status(500).json({success: false, msg: "internal server error"})
+    res.status(500).json({success: false, msg: "internal server error!"})
 }
 }
 
@@ -29,18 +31,18 @@ export const login = async (req, res) => {
     if (!email || !password)
         return res.status(400).json({success: false, msg: "email & password required!"})
     try {
-        const data = await pool.execute("select id, password, username from users where email = ?", [email])
-        if (data[0] == '')
+        const [ tuples, fields ] = await pool.execute("select id, password, username from users where email = ? limit 1", [email])
+        if (tuples == '')
             return res.status(401).json({success: false, msg: "user not found!"})
-        const isAuthenticated = data[0][0].password == password
+        const isAuthenticated = await varify(password, tuples[0].password)
         if (isAuthenticated) {
             const token = setUser({
-                id: data[0][0].id,
+                id: tuples[0].id,
                 email,
-                username: data[0][0].username
+                username: tuples[0].username
             })
             res.cookie("secret", token)
-            return res.status(200).json({success: true, msg: "logged in", data: {id: data[0][0].id}})
+            return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id}})
         } else {
             return res.status(401).json({success: false, msg: "incorrent password!"})
         }
