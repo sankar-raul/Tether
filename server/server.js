@@ -3,6 +3,7 @@ import http from 'http'
 import { Server } from 'socket.io'
 import auth from './routes/auth.js'
 import cookieParser from 'cookie-parser'
+import cookie from 'cookie'
 import { disconnectUser, getIdFromUser, getUserFromId, MsgQueue, registerUser } from './socketServices/chat.js'
 import root from './routes/root.js'
 import { softAuthCheck } from './middleware/auth.js'
@@ -32,6 +33,11 @@ const io = new Server(server)
 
 const MsgQue = new MsgQueue()
 
+io.use((socket, next) => {
+    const token = cookie.parse(socket.request.headers.cookie)
+    console.log(socket.request.headers.cookie, socket.id)
+    next()
+})
 io.on('connection', (socket) => {
     console.log("A new user Connected", socket.id)
 

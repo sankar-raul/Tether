@@ -7,9 +7,12 @@
     align-items: center;
 }
 .appLogo {
-    height: 50%;
+    height: 80%;
     /* background-color: red; */
     object-fit: contain;
     object-position: center center;
     opacity: 1;
+    margin: auto 10px;
+    user-select: none;
+    -webkit-user-drag: none;
 }
