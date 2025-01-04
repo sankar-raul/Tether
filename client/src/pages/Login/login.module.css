@@ -93,7 +93,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px auto 25px auto;
+    margin: 25px auto 25px auto;
 }
 .submitBtn > input {
     all: unset;
