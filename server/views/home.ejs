@@ -32,12 +32,6 @@
         const sendTo = document.getElementById("sendTo")
         const msgForm = document.getElementById("inputForm")
         const messages = document.getElementById("messages")
-        const registerSocket = async () => {
-            const { value: secret } = await cookieStore.get("secret")
-            if (!secret) location.href = '/'
-            socket.emit("register:user", {secret})
-        }
-        // registerSocket() // register socket
 
         msgForm.onsubmit = e => {
             e.preventDefault()
@@ -50,7 +44,9 @@
         }
         socket.on('connect', () => {
             console.log("connected")
-            registerSocket()
+        })
+        socket.on('connect_error', (error) => {
+            console.log(error)
         })
         socket.on('message:recive', (...args) => {
             const { from, msg } = args[0]

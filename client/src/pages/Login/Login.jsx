@@ -23,6 +23,9 @@ const Login = () => {
                         <label htmlFor='password'>Password</label>
                     </div>
                 </div>
+                <div className={styles.forgot}>
+                    <Link to='/forgot'>forgot password</Link>
+                </div>
                 <div className={styles.submitBtn}>
                     <input type="submit" value="Login"/>
                 </div>

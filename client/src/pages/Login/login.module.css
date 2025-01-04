@@ -93,7 +93,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 40px auto 25px auto;
+    margin: 20px auto 25px auto;
 }
 .submitBtn > input {
     all: unset;
@@ -110,7 +110,7 @@
 .help {
     text-align: center;
 }
-.help a {
+.help a, .forgot a {
     color: #fff;
     font-weight: 600;
     white-space: nowrap;
@@ -118,6 +118,13 @@
         text-decoration: none;
     }
 }
+.forgot {
+    width: clamp(150px, 80%, 350px);
+    margin: 0 auto;
+    margin-top: 10px;
+    text-align: right;
+}
+
 @media screen and (max-width: 850px) {
     .login {
         width: clamp(300px, 90%, 600px);

@@ -33,9 +33,22 @@ const io = new Server(server)
 
 const MsgQue = new MsgQueue()
 
+const checkUndeliveredMsg = async (socketId, userID) => {
+    const undeliverdMessages = await MsgQue.getAll(userID)
+    if (undeliverdMessages) {
+        io.to(socketId).emit("waited:messages", undeliverdMessages)
+    }
+}
+
 io.use((socket, next) => {
-    const token = cookie.parse(socket.request.headers.cookie)
-    console.log(socket.request.headers.cookie, socket.id)
+    const token = cookie.parse(socket.request.headers.cookie)?.secret
+    if (!token) {
+        return next(new Error("unauthorized! token"))
+    }
+    const user = getUser(token)
+    if (!user) return next(new Error("unauthorized! oo"))
+    registerUser(socket.id, user.id)
+    checkUndeliveredMsg(socket.id, user.id)
     next()
 })
 io.on('connection', (socket) => {
@@ -49,21 +62,6 @@ io.on('connection', (socket) => {
             io.to(reciversSocketId).emit("message:recive" , { from, msg })
         else {
             MsgQue.pushMessage({ from, to, msg })
-        }
-    })
-
-
-    socket.on("register:user", async (...args) => {
-        const secret = args[0]?.secret
-        if (!secret) {
-            return socket.disconnect()
-        }
-        const user = getUser(secret)
-        if (!user) return socket.disconnect()
-        registerUser(socket.id, user.id)
-        const undeliverdMessages = await MsgQue.getAll(user.id)
-        if (undeliverdMessages) {
-            io.to(socket.id).emit("waited:messages", undeliverdMessages)
         }
     })
 
