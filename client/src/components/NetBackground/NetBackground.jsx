@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import styles from './netbg.module.css'
+import { memo } from 'react'
 const NetBackground = ({ children }) => {
 
     return (
@@ -11,4 +12,4 @@ const NetBackground = ({ children }) => {
 NetBackground.propTypes = {
     children: PropTypes.node
 }
-export default NetBackground
+export default memo(NetBackground)

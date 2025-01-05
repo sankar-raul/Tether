@@ -8,10 +8,14 @@ import { disconnectUser, getIdFromUser, getUserFromId, MsgQueue, registerUser } 
 import root from './routes/root.js'
 import { softAuthCheck } from './middleware/auth.js'
 import { getUser } from './service/auth.js'
+import helmet from 'helmet'
+import cors from 'cors'
 
 const app = express()
 const server = http.createServer(app)
 
+app.use(cors())
+app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())

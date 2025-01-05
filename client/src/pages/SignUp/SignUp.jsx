@@ -1,9 +1,17 @@
 import { Link } from "react-router-dom"
 import NetBackground from "../../components/NetBackground/NetBackground"
 import styles from './signup.module.css'
+import { useEffect, useState } from "react"
 
 const SignUp = () => {
-
+    const [ formData, setFormData ] = useState({})
+    const [ isValidData, setISValidData ] = useState({})
+    const handleDataInput = (e) => {
+        setFormData(prev => ({...prev, [e.target.name]: e.target.value}))
+    }
+    useEffect(() => {
+        console.log(formData)
+    }, [formData])
     return (
         <NetBackground>
                 <div className={styles.login}>
@@ -13,19 +21,19 @@ const SignUp = () => {
                     <form className={styles.form}>
                         <div className={styles.inputBox}>
                             <div className={styles['input-wraper']}>
-                                <input required type="text" id='name' autoComplete='nickname' />
+                                <input onChange={handleDataInput} value={formData['name'] || ''} type="text" id='name' name="name" autoComplete='nickname' />
                                 <label htmlFor='name'>Name</label>
                             </div>
                         </div>
                         <div className={styles.inputBox}>
                             <div className={styles['input-wraper']}>
-                                <input required type="text" id='email' autoComplete='email' />
+                                <input onChange={handleDataInput} value={formData['email'] || ''} type="text" id='email' name="email" autoComplete='email' />
                                 <label htmlFor='email'>Email</label>
                             </div>
                         </div>
                         <div className={styles.inputBox}>
                             <div className={styles['input-wraper']}>
-                                <input required type="password" id='password' />
+                                <input onChange={handleDataInput} value={formData['password'] || ''} type="password" name="password" id='password' />
                                 <label htmlFor='password'>Password</label>
                             </div>
                         </div>

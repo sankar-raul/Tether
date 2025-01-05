@@ -1,25 +1,87 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import NetBackground from '../../components/NetBackground/NetBackground'
 import styles from './login.module.css'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import apiRequest from '../../service/apiRequest'
 
 const Login = () => {
+    const [ formData, setFormData ] = useState({})
+    const [ isValidData, setISValidData ] = useState({})
+    const [ isAllValid, setIsAllValid ] = useState(false)
+    const navigate = useNavigate()
 
+    const regex = useMemo(() => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, [])
+    const fields = useMemo(() => new Map([['email', "required"], ['password', "required"]]), [])
+    
+    const handleDataInput = (e) => {
+        setFormData(prev => ({...prev, [e.target.name]: e.target.value}))
+        if (e.target.name == 'email') {
+            setISValidData(prev => ({ ...prev, [e.target.name]: regex.test(e.target.value)}))
+        } else {
+            setISValidData(prev => ({ ...prev, [e.target.name]: e.target.value.length >= 6 }))
+        }
+    }
+    const login = useCallback(async (e) => {
+        e.preventDefault()
+        if (isAllValid) {
+            const [ data, error ] = await apiRequest('/auth/login', {
+                method: "POST",
+                body: formData
+            })
+            if (data) {
+                navigate('/')
+            } else {
+                console.log(error)
+                if (error.msg == "incorrect password!") {
+                    setISValidData(prev => ({...prev, password: 'incorrect'}))
+                } else if (error.msg == "user not found!") {
+                    setISValidData(prev => ({...prev, email: 'incorrect', password: "incorrect"}))
+                }
+            }
+        } else {
+            fields.forEach((value, key) => {
+                if (value == "required") {
+                    if (!isValidData[key]) {
+                        setISValidData(prev => ({...prev, [key]: 'incorrect'}))
+                    }
+                }
+            })
+        }
+    }, [formData, fields, isAllValid, isValidData])
+    useEffect(() => {
+
+    }, [formData])
+    useEffect(() => {
+        setIsAllValid((_) => {
+            let isValid = true
+            fields.forEach((value, key) => {
+                // console.log(value, key)
+                if (value == "required")
+                    isValid *= !!isValidData[key] && isValidData[key] != 'incorrect'
+            })
+            return !!isValid
+        })
+        // console.log(isValidData)
+    }, [isValidData, fields])
+    useEffect(() => {
+        // console.log(isAllValid)
+    }, [isAllValid])
     return (
         <NetBackground>
         <div className={styles.login}>
             <h1 className={styles.wellcome}>
                 Login
             </h1>
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={login}>
                 <div className={styles.inputBox}>
-                    <div className={styles['input-wraper']}>
-                        <input required type="text" id='email' autoComplete='email' />
+                    <div name={isValidData.email + ''} className={styles['input-wraper']}>
+                        <input type="text" onChange={handleDataInput} value={formData['email'] || ''} id='email' autoComplete='email' name='email' />
                         <label htmlFor='email'>Email</label>
                     </div>
                 </div>
                 <div className={styles.inputBox}>
-                    <div className={styles['input-wraper']}>
-                        <input required type="password" id='password' />
+                    <div name={isValidData.password + ''} className={styles['input-wraper']}>
+                        <input type="password" id='password' value={formData['password'] || ''} onChange={handleDataInput} name='password' />
                         <label htmlFor='password'>Password</label>
                     </div>
                 </div>
@@ -38,4 +100,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default memo(Login)

@@ -44,7 +44,7 @@ export const login = async (req, res) => {
             res.cookie("secret", token)
             return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id}})
         } else {
-            return res.status(401).json({success: false, msg: "incorrent password!"})
+            return res.status(401).json({success: false, msg: "incorrect password!"})
         }
     } catch (error) {
         console.log("Error:", error)

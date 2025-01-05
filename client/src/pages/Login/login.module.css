@@ -52,18 +52,20 @@
     border-bottom: 1px solid #fff3;
     background-color: #ffffff0b;
     cursor: text;
+    transition: border ease .2s;
 }
 .input-wraper > label {
     position: absolute;
-    margin-left: 7px;
     align-self: center;
     pointer-events: none;
     transition: .6s;
-    opacity: .8;
+    margin-top: -50px;
+    margin-left: 2px;
+    opacity: 1;
 }
 .input-wraper:has(input:focus) {
-    background-color: #fff1;
-    border-bottom: 1px solid #ffffffb3;
+    background-color: #ccc1;
+    border-bottom: 1px solid #ffffff56;
 }
 .input-wraper > input {
     height: 85%;
@@ -82,17 +84,25 @@
 .input-wraper > input::spelling-error {
     text-decoration: none;
 }
-.input-wraper > input:valid + label {
-    margin-top: -50px;
-    margin-left: 2px;
-    opacity: 1;
+.input-wraper > input[value=''] + label {
+    margin-left: 7px;
+    opacity: .8;
+    margin-top: 0;
 }
+.input-wraper[name="true"] {
+    border-bottom: 1px solid #1a39 !important;
+}
+.input-wraper[name="incorrect"] {
+    border-bottom: 1px solid rgba(255, 49, 107, 0.834) !important;
+}
+
 .submitBtn {
     width: clamp(150px, 80%, 350px);
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     margin: 25px auto 25px auto;
 }
 .submitBtn > input {
@@ -102,10 +112,24 @@
     width: 100%;
     height: 45px;
     background-color: #fff;
+    background: repeating-linear-gradient(to bottom, transparent 0 6px,#0001 6px 12px),
+    repeating-linear-gradient(to right, transparent 0 6px, #0001 6px 12px), #fff;
     color: #000;
     font-weight: 700;
     cursor: pointer;
+    transition: .3s;
+    position: relative;
     font-size: 1.1rem;
+
+    &:active {
+        transform: scale(.96);
+        background: repeating-linear-gradient(to bottom, transparent 0 6px,#0001 6px 12px),
+    repeating-linear-gradient(to right, transparent 0 6px, #0001 6px 12px), #fff;
+    }
+}
+.submitBtn:hover > input {
+    background: repeating-linear-gradient(to bottom, transparent 0 6px,#0001 6px 12px),
+    repeating-linear-gradient(to right, transparent 0 6px, #0001 6px 12px), #ffffffee;
 }
 .help {
     text-align: center;
@@ -137,7 +161,7 @@
     .form {
         width: clamp(20px, 100%, 450px);
     }
-    .input-wraper {
+    .input-wraper, .forgot {
         width: clamp(10px, 100%, 350px);
     }
     .submitBtn {
