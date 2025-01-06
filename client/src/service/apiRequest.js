@@ -8,6 +8,7 @@ const apiRequest = async (endpoint, { body, method }) => {
             data: body
         })
         const data = response.data
+        console.log(response)
         return [data, null]
     } catch (e) {
         // console.log(e)

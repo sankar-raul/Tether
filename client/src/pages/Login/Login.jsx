@@ -29,7 +29,8 @@ const Login = () => {
                 body: formData
             })
             if (data) {
-                navigate('/')
+                // navigate('/')
+                console.log(data)
             } else {
                 console.log(error)
                 if (error.msg == "incorrect password!") {

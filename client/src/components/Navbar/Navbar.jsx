@@ -1,5 +1,5 @@
 import styles from './navbar.module.css'
-import appLogo from '../../assets/app-dark.svg'
+import appLogo from '../../assets/svg/app-dark.svg'
 const Navbar = () => {
 
     return (
