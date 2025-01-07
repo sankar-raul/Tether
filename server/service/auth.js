@@ -2,11 +2,11 @@ import jwt from 'jsonwebtoken'
 import { config } from 'dotenv'
 const secret = process.env.JWT_SECRET
 config()
-
+const expriry = 7 // days
 export const setUser = (user) => {
     if (!user) return null
     const payload = {
-        ...user
+        ...user,
     }
     return jwt.sign(payload, secret)
 }

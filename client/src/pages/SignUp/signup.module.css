@@ -88,6 +88,12 @@
     opacity: .8;
     margin-top: 0;
 }
+.input-wraper[name="true"] {
+    border-bottom: 1px solid #1a39 !important;
+}
+.input-wraper[name="incorrect"] {
+    border-bottom: 1px solid rgba(255, 49, 107, 0.834) !important;
+}
 .submitBtn {
     width: clamp(150px, 80%, 350px);
     margin: 0 auto;

@@ -39,9 +39,14 @@ export const login = async (req, res) => {
             const token = setUser({
                 id: tuples[0].id,
                 email,
-                username: tuples[0].username
+                username: tuples[0].username,
             })
-            res.cookie("secret", token)
+            res.cookie("secret", token, {
+                sameSite: 'None',
+                path: '/',
+                secure: true
+                
+            })
             return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id}})
         } else {
             return res.status(401).json({success: false, msg: "incorrect password!"})

@@ -29,8 +29,8 @@ const Login = () => {
                 body: formData
             })
             if (data) {
-                // navigate('/')
-                console.log(data)
+                if (data.success) navigate('/')
+                // console.log(data)
             } else {
                 console.log(error)
                 if (error.msg == "incorrect password!") {
@@ -48,12 +48,12 @@ const Login = () => {
                 }
             })
         }
-    }, [formData, fields, isAllValid, isValidData])
+    }, [formData, fields, isAllValid, isValidData, navigate])
     useEffect(() => {
 
     }, [formData])
     useEffect(() => {
-        setIsAllValid((_) => {
+        setIsAllValid(() => {
             let isValid = true
             fields.forEach((value, key) => {
                 // console.log(value, key)
