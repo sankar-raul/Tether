@@ -2,20 +2,20 @@ const idToUser = new Map()
 const userToId = new Map()
 import pool from "../db/pool.js"
 
-export class MsgQueue {
+export class Message {
     constructor() {
 
     }
-    async pushMessage({from, to, msg}) {
+    async pushMessage({sender, reciver, content, tick = 1}) {
         try {
-            await pool.execute("insert into message_queue (msg_from, msg_to, msg) value (?, ?, ?)", [from, to, msg])
+            await pool.execute("insert into message (sender, reciver, content) value (?, ?, ?)", [sender, reciver, content])
         } catch (error) {
             console.log("Error: here", error)
         }
     }
     async getAll(userId) {
         try {
-            const [msgs, fields] = await pool.execute("select msg_from, msg from message_queue where msg_to = ?", [userId])
+            const [msgs, fields] = await pool.execute("select sender, content from message where reciver = ?", [userId])
             await pool.execute("delete from message_queue where msg_to = ?", [userId])
             return msgs != '' ? msgs : null
         } catch (error) {

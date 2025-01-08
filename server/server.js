@@ -4,7 +4,7 @@ import { Server } from 'socket.io'
 import auth from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cookie from 'cookie'
-import { disconnectUser, getIdFromUser, getUserFromId, MsgQueue, registerUser } from './socketServices/chat.js'
+import { disconnectUser, getIdFromUser, getUserFromId, Message, registerUser } from './socketServices/chat.js'
 import root from './routes/root.js'
 import { softAuthCheck } from './middleware/auth.js'
 import { getUser } from './service/auth.js'
@@ -42,7 +42,7 @@ app.use((req, res) => {
 // Socket.io
 const io = new Server(server)
 
-const MsgQue = new MsgQueue()
+const MsgQue = new Message()
 
 const checkUndeliveredMsg = async (socketId, userID) => {
     const undeliverdMessages = await MsgQue.getAll(userID)

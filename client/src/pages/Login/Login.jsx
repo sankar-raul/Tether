@@ -3,11 +3,13 @@ import NetBackground from '../../components/NetBackground/NetBackground'
 import styles from './login.module.css'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import apiRequest from '../../service/apiRequest'
+import useUserInfo from '../../context/userInfo/userInfo'
 
 const Login = () => {
     const [ formData, setFormData ] = useState({})
     const [ isValidData, setISValidData ] = useState({})
     const [ isAllValid, setIsAllValid ] = useState(false)
+    // const { set } = useUserInfo()
     const navigate = useNavigate()
 
     const regex = useMemo(() => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, [])

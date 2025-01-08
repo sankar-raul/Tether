@@ -5,7 +5,7 @@ const root = express.Router()
 root.get('/', async (req, res) => {
     const user = req.user
     if (user) {
-        const [ users, columns ] = await pool.execute("select username, id from users where id <> ? order by username limit 10", [user.id])
+        const [ users, columns ] = await pool.execute("select username, id from users where id <> ? order by username", [user.id])
         return res.render('home', { username: user.username, users })
     } else {
         return res.redirect('login')
