@@ -5,7 +5,7 @@ let pool = createPool({
     host: process.env.HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    port: Number(process.env.DB_PORT) || 3306,
     database: process.env.DB,
     connectionLimit: 10,
     queueLimit: 0
