@@ -4,14 +4,15 @@ import { Server } from 'socket.io'
 import auth from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cookie from 'cookie'
-import { disconnectUser, getIdFromUser, getUserFromId, Message, registerUser } from './socketServices/chat.js'
+import { disconnectUser, getIdFromUser, getUserFromId, registerUser, Message } from './socketServices/chat.js'
 import root from './routes/root.js'
-import { softAuthCheck } from './middleware/auth.js'
+import { restrictedRoute, softAuthCheck } from './middleware/auth.js'
 import { getUser } from './service/auth.js'
 import helmet from 'helmet'
 import cors from 'cors'
 import { config } from 'dotenv'
 import user from './routes/user.js'
+import chatRouter from './routes/chat.js'
 config()
 
 const app = express()
@@ -32,6 +33,11 @@ app.set("view engine", "ejs")
 
 app.use('/auth', auth)
 app.use('/user', user)
+
+// chat data 
+app.use('/chat', restrictedRoute, chatRouter)
+
+// root
 app.use('/', root)
 
 app.use((req, res) => {
@@ -42,10 +48,9 @@ app.use((req, res) => {
 // Socket.io
 const io = new Server(server)
 
-const MsgQue = new Message()
 
 const checkUndeliveredMsg = async (socketId, userID) => {
-    const undeliverdMessages = await MsgQue.getAll(userID)
+    const undeliverdMessages = await Message.getNotDeliveredMsg(userID)
     if (undeliverdMessages) {
         io.to(socketId).emit("waited:messages", undeliverdMessages)
     }
@@ -63,17 +68,20 @@ io.use((socket, next) => {
     checkUndeliveredMsg(socket.id, user.id)
     next()
 })
+
 io.on('connection', (socket) => {
     console.log("A new user Connected", socket.id)
 
     socket.on("message:send", (...args) => { // private chat
-        const from = getUserFromId(socket.id)
-        const { to, msg } = args[0]
-        const reciversSocketId = getIdFromUser(to)
-        if (reciversSocketId)
-            io.to(reciversSocketId).emit("message:recive" , { from, msg })
+        const sender = getUserFromId(socket.id)
+        const { reciver, content } = args[0]
+        const reciversSocketId = getIdFromUser(reciver)
+        if (reciversSocketId) {
+            io.to(reciversSocketId).emit("message:recive" , { sender, content })
+            Message.pushMessage({ sender, reciver, content, tick: 2 })
+        }
         else {
-            MsgQue.pushMessage({ from, to, msg })
+            Message.pushMessage({ sender, reciver, content })
         }
     })
 

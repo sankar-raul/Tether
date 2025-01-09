@@ -18,7 +18,12 @@ export const register = async (req, res) => {
         email,
         username
     })
-    res.cookie("secret", token)
+    res.cookie("secret", token, {
+        sameSite: 'None',
+        path: '/',
+        secure: true
+        
+    })
     res.status(201).json({success: true, msg: "success", data: {id: data[0].insertId}})
 } catch (error) {
     console.log("Error:", error)
@@ -45,7 +50,6 @@ export const login = async (req, res) => {
                 sameSite: 'None',
                 path: '/',
                 secure: true
-                
             })
             return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id}})
         } else {
@@ -56,7 +60,10 @@ export const login = async (req, res) => {
         res.status(500).json({success: false, msg: "internal server error"})
     }
 }
-
+export const logout = (req, res) => {
+    res.clearCookie('secret', { path: '/' })
+    res.end()
+}
 export const update = async (req, res) => {
     const what = req.params.what
     const { password, changeTo } = req.body
