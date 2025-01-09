@@ -19,7 +19,7 @@ const app = express()
 const server = http.createServer(app)
 const DEV_MODE = process.env.DEV_MODE == 'true'
 app.use(cors({
-    origin: DEV_MODE ? "http://localhost:5173" : "tether-xi.vercel.app",
+    origin: DEV_MODE ? "http://localhost:5173" : "https://tether-xi.vercel.app",
     credentials: true
 }))
 
