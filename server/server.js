@@ -15,6 +15,7 @@ import user from './routes/user.js'
 import chatRouter from './routes/chat.js'
 config()
 
+const PORT = process.env.PORT || 8080
 const app = express()
 const server = http.createServer(app)
 const DEV_MODE = process.env.DEV_MODE == 'true'
