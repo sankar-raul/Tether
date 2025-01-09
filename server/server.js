@@ -59,11 +59,11 @@ const checkUndeliveredMsg = async (socketId, userID) => {
 io.use((socket, next) => {
     const token = cookie.parse(socket.request.headers.cookie || '')?.secret
     if (!token) {
-        return next(new Error("unauthorized! token"))
+        return next(new Error("unauthorized!"))
     }
     const user = getUser(token)
-    console.log(token)
-    if (!user) return next(new Error("unauthorized! oo"))
+    // console.log(token)
+    if (!user) return next(new Error("unauthorized!"))
     registerUser(socket.id, user.id)
     checkUndeliveredMsg(socket.id, user.id)
     next()

@@ -24,13 +24,3 @@ create table messages (
 -- drop table users;
 -- delete from users where id <> 90;
 select * from users;
--- truncate table message_queue;
--- create table message_queue (
--- 	id bigint auto_increment primary key,
---     msg_from bigint not null,
---     msg_to bigint not null,
---     msg text not null,
---     foreign key (msg_from) references users(id),
---     foreign key (msg_to) references users(id)
--- );
--- select * from message_queue;
