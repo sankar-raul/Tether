@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { userInfoContext } from './userInfo'
 import { useCallback, useEffect, useState } from 'react'
-import apiRequest from '../../service/apiRequest'
+import apiRequest from '../../hook/apiRequest'
 
 const UserInfoProvider = ({ children }) => {
     const [ userInfo, setUserInfo ] = useState(null)

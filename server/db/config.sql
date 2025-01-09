@@ -24,3 +24,4 @@ create table messages (
 -- drop table users;
 -- delete from users where id <> 90;
 select * from users;
+select * from messages;

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import NetBackground from "../../components/NetBackground/NetBackground"
 import styles from './signup.module.css'
 import { useCallback, useEffect, useMemo, useState } from "react"
-import apiRequest from "../../service/apiRequest"
+import apiRequest from "../../hook/apiRequest"
 
 const SignUp = () => {
     const [ formData, setFormData ] = useState({})
