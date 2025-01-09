@@ -4,7 +4,6 @@ const apiRequest = async (endpoint, details) => {
     let body = details?.body
     let method = details?.method
     const backend_uri = import.meta.env.VITE_API_URI
-    // console.log(body)
     try {
         const response = await axios(`${backend_uri}${endpoint}`, {
             method: method || 'GET',
