@@ -85,7 +85,16 @@ io.on('connection', (socket) => {
             Message.pushMessage({ sender, reciver, content })
         }
     })
-
+    socket.on("message:see", (...args) => {
+        const sender = args[0]
+        const reciver = getUserFromId(socket.id)
+        const senderId = getIdFromUser(sender)
+        io.to(senderId).emit("message:seen", reciver)
+        sender && reciver && Message.seen({
+            sender,
+            reciver
+        })
+    })
     socket.on('disconnect', () => {
         disconnectUser(socket.id)
         console.log(socket.id, "disconnected")
@@ -94,5 +103,5 @@ io.on('connection', (socket) => {
 
 
 server.listen(8080, () => {
-    console.log(`http://localhost:8080`)
+    console.log(`http://localhost:${PORT}`)
 })
