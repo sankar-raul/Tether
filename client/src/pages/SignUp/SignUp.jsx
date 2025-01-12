@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 
 const SignUp = () => {
     const navigate = useNavigate()
-    const { register, handleSubmit, setError, formState: { errors } } = useForm({defaultValues: {
+    const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({defaultValues: {
         email: ''
     }})
 
@@ -57,7 +57,7 @@ const SignUp = () => {
                         </div>
                         
                        <div className={styles.submitBtn}>
-                            <input type="submit" value="Sign Up"/>
+                            <input disabled={isSubmitting} type="submit" value="Sign Up"/>
                        </div>
                        <div className={styles.submitBtn + " " + styles.help}>
                             <p>Allready have an account. <Link to='/login'>Login here</Link></p>
