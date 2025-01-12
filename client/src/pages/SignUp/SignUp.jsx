@@ -1,97 +1,61 @@
 import { Link, useNavigate } from "react-router-dom"
 import NetBackground from "../../components/NetBackground/NetBackground"
 import styles from './signup.module.css'
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback } from "react"
 import apiRequest from "../../hook/apiRequest"
+import { useForm } from "react-hook-form"
 
 const SignUp = () => {
-    const [ formData, setFormData ] = useState({})
-    const [ isValidData, setISValidData ] = useState({})
-    const [ isAllValid, setIsAllValid ] = useState(false)
     const navigate = useNavigate()
+    const { register, handleSubmit, setError, formState: { errors } } = useForm({defaultValues: {
+        email: ''
+    }})
 
-    const regex = useMemo(() => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, [])
-    const fields = useMemo(() => new Map([['email', "required"], ['password', "required"], ["username", "required"]]), [])
-    
-    const handleDataInput = (e) => {
-        setFormData(prev => ({...prev, [e.target.name]: e.target.value}))
-        if (e.target.name == 'email') {
-            setISValidData(prev => ({ ...prev, [e.target.name]: regex.test(e.target.value)}))
-        } else if (e.target.name == "password") {
-            setISValidData(prev => ({ ...prev, [e.target.name]: e.target.value.length >= 6 }))
-        } else {
-            setISValidData(prev => ({ ...prev, [e.target.name]: e.target.value.length >= 3 }))
-        }
-    }
-    const signup = useCallback(async (e) => {
-        e.preventDefault()
-        if (isAllValid) {
-            const [ data, error ] = await apiRequest('/auth/register', {
-                method: "POST",
-                body: formData
-            })
-            if (data) {
-                if (data.success) navigate('/')
-                console.log(data)
-            } else {
-                console.log(error)
-                if (error.msg == "user already exists") {
-                    setISValidData(prev => ({...prev, email: 'incorrect'}))
-                }
-            }
-        } else {
-            fields.forEach((value, key) => {
-                if (value == "required") {
-                    if (!isValidData[key]) {
-                        setISValidData(prev => ({...prev, [key]: 'incorrect'}))
-                    }
-                }
-            })
-        }
-    }, [formData, fields, isAllValid, isValidData, navigate])
-    useEffect(() => {
-
-    }, [formData])
-    useEffect(() => {
-        setIsAllValid(() => {
-            let isValid = true
-            fields.forEach((value, key) => {
-                // console.log(value, key)
-                if (value == "required")
-                    isValid *= !!isValidData[key] && isValidData[key] != 'incorrect'
-            })
-            return !!isValid
+    const signup = useCallback(async (formData) => {
+        const [ data, error ] = await apiRequest('/auth/register', {
+            method: "POST",
+            body: formData
         })
-        // console.log(isValidData)
-    }, [isValidData, fields])
-    useEffect(() => {
-        // console.log(isAllValid)
-    }, [isAllValid])
+        if (data) {
+            if (data.success) navigate('/')
+            // console.log(data)
+        } else {
+            console.log(error)
+            if (error.msg == "user already exists") {
+                setError('email', {message: "user allready exists"})
+            }
+        }
+    }, [navigate, setError])
+  
     return (
         <NetBackground>
                 <div className={styles.login}>
                     <h1 className={styles.wellcome}>
                         Sign Up
                     </h1>
-                    <form onSubmit={signup} className={styles.form}>
+                    <form onSubmit={handleSubmit(signup)} className={styles.form}>
+
                         <div className={styles.inputBox}>
-                            <div name={isValidData.username + ''} className={styles['input-wraper']}>
-                                <input onChange={handleDataInput} value={formData['username'] || ''} type="text" id='username' name="username" autoComplete='nickname' />
+                            <div name={!errors.username ? 'true' : 'incorrect'} className={styles['input-wraper']}>
+                                <input {...register('username', {required: {value: true, message: "username required"}, minLength: {value: 3, message: "minimum 3 letter is required"}, maxLength: {value: 30, message: "maximum 30 letters are allowed"}})} autoComplete='nickname' />
                                 <label htmlFor='name'>Name</label>
                             </div>
                         </div>
+
                         <div className={styles.inputBox}>
-                            <div name={isValidData.email + ''} className={styles['input-wraper']}>
-                                <input onChange={handleDataInput} value={formData['email'] || ''} type="text" id='email' name="email" autoComplete='email' />
+                            <div name={!errors.email ? 'true' : 'incorrect'} className={styles['input-wraper']}>
+                                <input type="text" {...register('email', {required: {value: true, message: "email required"}, pattern: {value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "invalid email"}})} autoComplete='email' />
                                 <label htmlFor='email'>Email</label>
                             </div>
                         </div>
+
                         <div className={styles.inputBox}>
-                            <div name={isValidData.password + ''} className={styles['input-wraper']}>
-                                <input onChange={handleDataInput} value={formData['password'] || ''} type="password" name="password" id='password' />
+                            <div name={!errors.password ? 'true' : 'incorrect'} className={styles['input-wraper']}>
+                                <input type="password" {...register('password', {required: {value: true, message: "password required"}, minLength: {value: 6, message: "password length must be greater 6"}})} />
                                 <label htmlFor='password'>Password</label>
                             </div>
                         </div>
+                        
                        <div className={styles.submitBtn}>
                             <input type="submit" value="Sign Up"/>
                        </div>

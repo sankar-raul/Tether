@@ -56,7 +56,7 @@ export const login = async (req, res) => {
             return res.status(401).json({success: false, msg: "incorrect password!"})
         }
     } catch (error) {
-        console.log("Error:", error)
+        console.log("Error: hre", error)
         res.status(500).json({success: false, msg: "internal server error"})
     }
 }

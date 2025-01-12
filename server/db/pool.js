@@ -1,7 +1,5 @@
-import { createPool } from 'mysql2';
+import { createPool } from 'mysql2/promise';
 import { config } from 'dotenv';
-import fs from 'fs';
-import path from 'path';
 
 // Load environment variables
 config();
@@ -13,22 +11,6 @@ const pool = createPool({
     password: process.env.DB_PASSWORD,
     port: Number(process.env.DB_PORT) || 3306,
     database: process.env.DB,
-    ssl: {
-        ca: fs.readFileSync(path.join('db', 'ca.pem')), // Update with the actual path
-    },
 });
-
-// Test connection
-const testConnection = async () => {
-    try {
-        pool.getConnection();
-        console.log('Connected to Aiven MySQL successfully!');
-        pool.release();
-    } catch (error) {
-        console.error('Error connecting to Aiven MySQL:', error.message);
-    }
-};
-
-testConnection();
 
 export default pool;
