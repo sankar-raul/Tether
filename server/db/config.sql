@@ -2,14 +2,14 @@ show databases;
 create database tether;
 use tether;
 SET SQL_SAFE_UPDATES = 0;
-create table users (
+create table if not exists users (
 	id bigint auto_increment primary key,
     username varchar(50) not null,
     email varchar(255) unique,
     password varchar(100) not null,
 	isLoggedIn boolean default 0
 );
-create table messages (
+create table if not exists messages (
 	id bigint auto_increment primary key,
 	sender bigint not null,
     reciver bigint not null,
