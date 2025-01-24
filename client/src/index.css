@@ -7,21 +7,41 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: #fff;
-  background-color: #000;
-
+  background: #000;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --primary-bg: #000;
+  --secondery-bg: #6666661a;
+  --chat-msg-bg: #5555551a;
+  --secondery-icon: #bbbbbb;
+  --send-btn-shade: #77C1E3;
+  --brand-color: #1B91E5;
+  --brand-bg: #002f7a45;
+  --solid-bg: #111111;
+  --secondery-text: #cccccc;
+  --danger-color: #E51B5E;
+  --danger-bg: #72002645;
+
+  --radius-big: 24px;
+  --radius-mid: 14px;
+  --radius-small: 7px;
 }
 html {
-  cursor: url('/svg/cursor.svg') 10 10, auto;
+  /* cursor: url('/svg/cursor.svg') 10 10, auto; */
 }
 html, body, #root {
   height: 100%;
+  font-family: 'Istok Web', serif;
+  letter-spacing: .5px;
+  user-select: none;
+}
+input {
+  font-family: 'Istok Web', serif;
 }
 #root {
   overflow: hidden;

@@ -1,0 +1,25 @@
+.contacts-wraper {
+    min-width: 300px;
+    max-width: 500px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 2px;
+}
+.contacts {
+    flex-grow: 1;
+    background: var(--secondery-bg);
+    border-radius: var(--radius-mid);
+}
+.handle-resize {
+    background: var(--solid-bg);
+    width: 5px;
+    border-radius: var(--radius-mid);
+    cursor: ew-resize;
+    opacity: .4;
+    transition-duration: .2s;
+
+    &:hover {
+        opacity: 1;
+        background: var(--solid-bg);
+    }
+}

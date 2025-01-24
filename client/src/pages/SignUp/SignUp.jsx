@@ -17,7 +17,7 @@ const SignUp = () => {
             body: formData
         })
         if (data) {
-            if (data.success) navigate('/')
+            if (data.success) navigate('/chat?new_user=true')
             // console.log(data)
         } else {
             console.log(error)

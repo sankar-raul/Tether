@@ -22,7 +22,7 @@ const Login = () => {
                 body: formData
             })
             if (data) {
-                if (data.success) navigate('/')
+                if (data.success) navigate('/chat')
             } else {
                 console.log(error)
                 if (error.msg == "incorrect password!") {

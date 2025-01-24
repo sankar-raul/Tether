@@ -1,0 +1,13 @@
+.tabs-wraper {
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+}
+.tabs {
+    background-color: var(--secondery-bg);
+    flex-grow: 1;
+    height: 100%;
+    border-radius: var(--radius-mid);
+}

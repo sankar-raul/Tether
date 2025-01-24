@@ -1,0 +1,71 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding: 5px;
+}
+.app-name {
+    font-family: 'Vampiro One', serif;
+    padding: 0px 5px;
+    letter-spacing: 0px;
+}
+.user {
+    height: 60%;
+    place-self: center;
+    padding: 0px 5px;
+}
+.user > img {
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    max-height: 100%;
+}
+.search-box {
+    display: grid;
+    grid-template-columns: 1fr 44px;
+    grid-template-rows: 1fr;
+    place-items: center;
+    width: clamp(300px, 60%, 600px);
+    /* background-color: red; */
+    
+}
+.search-input-wraper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    /* background-color: red; */
+}
+.search-input {
+    width: 100%;
+    height: 70%;
+    border: none;
+    background: #7777771a;
+    border-radius: var(--radius-big);
+    padding: 0px 15px;
+    font-size: 15px;
+    caret-color: #fff;
+    letter-spacing: 1px;
+
+    &:focus {
+        outline: 2px solid var(--brand-color);
+    }
+    &::spelling-error {
+        text-decoration: none;
+    }
+    &::placeholder {
+        color: #888;
+    }
+}
+.search-button {
+    all: unset;
+    display: grid;
+    place-items: center;
+    transition-duration: .3s;
+}
+.search-button:hover > img {
+    opacity: .9;
+}
+.search-button > img {
+    height: 80%;
+}

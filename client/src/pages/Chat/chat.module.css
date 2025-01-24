@@ -1,0 +1,9 @@
+.chat-view {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-bottom: 10px;
+}
+.chat-box  {
+    flex-grow: 1;
+}
