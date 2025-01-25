@@ -3,11 +3,10 @@ import styles from './chatbox.module.css'
 
 
 const ChatBox = () => {
-    const { currentContact, contact } = useContacts()
-
+    const { selectedContact, contact } = useContacts()
     return (
         <section className={styles['chat-box']}>
-            <h1>Chatting with {currentContact}</h1>
+            <h1>Chatting with {selectedContact}</h1>
         </section>
     )
 }
