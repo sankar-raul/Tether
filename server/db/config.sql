@@ -25,3 +25,4 @@ create table if not exists messages (
 -- delete from users where id <> 90;
 select * from users;
 select * from messages;
+select sender from messages where reciver = 1 group by sender order by sent_at;

@@ -1,27 +1,36 @@
 import styles from './tabs.module.css'
 import PropTypes from 'prop-types'
-import messageTagIconActive from '../../assets/svg/chat/message-tab.svg'
+import messageIconActive from '../../assets/svg/chat/message-tab.svg'
+import messageIconPassive from '../../assets/svg/chat/chat-passive.svg'
 import HambargerPassive from '../../assets/svg/chat/ham-barger.svg'
 import CallPassive from '../../assets/svg/chat/call.svg'
+import callActive from '../../assets/svg/chat/call-active.svg'
 import PaintPassive from '../../assets/svg/chat/paint.svg'
 import SettingsPassive from '../../assets/svg/chat/settings.svg'
 import AboutPassive from '../../assets/svg/chat/about.svg'
+import { useCallback, useEffect, useState } from 'react'
+import useTabs from '../../context/Tabs/tabs'
 const Tabs = () => {
+    const { setCurrentTab } = useTabs()
+
+    const handleTabs = useCallback((tab = "chat") => {
+        setCurrentTab(tab)
+    }, [setCurrentTab])
 
     return (
         <nav className={styles['tabs-wraper']}>
             <div className={styles['tabs']}>
                 <div>
-                    <Tab icon={HambargerPassive} />
-                    <Tab icon={messageTagIconActive} active />
-                    <Tab icon={CallPassive} />
+                    <Tab icon={{active: HambargerPassive, passive: HambargerPassive}} />
+                    <Tab type='chat' onClick={() => handleTabs("chat")} icon={{active: messageIconActive, passive: messageIconPassive}}/>
+                    <Tab type='call' onClick={() => handleTabs("call")} icon={{active: callActive, passive: CallPassive}} />
                 </div>
                 <div>
-                    <Tab icon={PaintPassive} />
+                    <Tab icon={{active: PaintPassive, passive: PaintPassive}} />
                 </div>
                 <div>
-                    <Tab icon={AboutPassive} />
-                    <Tab icon={SettingsPassive} />
+                    <Tab icon={{active: AboutPassive, passive: AboutPassive}} />
+                    <Tab icon={{active: SettingsPassive, passive: SettingsPassive}} />
                 </div>
             </div>
         </nav>
@@ -29,15 +38,27 @@ const Tabs = () => {
 }
 export default Tabs
 
-const Tab = ({icon, active = false}) => {
+const Tab = ({icon, active = false, type, ...args}) => {
+    const { currentTab } = useTabs()
+    const [ isActive, setIsActive ] = useState(active)
+
+    useEffect(() => {
+        if (type == 'chat' || type == 'call') {
+            setIsActive(currentTab == type)
+        } else {
+            // add logic for other left section buttons
+        }
+    }, [currentTab, type])
 
     return (
-        <div className={`${styles["tab"]} ${active ? styles['active'] : ''}`}>
-            <img src={icon} alt="tab" />
+        <div {...args} className={`${styles["tab"]} ${isActive ? styles['active'] : ''}`}>
+            <img src={isActive ? icon?.active : icon?.passive} alt="tab" />
         </div>
     )
 }
 Tab.propTypes = {
-    icon: PropTypes.string.isRequired,
-    active: PropTypes.bool
+    icon: PropTypes.object.isRequired,
+    active: PropTypes.bool,
+    type: PropTypes.string,
+    props: PropTypes.object
 }

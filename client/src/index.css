@@ -34,6 +34,9 @@
 html {
   /* cursor: url('/svg/cursor.svg') 10 10, auto; */
 }
+::-webkit-scrollbar {
+  width: 0px;
+}
 html, body, #root {
   height: 100%;
   font-family: 'Istok Web', serif;

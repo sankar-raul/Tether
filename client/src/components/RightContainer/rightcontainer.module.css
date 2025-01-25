@@ -1,0 +1,6 @@
+.right-container  {
+    flex-grow: 1;
+    display: grid;
+    /* border: 1px solid red; */
+    margin-right: 10px;
+}

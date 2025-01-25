@@ -1,9 +1,7 @@
 .chat-view {
     display: flex;
     flex-wrap: nowrap;
-    gap: 10px;
+    gap: 1px;
     padding-bottom: 5px;
-}
-.chat-box  {
-    flex-grow: 1;
+    overflow: hidden;
 }
