@@ -7,8 +7,11 @@ create table if not exists users (
     username varchar(50) not null,
     email varchar(255) unique,
     password varchar(100) not null,
-	isLoggedIn boolean default 0
+	isLoggedIn boolean default 0,
+    profile_pic_url varchar(255),
+    bio varchar(255) default "Friends are just a text away!"
 );
+
 create table if not exists messages (
 	id bigint auto_increment primary key,
 	sender bigint not null,
@@ -25,4 +28,6 @@ create table if not exists messages (
 -- delete from users where id <> 90;
 select * from users;
 select * from messages;
-select sender from messages where reciver = 1 group by sender order by sent_at;
+select sender, MAX(sent_at) as latest_msg from messages where reciver = 1 group by sender order by latest_msg;
+select reciver, MAX(sent_at) as latest_msg from messages where sender = 1 group by reciver order by latest_msg;
+select * from messages where sender = 1 and reciver = 2 order by sent_at desc limit 20;
