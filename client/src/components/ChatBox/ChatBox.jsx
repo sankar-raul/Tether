@@ -7,7 +7,7 @@ const ChatBox = () => {
 
     return (
         <section className={styles['chat-box']}>
-            <h1>Chatting with {contact}</h1>
+            <h1>Chatting with {currentContact}</h1>
         </section>
     )
 }
