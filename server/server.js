@@ -63,6 +63,7 @@ io.use((socket, next) => {
         return next(new Error("unauthorized!"))
     }
     const user = getUser(token)
+    // console.log(user)
     // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     registerUser(socket.id, user.id)
@@ -73,20 +74,24 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
     console.log("A new user Connected", socket.id)
 
-    socket.on("message:send", (...args) => { // private chat
+    socket.on("message:send", async ({reciver, content}) => { // private chat
         const sender = getUserFromId(socket.id)
-        const { reciver, content } = args[0]
+        console.log(reciver, content)
+        if (!reciver || !content) {
+            return io.to(socket.id).emit('message:send:error', "error")
+        }
         const reciversSocketId = getIdFromUser(reciver)
         if (reciversSocketId) {
-            io.to(reciversSocketId).emit("message:recive" , { sender, content })
-            Message.pushMessage({ sender, reciver, content, tick: 2 })
-        }
-        else {
+            const msg = await Message.pushMessage({ sender, reciver, content, tick: 2 })
+            io.to(reciversSocketId).emit("message:recive" , msg)
+            return io.to(socket.id).emit("message:tick", {msg_id: msg?.id, tick: msg?.tick})
+        } else {
             Message.pushMessage({ sender, reciver, content })
         }
     })
-    socket.on("message:see", (...args) => {
-        const sender = args[0]
+
+    socket.on("message:see", ({sender}) => {
+        if (!sender) return
         const reciver = getUserFromId(socket.id)
         const senderId = getIdFromUser(sender)
         io.to(senderId).emit("message:seen", reciver)
@@ -94,6 +99,51 @@ io.on('connection', (socket) => {
             sender,
             reciver
         })
+    })
+
+    socket.on('message:delete', async (req) => {
+        const { msg_id } = req
+        if (!msg_id) {
+            console.log(req, "op")
+            return
+        }
+        const sender = getUserFromId(socket.id)
+        try {
+            const reciver = await Message.delete({ sender, msg_id })
+            // console.log(reciver)
+            if (reciver) {
+                // console.log(res)
+                const reciver_socket_id = getIdFromUser(reciver)
+                if (reciver_socket_id) {
+                    // console.log(reciver)
+                    io.to(reciver_socket_id).emit('messages:deleted', { msg_id, sender })
+                }
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    })
+
+    socket.on('message:edit', async (req) => {
+        const { msg_id, newContent } = req
+        if (!msg_id || !newContent) {
+            console.log(req)
+            return
+        }
+        const sender = getUserFromId(socket.id)
+        try {
+            const res = await Message.edit({ msg_id, newContent, sender })
+            if (res) {
+                // console.log(res)
+                const reciver = getIdFromUser(res.reciver)
+                if (reciver) {
+                    // console.log(reciver)
+                    io.to(reciver).emit('messages:edited', { newContent, msg_id, edited_at: res.edited_at, sender })
+                }
+            }
+        } catch (e) {
+            console.log(e)
+        }
     })
     socket.on('disconnect', () => {
         disconnectUser(socket.id)

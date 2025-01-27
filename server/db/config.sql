@@ -21,13 +21,18 @@ create table if not exists messages (
     sent_at datetime default now(), -- sent by sender to server
     recived_at datetime, -- delivered to reciver
     seen_at datetime, -- seen by reciver
+    edited_at datetime,
     foreign key (sender) references users(id),
     foreign key (reciver) references users(id)
 );
+alter table messages add column edited_at datetime;
 -- drop table users;
 -- delete from users where id <> 90;
 select * from users;
-select * from messages;
+select * from messages order by sent_at desc;
+
+update messages set content = "hii sir" where id = 53;
+
 select sender, MAX(sent_at) as latest_msg from messages where reciver = 1 group by sender order by latest_msg;
 select reciver, MAX(sent_at) as latest_msg from messages where sender = 1 group by reciver order by latest_msg;
 select * from messages where sender = 1 and reciver = 2 order by sent_at desc limit 20;
