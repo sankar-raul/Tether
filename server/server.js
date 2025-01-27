@@ -47,15 +47,8 @@ app.use((req, res) => {
 
 
 // Socket.io
-const io = new Server(server)
+export const io = new Server(server)
 
-
-const checkUndeliveredMsg = async (socketId, userID) => {
-    const undeliverdMessages = await Message.getNotDeliveredMsg(userID)
-    if (undeliverdMessages) {
-        io.to(socketId).emit("waited:messages", undeliverdMessages)
-    }
-}
 
 io.use((socket, next) => {
     const token = cookie.parse(socket.request.headers.cookie || '')?.secret
@@ -66,16 +59,18 @@ io.use((socket, next) => {
     // console.log(user)
     // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
+    socket.user = user
     registerUser(socket.id, user.id)
-    checkUndeliveredMsg(socket.id, user.id)
+    Message.sendUndelivered(socket.id, user.id)
     next()
 })
 
 io.on('connection', (socket) => {
-    console.log("A new user Connected", socket.id)
+    // console.log(socket.user)
+    console.log(socket.user.username, "connected")
 
     socket.on("message:send", async ({reciver, content}) => { // private chat
-        const sender = getUserFromId(socket.id)
+        const { id:sender } = socket.user
         console.log(reciver, content)
         if (!reciver || !content) {
             return io.to(socket.id).emit('message:send:error', "error")
@@ -83,40 +78,44 @@ io.on('connection', (socket) => {
         const reciversSocketId = getIdFromUser(reciver)
         if (reciversSocketId) {
             const msg = await Message.pushMessage({ sender, reciver, content, tick: 2 })
-            io.to(reciversSocketId).emit("message:recive" , msg)
-            return io.to(socket.id).emit("message:tick", {msg_id: msg?.id, tick: msg?.tick})
+            
+            if (reciversSocketId != socket.id) {
+                io.to(reciversSocketId).emit("message:recive" , msg)
+                return io.to(socket.id).emit("message:status", {msg_id: msg?.id, tick: msg?.tick})
+            }
         } else {
             Message.pushMessage({ sender, reciver, content })
         }
     })
 
-    socket.on("message:see", ({sender}) => {
+    socket.on("message:see", async ({sender}) => {
         if (!sender) return
-        const reciver = getUserFromId(socket.id)
+        const { id:reciver } = socket.user
         const senderId = getIdFromUser(sender)
-        io.to(senderId).emit("message:seen", reciver)
-        sender && reciver && Message.seen({
-            sender,
-            reciver
-        })
+        if (senderId) {
+            await Message.seen({
+                sender,
+                reciver
+            })
+            return io.to(senderId).emit("message:seen", {reciver, seen_at: Date.now()})
+        }
     })
 
-    socket.on('message:delete', async (req) => {
-        const { msg_id } = req
-        if (!msg_id) {
-            console.log(req, "op")
+    socket.on('message:delete', async ({msg_id, all = false}) => {
+        if (!msg_id && !all) {
+            console.log(req, "oo no message id is here!")
             return
         }
-        const sender = getUserFromId(socket.id)
+        const { id:sender } = socket.user
         try {
-            const reciver = await Message.delete({ sender, msg_id })
-            // console.log(reciver)
+            const reciver = await Message.delete({ sender, msg_id, all })
             if (reciver) {
-                // console.log(res)
                 const reciver_socket_id = getIdFromUser(reciver)
                 if (reciver_socket_id) {
-                    // console.log(reciver)
-                    io.to(reciver_socket_id).emit('messages:deleted', { msg_id, sender })
+                    if (all)
+                        io.to(reciver_socket_id).emit('message:deleted:all', { sender })
+                    else
+                        io.to(reciver_socket_id).emit('message:deleted', { msg_id, sender })
                 }
             }
         } catch (e) {
@@ -124,13 +123,11 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('message:edit', async (req) => {
-        const { msg_id, newContent } = req
+    socket.on('message:edit', async ({ msg_id, newContent }) => {
         if (!msg_id || !newContent) {
-            console.log(req)
             return
         }
-        const sender = getUserFromId(socket.id)
+        const { id:sender } = socket.user
         try {
             const res = await Message.edit({ msg_id, newContent, sender })
             if (res) {
@@ -138,7 +135,7 @@ io.on('connection', (socket) => {
                 const reciver = getIdFromUser(res.reciver)
                 if (reciver) {
                     // console.log(reciver)
-                    io.to(reciver).emit('messages:edited', { newContent, msg_id, edited_at: res.edited_at, sender })
+                    io.to(reciver).emit('message:edited', { msg_id, newContent, edited_at: res.edited_at, sender })
                 }
             }
         } catch (e) {
