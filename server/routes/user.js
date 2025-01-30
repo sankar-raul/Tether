@@ -1,7 +1,8 @@
 import express from 'express'
-import { userRoot } from '../controllers/user.js'
+import { userRoot, search } from '../controllers/user.js'
 const user = express.Router()
 
 user.get('/', userRoot)
+user.get('/search', search)
 
 export default user
