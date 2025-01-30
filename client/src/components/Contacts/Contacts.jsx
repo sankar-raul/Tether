@@ -4,6 +4,8 @@ import styles from './contacts.module.css'
 import PropTypes from 'prop-types'
 import useContacts from '../../context/contacts/contact'
 import useTabs from '../../context/Tabs/tabs'
+import { HeroDate } from '../../utils/date'
+import apiRequest from '../../hook/apiRequest'
 
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -44,29 +46,72 @@ const Chats = () => {
 const Contact = ({ user }) => {
     const [ isActive, setIsActive ] = useState(false)
     const { selectedContact, setSelectedContact } = useContacts()
-
+    const [ timestamp, setTimeStamp ] = useState('')
+    const [ userInfo, setUserInfo ] = useState({})
+    const [ lastMessage, setLastMessage ] = useState(null)
     const togglwActive = useCallback(() => {
         setSelectedContact(user?.id)
     }, [user, setSelectedContact])
+    
+    const fetchContacalInfo = useCallback(async () => {
+        const [response, error] = await apiRequest(`/chat/c/${user?.id}`)
+        if (!error) {
+            setUserInfo(response?.data)
+            console.log(response)
+        } else {
+            console.log(error)
+        }
+    }, [user])
 
+    const lastMsg = useCallback(async () => {
+        const [ res, error ] = await apiRequest(`/chat/lastMessage/${user?.id}`)
+        if (!error) {
+            if (res?.data) {
+                setLastMessage(res?.data)
+            } else {
+                setLastMessage(userInfo?.bio)
+            }
+        }
+    }, [user, setLastMessage, userInfo])
+
+    useEffect(() => {
+        lastMsg()
+    }, [userInfo, lastMsg])
+    useEffect(() => {
+        fetchContacalInfo()
+        const lastMsgDate = new HeroDate(user.last_msg_at)
+        const prevDayStart = new HeroDate()
+        const prevMidNight = new HeroDate()
+        prevMidNight.setHours(0,0,0,0)
+        prevDayStart.setHours(0,0,0,0)
+        prevMidNight.setDate(prevMidNight.getDate() - 1)
+        prevDayStart.setDate(prevMidNight.getDate() - 1)
+        if (prevMidNight.getTime() < lastMsgDate.getTime()) {
+            setTimeStamp(lastMsgDate.formatedTime())
+        } else if (prevDayStart.getTime() < lastMsgDate.getTime()) {
+            setTimeStamp('yesterday')
+        } else {
+            setTimeStamp(lastMsgDate.formatedDate())
+        }
+    }, [user, fetchContacalInfo])
     useEffect(() => {
         setIsActive(selectedContact == user?.id)
     }, [selectedContact, user])
     return (
         <div onClick={togglwActive} className={`${styles['contact']} ${isActive ? styles['active'] : ''}`}>
             <div className={styles['profile']}>
-                <img src="/me.jpg" alt="user" />
+                <img src={userInfo?.profile_pic_url || "/me.jpg"} alt="user" />
             </div>
             <div className={styles['user-info']}>
                 <div className={styles['user-meta-data']}>
-                    <div className={styles['username']}>{user?.name}</div>
+                    <div className={styles['username']}>{userInfo?.username}</div>
                     <div className={styles['last-msg']}>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, facere inventore! Odio obcaecati quia, et quas minus aspernatur corporis aut dolores cum quasi ullam dignissimos beatae eos porro atque iure?
+                        {lastMessage?.content || lastMessage}
                     </div>
                 </div>
                 <div className={styles['user-status']}>
                     <div className={styles['last-msg-time']}>
-                        07-07-2025
+                        {timestamp}
                     </div>
                     <div className={styles['unread-msg-count']}>
                         <div><p>2</p></div>

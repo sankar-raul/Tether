@@ -36,3 +36,6 @@ update messages set content = "hii sir" where id = 53;
 select sender, MAX(sent_at) as latest_msg from messages where reciver = 1 group by sender order by latest_msg;
 select reciver, MAX(sent_at) as latest_msg from messages where sender = 1 group by reciver order by latest_msg;
 select * from messages where sender = 1 and reciver = 2 order by sent_at desc limit 20;
+
+select * from ((select sender as q, MAX(sent_at) as latest_msg from messages where reciver = 2 and tick in (2, 3) group by sender order by latest_msg desc)
+union (select reciver as q, MAX(sent_at) as latest_msg from messages where sender = 2 group by reciver order by latest_msg desc)) as combined order by latest_msg desc;

@@ -11,6 +11,7 @@ const apiRequest = async (endpoint, details) => {
             withCredentials: true,
         })
         const data = response.data
+        // console.log(data)
         return [data, null]
     } catch (e) {
         // console.log(e)

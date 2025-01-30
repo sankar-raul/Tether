@@ -33,7 +33,20 @@ export const sortContactsListByDateDesc = (msg1, msg2) => {
                 j++
             }
         }
-    
+    // console.log(data)
+    const ndata = Object.fromEntries(data)
+    const sortedContacts = Object.entries(ndata).sort((a, b) => {
+        return new Date(b[1].last_msg_at) - new Date(a[1].last_msg_at)
+    })
+    // console.log(sortedContacts)
+    const contactList = sortedContacts.map(item => {
+        return {
+            id: item[0],
+            last_msg_at: item[1].last_msg_at
+        }
+    })
+    // console.log(contactList)
+    return contactList
 }
 
 // algorithm for merge two sorted list of messages
