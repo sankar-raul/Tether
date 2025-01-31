@@ -1,3 +1,4 @@
+import MessageProvider from "../../context/messages/provider"
 import useTabs from "../../context/Tabs/tabs"
 import CallBox from "../CallBox/CallBox"
 import ChatBox from "../ChatBox/ChatBox"
@@ -6,9 +7,11 @@ const RightContainer = () => {
     const { currentTab } = useTabs()
     
     return (
-        <div className={styles['right-container']}>
-            { currentTab == 'chat' ? <ChatBox /> : <CallBox /> }
-        </div>
+        <MessageProvider>
+            <div className={styles['right-container']}>
+                { currentTab == 'chat' ? <ChatBox /> : <CallBox /> }
+            </div>
+        </MessageProvider>
     )
 }
 export default RightContainer

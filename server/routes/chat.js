@@ -39,10 +39,9 @@ chatRouter.get('/lastMessage/:id', async (req, res) => {
                 data: data[0][0]
             })
         }
-        res.end()
     } catch (error) {
         console.log(error)
-        res.end()
+        res.status(400).json({succes: false})
     }
 })
 chatRouter.get('/contacts', async (req, res) => {
@@ -53,7 +52,7 @@ chatRouter.get('/contacts', async (req, res) => {
     const msg_sent = await pool.execute("select reciver, MAX(sent_at) as latest_msg from messages where sender = ? group by reciver order by latest_msg", [id])
     // console.log(msg_recived, msg_sent)
     const contacts = sortContactsListByDateDesc(msg_recived[0], msg_sent[0])
-    console.log(contacts)
+    // console.log(contacts)
     return res.status(200).json({success: true, msg: "data fetch success!", type: "map", data: contacts})
     } catch (error) {
         console.log("error ", error)

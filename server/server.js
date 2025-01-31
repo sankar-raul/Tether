@@ -47,7 +47,12 @@ app.use((req, res) => {
 
 
 // Socket.io
-export const io = new Server(server)
+export const io = new Server(server, {
+    cors: {
+        origin: DEV_MODE ? "http://localhost:5173" : "https://tether-xi.vercel.app",
+        credentials: true
+      }
+})
 
 
 io.use((socket, next) => {
@@ -56,7 +61,6 @@ io.use((socket, next) => {
         return next(new Error("unauthorized!"))
     }
     const user = getUser(token)
-    // console.log(user)
     // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     socket.user = user

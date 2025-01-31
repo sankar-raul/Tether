@@ -32,6 +32,7 @@ const Calls = () => {
 }
 const Chats = () => {
     const { contacts } = useContacts()
+
     return (
         <>
         {
@@ -45,7 +46,7 @@ const Chats = () => {
 
 const Contact = ({ user }) => {
     const [ isActive, setIsActive ] = useState(false)
-    const { selectedContact, setSelectedContact } = useContacts()
+    const { selectedContact, setSelectedContact, setContactInfo, contactMap } = useContacts()
     const [ timestamp, setTimeStamp ] = useState('')
     const [ userInfo, setUserInfo ] = useState({})
     const [ lastMessage, setLastMessage ] = useState(null)
@@ -56,12 +57,12 @@ const Contact = ({ user }) => {
     const fetchContacalInfo = useCallback(async () => {
         const [response, error] = await apiRequest(`/chat/c/${user?.id}`)
         if (!error) {
-            setUserInfo(response?.data)
+            setContactInfo(user?.id, response?.data)
             console.log(response)
         } else {
             console.log(error)
         }
-    }, [user])
+    }, [user, setContactInfo])
 
     const lastMsg = useCallback(async () => {
         const [ res, error ] = await apiRequest(`/chat/lastMessage/${user?.id}`)
@@ -75,6 +76,9 @@ const Contact = ({ user }) => {
     }, [user, setLastMessage, userInfo])
 
     useEffect(() => {
+        setUserInfo(contactMap?.get(user?.id))
+    }, [contactMap, user])
+    useEffect(() => {
         lastMsg()
     }, [userInfo, lastMsg])
     useEffect(() => {
@@ -85,14 +89,18 @@ const Contact = ({ user }) => {
         prevMidNight.setHours(0,0,0,0)
         prevDayStart.setHours(0,0,0,0)
         prevMidNight.setDate(prevMidNight.getDate() - 1)
-        prevDayStart.setDate(prevMidNight.getDate() - 1)
+        prevDayStart.setDate(prevDayStart.getDate() - 2)
         if (prevMidNight.getTime() < lastMsgDate.getTime()) {
             setTimeStamp(lastMsgDate.formatedTime())
+            console.log(prevMidNight.getTime(), lastMsgDate.getTime())
+            console.log(prevMidNight.formatedDate(), prevMidNight.formatedTime())
+            console.log(lastMsgDate.formatedDate(), lastMsgDate.formatedTime())
         } else if (prevDayStart.getTime() < lastMsgDate.getTime()) {
             setTimeStamp('yesterday')
         } else {
             setTimeStamp(lastMsgDate.formatedDate())
         }
+        // console.log(prevDayStart.formatedDate(), prevDayStart.formatedTime(), prevMidNight.formatedDate(), prevMidNight.formatedTime())
     }, [user, fetchContacalInfo])
     useEffect(() => {
         setIsActive(selectedContact == user?.id)
