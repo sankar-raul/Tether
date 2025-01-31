@@ -4,7 +4,7 @@ import ResizeableAsideProvider from '../../context/resizeableAside/provider'
 import ContactsProvider from '../../context/contacts/provider'
 import TabsProvider from '../../context/Tabs/provider'
 import RightContainer from '../../components/RightContainer/RightContainer'
-import SocketProvider from '../../context/Socket/provider'
+import SocketProvider from '../../context/socket/provider'
 const Chat = () => {
     
     return (

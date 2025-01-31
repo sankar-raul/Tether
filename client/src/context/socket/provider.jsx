@@ -4,7 +4,7 @@ import socket from '../../utils/chatSocket'
 import { useMemo } from "react"
 const SocketProvider = ({children}) => {
     const Socket = useMemo(() => socket, [])
-
+ 
     return (
         <SocketContext.Provider value={{Socket}}>
             {children}
