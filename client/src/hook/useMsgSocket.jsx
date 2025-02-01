@@ -59,11 +59,15 @@ const useMsgSocket = (contactId) => {
             console.log(message.id, contactId)
             let { sender } = message
             sender = Number(sender)
+            if (!messageRef.has(sender)) {
+                getInitialMessages(sender)
+            }
             console.log(sender)
             const messageMap = messageRef.get(sender) || new Map()
             messageMap.set(message.id, message)
             messageRef.set(sender, messageMap)
             setMessages(new Map(messageRef))
+            shiftUpContact(sender, message)
         }
 
         // delete a single message by msg_id
