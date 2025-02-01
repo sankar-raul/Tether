@@ -8,14 +8,13 @@ export default class Msg {
     }
     async pushMessage({sender, reciver, content, tick = 1}) {
         try {
-            if (tick == 1) {
-                await pool.execute("insert into messages (sender, reciver, content) value (?, ?, ?)", [sender, reciver, content])
-            }
-            else if (tick == 2) {
-                const data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at) value (?, ?, ?, 2, now())", [sender, reciver, content])
-                const msg = await pool.execute("select * from messages where id = ?", [ data[0].insertId ])
-                return msg[0][0]
-            }
+            let data
+            if (tick == 2)
+                data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at) value (?, ?, ?, 2, now())", [sender, reciver, content])
+            else
+                data = await pool.execute("insert into messages (sender, reciver, content, tick) value (?, ?, ?, 1)", [sender, reciver, content])
+            const msg = await pool.execute("select * from messages where id = ?", [ data[0].insertId ])
+            return msg[0][0]
         } catch (error) {
             console.log("Error: here", error)
             throw new Error(error)

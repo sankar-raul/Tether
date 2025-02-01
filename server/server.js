@@ -73,11 +73,13 @@ io.on('connection', (socket) => {
     // console.log(socket.user)
     console.log(socket.user.username, "connected")
 
-    socket.on("message:send", async ({reciver, content}) => { // private chat
+    socket.on("message:send", async ({reciver, content}, ackFunc) => { // private chat
         const { id:sender } = socket.user
         console.log(reciver, content)
+        if (!ackFunc) return
         if (!reciver || !content) {
-            return io.to(socket.id).emit('message:send:error', "error")
+            // return io.to(socket.id).emit('message:send:error', "error")
+            return ackFunc("error")
         }
         const reciversSocketId = getIdFromUser(reciver)
         if (reciversSocketId) {
@@ -85,10 +87,11 @@ io.on('connection', (socket) => {
             
             if (reciversSocketId != socket.id) {
                 io.to(reciversSocketId).emit("message:recive" , msg)
-                return io.to(socket.id).emit("message:status", {msg_id: msg?.id, tick: msg?.tick})
+                return ackFunc(msg)
             }
         } else {
-            Message.pushMessage({ sender, reciver, content })
+            const msg = await Message.pushMessage({ sender, reciver, content })
+            return ackFunc(msg)
         }
     })
 
@@ -148,7 +151,7 @@ io.on('connection', (socket) => {
     })
     socket.on('disconnect', () => {
         disconnectUser(socket.id)
-        console.log(socket.id, "disconnected")
+        console.log(socket.user.username, "disconnected")
       })
 })
 
