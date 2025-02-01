@@ -47,6 +47,7 @@ app.use((req, res) => {
 
 
 // Socket.io
+// chat logic
 export const io = new Server(server, {
     cors: {
         origin: DEV_MODE ? "http://localhost:5173" : "https://tether-xi.vercel.app",

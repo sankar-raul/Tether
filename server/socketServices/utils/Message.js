@@ -30,13 +30,13 @@ export default class Msg {
         }
     }
     // inform to sender that his / her messages delivered
-    async #delevered(msg_id, sender) {
-        console.log(msg_id, sender)
+    async #delevered(msg_id, sender, reciver) {
+        // console.log(msg_id, sender, "oppp")
         if (msg_id, sender) {
             const senderSocketId = getIdFromUser(sender)
             if (senderSocketId) {
-            console.log(senderSocketId)
-                io.to(senderSocketId).emit("message:status", {msg_id, tick: 2})
+            // console.log(senderSocketId)
+                io.to(senderSocketId).emit("message:status", {msg_id, tick: 2, reciver, recived_at: new Date().toISOString()})
             }
         }
     }
@@ -46,7 +46,7 @@ export default class Msg {
         if (undeliverdMessages) {
             io.to(socketId).emit("waited:messages", undeliverdMessages)
             undeliverdMessages.forEach(message => {
-                this.#delevered(message?.id, message?.sender)
+                this.#delevered(message?.id, message?.sender, message?.reciver)
             })
         }
     }

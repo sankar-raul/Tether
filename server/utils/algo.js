@@ -50,7 +50,7 @@ export const sortContactsListByDateDesc = (msg1, msg2) => {
 }
 
 // algorithm for merge two sorted list of messages
-export const sortMessagesDesc = (msgs1, msgs2) => {
+export const sortMessages = (msgs1, msgs2) => {
     // console.log(msgs1, msgs2)
     const res = []
     const date = (dateString) => new Date(dateString).getTime()
@@ -58,7 +58,7 @@ export const sortMessagesDesc = (msgs1, msgs2) => {
     while (msgs1[i] || msgs2[j]) {
         if (msgs1[i] && msgs2[j]) {
             let [a, b] = [date(msgs1[i].sent_at), date(msgs2[j].sent_at)] 
-            if (a > b) {
+            if (a < b) {
                 res.push(msgs1[i])
                 i++
             } else {

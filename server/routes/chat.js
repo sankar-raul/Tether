@@ -1,7 +1,7 @@
 import express from 'express'
 import { getAllMessage } from '../controllers/chat.js'
 import pool from '../db/pool.js'
-import { sortContactsListByDateDesc, sortMessagesDesc } from '../utils/algo.js'
+import { sortContactsListByDateDesc, sortMessages } from '../utils/algo.js'
 
 const chatRouter = express.Router()
 
@@ -12,9 +12,9 @@ chatRouter.get('/messages/:contact_id', async (req, res) => {
     const { contact_id } = req.params
     if (id == contact_id) return res.status(400).json({success: false, msg: "bad request!"})
     try {
-    const msg_sent = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at desc;", [id, contact_id])
-    const msg_recived = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at desc", [contact_id, id])
-    const messages = sortMessagesDesc(msg_sent[0], msg_recived[0])
+    const msg_sent = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
+    const msg_recived = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])
+    const messages = sortMessages(msg_sent[0], msg_recived[0])
     res.status(200).json(messages)
     } catch (error) {
         console.log("error")

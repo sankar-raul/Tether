@@ -1,20 +1,13 @@
-import { useCallback, useState } from "react"
+import { useState } from "react"
 import { MessageContext } from "./messages"
 import PropTypes from 'prop-types'
-import apiRequest from "../../hook/apiRequest"
 const MessageProvider = ({children}) => {
     const [messagesMap, setMessagesMap] = useState(new Map())
+    // const socket 
 
-
-    const getMessages = useCallback(async (id) => {
-        if (!id) return
-        const [response, error] = await apiRequest(`/chat/messages/${id}`)
-        if (!error) {
-            return response
-        }
-    }, [])
+    
     return (
-        <MessageContext.Provider value={{getMessages}}>
+        <MessageContext.Provider value={{}}>
             {children}
         </MessageContext.Provider>
     )

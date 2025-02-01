@@ -4,66 +4,92 @@ import PropTypes from 'prop-types'
 import useUserInfo from "../userInfo/userInfo"
 import apiRequest from '../../hook/apiRequest'
 
+let contactRef = new Map()
+
 const ContactsProvider = ({children}) => {
     const [ selectedContact, setSelectedContact ] = useState(null)
     const { userInfo } = useUserInfo()
-    const [ contacts, setContacts ] = useState()
     const [ contactMap, setContactMap ] = useState(new Map())
+    const [ isContactFetched, setIsContactFetched ] = useState(false)
+
+    const fetchContactInfo = useCallback(async (id) => {
+        if (!userInfo || !id || contactRef.get(userInfo.id)?.username) return
+        id = Number(id)
+        const [response, error] = await apiRequest(`/chat/c/${id}`)
+        if (!error) {
+            if (!response) return
+            const { data } = response
+            if (contactRef.has(id)) {
+                contactRef.set(id, {...contactRef.get(id), ...data})
+            } else {
+                contactRef.set(id, data)
+            }
+            setContactMap(new Map(contactRef))
+        } else {
+            console.log("/chat/c/:id Error at /src/context/contacts/provider.jsx". error)
+        }
+    }, [userInfo])
 
     const getContacts = useCallback(async () => {
+        setIsContactFetched(true)
         // call api to get first 20 contacts with recent message
         const [ response, error ] = await apiRequest('/chat/contacts')
         if (!error) {
             // console.log(response?.data)
-            setContacts(response?.data)
-            setContactMap(new Map(response?.data?.slice().reverse().map(item => [item.id, {}])))
+            if (response) {
+                response.data.forEach(contact => {
+                    contactRef.set(Number(contact.id), contact)
+                    fetchContactInfo(contact.id)
+                })
+                setContactMap(new Map(contactRef))
+            }
+            // setContacts(response?.data)
         }
-    }, [])
-    const addContact = useCallback((id, data = {}) => {
-        if (contactMap.has(id)) {
-            const prevData = contactMap.get(id)
-            contactMap.delete(id)
-            setContactMap(prev => {
-                const prevMap = new Map(prev)
-                prevMap.set(id, {...prevData, ...data})
-                return prevMap
+    }, [fetchContactInfo])
+
+    // add contact and bring the contact to top in contact list
+    const shiftUpContact = useCallback((id, data = {}) => {
+        if (!id) return
+        id = Number(id)
+        if (contactRef.has(id)) {
+            const prevUserInfo = contactRef.get(id)
+            const newOrder = new Map()
+            newOrder.set(id, {...prevUserInfo, ...data, id, last_msg_at: data.sent_at})
+            contactRef.delete(id)
+            contactRef.forEach((value, key) => {
+                newOrder.set(key, value)
             })
+            contactRef = new Map(newOrder)
+            // console.log(contactRef.get(id))
+            setContactMap(new Map(contactRef))
         } else {
-            setContacts({id, ...data})
-            setContactMap(prev => {
-                const prevMap = new Map(prev)
-                prevMap.set(id, data)
-                return prevMap
+            const newOrder = new Map()
+            newOrder.set(id, {...data, id, last_msg_at: data.sent_at})
+            contactRef.forEach((value, key) => {
+                newOrder.set(key, value)
             })
+            fetchContactInfo(id)
+            contactRef = new Map(newOrder)
+            setContactMap(new Map(contactRef))
         }
 
-    }, [contactMap])
+    }, [fetchContactInfo])
     const getContactInfo = useCallback((id) => {
         return contactMap.get(id)
     }, [contactMap])
-    const setContactInfo = useCallback((id, data = {}) => {
-        // console.log(id, data)
-        setContactMap(prev => {
-            const newMap = new Map(prev)
-            if (newMap.has(id)) {
-                newMap.set(id, {...newMap.get(id), ...data})
-            } else {
-                newMap.set(id, data)
-            }
-            return newMap
-        })
-    }, [])
+
     useEffect(() => {
-        console.log(contactMap)
+        // console.log(contactMap)
     }, [contactMap])
+
     useEffect(() => {
         if (userInfo) {
-            getContacts()
+            !isContactFetched && getContacts()
         }
-    }, [userInfo, getContacts])
+    }, [userInfo, getContacts, isContactFetched])
 
     return (
-        <contactsContext.Provider value={{selectedContact, setSelectedContact, contacts, setContactInfo, addContact, getContactInfo, contactMap}}>
+        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap}}>
             {children}
         </contactsContext.Provider>
     )

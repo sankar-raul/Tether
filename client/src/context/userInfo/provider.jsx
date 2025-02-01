@@ -6,7 +6,6 @@ import apiRequest from '../../hook/apiRequest'
 const UserInfoProvider = ({ children }) => {
     const [ userInfo, setUserInfo ] = useState(null)
     const [ isloggedIn, setIsLoggedIn ] = useState(false)
-    
     const getUserInfo = useCallback(async () => {
         const [ userData, error ] = await apiRequest('/user')
         if (userData) {
@@ -17,8 +16,8 @@ const UserInfoProvider = ({ children }) => {
         }
     }, [])
     useEffect(() => {
-        getUserInfo()
-    }, [isloggedIn, getUserInfo])
+        userInfo || getUserInfo()
+    }, [isloggedIn, getUserInfo, userInfo])
     return (
         <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn}}>
             {children}

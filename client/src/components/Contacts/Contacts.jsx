@@ -31,12 +31,11 @@ const Calls = () => {
     )
 }
 const Chats = () => {
-    const { contacts } = useContacts()
-
+    const { contactMap } = useContacts()
     return (
         <>
         {
-            contacts?.map(user => (
+            [...contactMap.values()]?.map(user => (
                 <Contact key={user?.id} user={user} />
             ))
         }
@@ -46,7 +45,7 @@ const Chats = () => {
 
 const Contact = ({ user }) => {
     const [ isActive, setIsActive ] = useState(false)
-    const { selectedContact, setSelectedContact, setContactInfo, contactMap } = useContacts()
+    const { selectedContact, setSelectedContact } = useContacts()
     const [ timestamp, setTimeStamp ] = useState('')
     const [ userInfo, setUserInfo ] = useState({})
     const [ lastMessage, setLastMessage ] = useState(null)
@@ -54,35 +53,32 @@ const Contact = ({ user }) => {
         setSelectedContact(user?.id)
     }, [user, setSelectedContact])
     
-    const fetchContacalInfo = useCallback(async () => {
-        const [response, error] = await apiRequest(`/chat/c/${user?.id}`)
-        if (!error) {
-            setContactInfo(user?.id, response?.data)
-            console.log(response)
-        } else {
-            console.log(error)
-        }
-    }, [user, setContactInfo])
-
     const lastMsg = useCallback(async () => {
-        const [ res, error ] = await apiRequest(`/chat/lastMessage/${user?.id}`)
+        if (lastMessage || !userInfo?.id) return
+        const [ res, error ] = await apiRequest(`/chat/lastMessage/${userInfo?.id}`)
         if (!error) {
+            // console.log(res.data)
             if (res?.data) {
                 setLastMessage(res?.data)
             } else {
                 setLastMessage(userInfo?.bio)
             }
         }
-    }, [user, setLastMessage, userInfo])
+    }, [setLastMessage, userInfo, lastMessage])
+
+    // useEffect(() => {
+    //     setUserInfo(contactMap?.get(user?.id))
+    // }, [user])
+    useEffect(() => {
+        if (lastMessage) {
+            userInfo.content && setLastMessage(userInfo.content)
+        } else {
+            lastMsg()
+        }
+    }, [userInfo, lastMsg, lastMessage])
 
     useEffect(() => {
-        setUserInfo(contactMap?.get(user?.id))
-    }, [contactMap, user])
-    useEffect(() => {
-        lastMsg()
-    }, [userInfo, lastMsg])
-    useEffect(() => {
-        fetchContacalInfo()
+        setUserInfo(user)
         const lastMsgDate = new HeroDate(user.last_msg_at)
         const prevDayStart = new HeroDate()
         const prevMidNight = new HeroDate()
@@ -92,17 +88,19 @@ const Contact = ({ user }) => {
         prevDayStart.setDate(prevDayStart.getDate() - 2)
         if (prevMidNight.getTime() < lastMsgDate.getTime()) {
             setTimeStamp(lastMsgDate.formatedTime())
-            console.log(prevMidNight.getTime(), lastMsgDate.getTime())
-            console.log(prevMidNight.formatedDate(), prevMidNight.formatedTime())
-            console.log(lastMsgDate.formatedDate(), lastMsgDate.formatedTime())
+            // console.log(prevMidNight.getTime(), lastMsgDate.getTime())
+            // console.log(prevMidNight.formatedDate(), prevMidNight.formatedTime())
+            // console.log(lastMsgDate.formatedDate(), lastMsgDate.formatedTime())
         } else if (prevDayStart.getTime() < lastMsgDate.getTime()) {
             setTimeStamp('yesterday')
         } else {
             setTimeStamp(lastMsgDate.formatedDate())
         }
         // console.log(prevDayStart.formatedDate(), prevDayStart.formatedTime(), prevMidNight.formatedDate(), prevMidNight.formatedTime())
-    }, [user, fetchContacalInfo])
+    }, [user])
+    
     useEffect(() => {
+        console.log(selectedContact, user.id)
         setIsActive(selectedContact == user?.id)
     }, [selectedContact, user])
     return (
