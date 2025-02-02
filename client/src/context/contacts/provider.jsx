@@ -47,14 +47,24 @@ const ContactsProvider = ({children}) => {
         }
     }, [fetchContactInfo])
 
+    const updateContactInfo = useCallback((id, data = {}) => {
+        id = Number(id)
+        // console.log(id, data)
+        if (contactRef.has(id)) {
+            contactRef.set(id, {...contactRef.get(id), ...data, id})
+        } else {
+            contactRef.set(id, {...data. id})
+        }
+        setContactMap(new Map(contactRef))
+    }, [])
+
     // add contact and bring the contact to top in contact list
     const shiftUpContact = useCallback((id, data = {}) => {
         if (!id) return
         id = Number(id)
         if (contactRef.has(id)) {
-            const prevUserInfo = contactRef.get(id)
             const newOrder = new Map()
-            newOrder.set(id, {...prevUserInfo, ...data, id, last_msg_at: data.sent_at})
+            newOrder.set(id, {...contactRef.get(id), ...data, id, last_msg_at: data.sent_at})
             contactRef.delete(id)
             contactRef.forEach((value, key) => {
                 newOrder.set(key, value)
@@ -86,10 +96,10 @@ const ContactsProvider = ({children}) => {
         if (userInfo) {
             !isContactFetched && getContacts()
         }
-    }, [userInfo, getContacts, isContactFetched])
+    }, [userInfo, getContacts, isContactFetched, updateContactInfo])
 
     return (
-        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap}}>
+        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo}}>
             {children}
         </contactsContext.Provider>
     )

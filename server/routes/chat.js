@@ -10,7 +10,7 @@ chatRouter.get('/all', getAllMessage)
 chatRouter.get('/messages/:contact_id', async (req, res) => {
     const { id } = req.user
     const { contact_id } = req.params
-    if (id == contact_id) return res.status(400).json({success: false, msg: "bad request!"})
+    if (!contact_id) return res.status(400).json({success: false, msg: "bad request!"})
     try {
     const msg_sent = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
     const msg_recived = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])
@@ -25,18 +25,21 @@ chatRouter.get('/lastMessage/:id', async (req, res) => {
     const { id } = req.params
     const userID = req.user.id
     try {
-        const data = await pool.execute("select sender, reciver, content from messages where sent_at = (select max(sent_at) from messages where sender in (?, ?) and reciver in (?, ?))", [id, userID, id, userID])
-        if (userID != id && data[0][0]?.sender == userID && userID == data[0][0]?.reciver) {
+        const data = await pool.execute("select sender, reciver, content from messages where sent_at = (select max(sent_at) from messages where (sender = ? and reciver = ?) or (reciver = ? and sender = ?))", [id, userID, id, userID])
+        console.log(data[0][0])
+        if (userID != id && !data[0][0]) {
             return res.status(200).json({
                 success: true,
                 msg: "no chat history found",
                 data: null
             })
         } else {
+            const unread = await pool.execute('select count(*) as unread from messages where sender = ? and reciver = ? and tick in (1, 2)', [id, userID])
+            console.log(unread)
             return res.status(200).json({
                 success: true,
                 msg: "success",
-                data: data[0][0]
+                data: {...data[0][0], unread: unread[0][0].unread}
             })
         }
     } catch (error) {

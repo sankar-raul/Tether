@@ -6,6 +6,7 @@ import useContacts from '../../context/contacts/contact'
 import useTabs from '../../context/Tabs/tabs'
 import { HeroDate } from '../../utils/date'
 import apiRequest from '../../hook/apiRequest'
+import useUserInfo from '../../context/userInfo/userInfo'
 
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -45,12 +46,15 @@ const Chats = () => {
 
 const Contact = ({ user }) => {
     const [ isActive, setIsActive ] = useState(false)
-    const { selectedContact, setSelectedContact } = useContacts()
+    const { selectedContact, setSelectedContact, updateContactInfo } = useContacts()
     const [ timestamp, setTimeStamp ] = useState('')
     const [ userInfo, setUserInfo ] = useState({})
     const [ lastMessage, setLastMessage ] = useState(null)
+    const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
+    const { userInfo:localUserInfo } = useUserInfo()
+
     const togglwActive = useCallback(() => {
-        setSelectedContact(user?.id)
+        setSelectedContact(Number(user?.id))
     }, [user, setSelectedContact])
     
     const lastMsg = useCallback(async () => {
@@ -59,12 +63,13 @@ const Contact = ({ user }) => {
         if (!error) {
             // console.log(res.data)
             if (res?.data) {
-                setLastMessage(res?.data)
+                setLastMessage(res.data)
+                updateContactInfo(Number(userInfo.id), {unread: res.data.unread})
             } else {
                 setLastMessage(userInfo?.bio)
             }
         }
-    }, [setLastMessage, userInfo, lastMessage])
+    }, [setLastMessage, userInfo, lastMessage, updateContactInfo])
 
     // useEffect(() => {
     //     setUserInfo(contactMap?.get(user?.id))
@@ -76,9 +81,11 @@ const Contact = ({ user }) => {
             lastMsg()
         }
     }, [userInfo, lastMsg, lastMessage])
-
     useEffect(() => {
-        setUserInfo(user)
+        localUserInfo && userInfo && setIsChatingWithMyself(localUserInfo.id == userInfo.id)
+    }, [localUserInfo, userInfo])
+    useEffect(() => {
+        setUserInfo({...user, id: Number(user.id)})
         const lastMsgDate = new HeroDate(user.last_msg_at)
         const prevDayStart = new HeroDate()
         const prevMidNight = new HeroDate()
@@ -96,12 +103,13 @@ const Contact = ({ user }) => {
         } else {
             setTimeStamp(lastMsgDate.formatedDate())
         }
+        // console.log(user)
         // console.log(prevDayStart.formatedDate(), prevDayStart.formatedTime(), prevMidNight.formatedDate(), prevMidNight.formatedTime())
     }, [user])
     
     useEffect(() => {
-        console.log(selectedContact, user.id)
-        setIsActive(selectedContact == user?.id)
+        // console.log(selectedContact, user.id)
+        setIsActive(selectedContact === Number(user.id))
     }, [selectedContact, user])
     return (
         <div onClick={togglwActive} className={`${styles['contact']} ${isActive ? styles['active'] : ''}`}>
@@ -110,7 +118,7 @@ const Contact = ({ user }) => {
             </div>
             <div className={styles['user-info']}>
                 <div className={styles['user-meta-data']}>
-                    <div className={styles['username']}>{userInfo?.username}</div>
+                    <div className={styles['username']}>{`${userInfo?.username}${isChatingWithMyself ? ' (You)' : ''}`}</div>
                     <div className={styles['last-msg']}>
                         {lastMessage?.content || lastMessage}
                     </div>
@@ -120,7 +128,8 @@ const Contact = ({ user }) => {
                         {timestamp}
                     </div>
                     <div className={styles['unread-msg-count']}>
-                        <div><p>2</p></div>
+                        {userInfo?.unread && userInfo.unread > 0 ?
+                        <div><p>{userInfo?.unread}</p></div> : ''}
                     </div>
                 </div>
             </div>

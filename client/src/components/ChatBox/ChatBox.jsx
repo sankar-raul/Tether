@@ -6,7 +6,7 @@ import useMsgSocket from '../../hook/useMsgSocket'
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
     const [ chatingWith, setChatingWith ] = useState(getContactInfo(selectedContact) || {})
-    const { messages, seenMap, sendMsg } = useMsgSocket(Number(selectedContact))
+    const { messages, seenMap, sendMsg, seeMsg } = useMsgSocket(Number(selectedContact))
     const [ text, setText ] = useState('')
     const [ chats, setChats ] = useState([])
     const handleInput = (e) => {
@@ -26,7 +26,14 @@ const ChatBox = () => {
         })
         setChats(chat)
         console.log(messages)
-    }, [messages, selectedContact])
+        console.log(chat)
+    }, [messages, selectedContact, seeMsg])
+    useEffect(() => {
+        if (!chatingWith || !chatingWith.unread) return
+        if (chatingWith.unread > 0) {
+            seeMsg(chatingWith.id)
+        }
+    }, [messages, chatingWith, seeMsg])
     useEffect(() => {
         setChatingWith(getContactInfo(selectedContact) ?? {})
     }, [selectedContact, getContactInfo])

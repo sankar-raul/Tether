@@ -86,10 +86,10 @@ io.on('connection', (socket) => {
         if (reciversSocketId) {
             const msg = await Message.pushMessage({ sender, reciver, content, tick: 2 })
             
-            if (reciversSocketId != socket.id) {
+            // if (reciversSocketId != socket.id) {
                 io.to(reciversSocketId).emit("message:recive" , msg)
                 return ackFunc(msg)
-            }
+            // }
         } else {
             const msg = await Message.pushMessage({ sender, reciver, content })
             return ackFunc(msg)
@@ -98,13 +98,14 @@ io.on('connection', (socket) => {
 
     socket.on("message:see", async ({sender}) => {
         if (!sender) return
+        console.log(sender)
         const { id:reciver } = socket.user
         const senderId = getIdFromUser(sender)
+        await Message.seen({
+        sender,
+        reciver
+        })
         if (senderId) {
-            await Message.seen({
-                sender,
-                reciver
-            })
             return io.to(senderId).emit("message:seen", {reciver, seen_at: Date.now()})
         }
     })
