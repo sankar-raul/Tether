@@ -33,7 +33,7 @@
 }
 
 .message-tag > div {
-    background-color: var(--chat-msg-bg);
+    background-color: var(--secondery-bg);
     padding: 4px 8px;
     border-radius: 12px;
     display: flex;

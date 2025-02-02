@@ -3,6 +3,13 @@ import useContacts from '../../context/contacts/contact'
 import styles from './chatbox.module.css'
 import useMsgSocket from '../../hook/useMsgSocket'
 import chatNavStyle from './chatNav.module.css'
+import PropTypes from 'prop-types'
+import videoIcon from '../../assets/svg/chat/video.svg'
+import callIcon from '../../assets/svg/chat/call-fff.svg'
+import messageSearchIcon from '../../assets/svg/chat/message-search.svg'
+import dotsIcon from '../../assets/svg/chat/dots.svg'
+
+
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
     const [ chatingWith, setChatingWith ] = useState(getContactInfo(selectedContact) || {})
@@ -79,9 +86,32 @@ const ChatContactHeader = () => {
     
     return (
         <nav className={chatNavStyle['chat-nav']}>
-            <div className={chatNavStyle['user-info']}>op</div>
-            <div className={chatNavStyle['nav-buttons']}></div>
+            <div className={chatNavStyle['user-info']}>
+                <div className={chatNavStyle['user-dp']}>
+                    <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src='/me.jpg' alt="" />
+                </div>
+                <div className={chatNavStyle['user-wraper']}>
+                    <div className={chatNavStyle['username']}>Sankar</div>
+                    <div className={chatNavStyle["user-status"]}>online</div>
+                </div>
+            </div>
+            <div className={chatNavStyle['nav-buttons']}>
+                <NavBtn src={videoIcon} />
+                <NavBtn src={callIcon} />
+                <NavBtn src={dotsIcon} />
+            </div>
         </nav>
     )
+}
+const NavBtn = ({src}) => {
+
+    return (
+        <div className={chatNavStyle['nav-btn']}>
+            <img src={src} alt="" />
+        </div>
+    )
+}
+NavBtn.propTypes = {
+    src: PropTypes.string.isRequired
 }
 export default ChatBox
