@@ -1,4 +1,25 @@
 .chat-box {
-    /* background-color: #0ff1; */
+    background-color: #0ff1;
+    display: grid;
+    grid-template-rows: 70px 1fr 70px;
+
+    background-color: red;
+    overflow-y: hidden;
+}
+.msgs {
+    overflow: hidden;
     overflow-y: auto;
+    background-color: blue;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column-reverse;
+    flex-flow: column-reverse;
+}
+.msgs > span {
+    display: inline;
+    background-color: aqua;
+}
+.msg-send-bar {
+    height: 70px;
+    overflow-x: hidden;
 }
