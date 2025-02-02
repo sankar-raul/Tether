@@ -42,6 +42,7 @@ html, body, #root {
   font-family: 'Istok Web', serif;
   letter-spacing: .5px;
   user-select: none;
+  background: #000;
 }
 input {
   font-family: 'Istok Web', serif;
