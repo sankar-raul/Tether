@@ -8,13 +8,13 @@
       "type": "image/x-icon"
     },
     {
-      "src": "/svg/tether.svg",
+      "src": "/svg/app-dark.svg",
       "type": "image/svg",
       "sizes": "192x192"
     },
     {
-      "src": "/svg/tether.svg",
-      "type": "image/png",
+      "src": "/svg/app-dark.svg",
+      "type": "image/svg",
       "sizes": "512x512"
     }
   ],
