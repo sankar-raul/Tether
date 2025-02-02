@@ -28,30 +28,41 @@
 .message-tag {
     padding: 2px 0px;
     display: flex;
+    position: relative;
     /* background-color: red; */
     /* justify-content: right; */
 }
 
-.message-tag > div {
+.message-tag > .message-body {
     background-color: var(--secondery-bg);
-    padding: 4px 8px;
+    padding: 6px 55px 12px 8px;
+    padding-bottom: 12px;
+    padding-right: 55px;
     border-radius: 12px;
     display: flex;
     justify-content: right;
     align-items: center;
-    width: clamp(100px, max-content, 600px);
-    min-width: 70px;
+    max-width: clamp(100px, 70%, 600px);
+    width: max-content;
     /* height: ; */
     font-size: .9rem;
+    flex-direction: column;
     cursor: pointer;
     padding-left: 16px;
+    /* overflow: hidden; */
+    position: relative;
 }
 .message-text {
     user-select: text;
     cursor: text;
 }
-.message-tag:hover > div {
+.message-tag:hover > .message-body {
     background: #4446;
+}
+.content {
+    word-wrap: normal;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 .me {
     justify-content: right;
@@ -59,7 +70,34 @@
 .not-me {
     justify-content: left;
 }
-.not-me > div {
+.not-me > .message-body {
+    padding-right: 35px;
+}
+.not-me > .message-body .message-status {
+    bottom: 7px;
+    right: 7px;
+}
+.not-me > .message-body > .content {
     justify-content: left;
     padding-right: 16px;
+}
+.message-status {
+    font-size: .5rem;
+    line-height: .3rem;
+    /* background-color: red; */
+    height: max-content;
+    color: var(--secondery-text);
+    position: absolute;
+    right: 3px;
+    bottom: 1px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.message-status > .tick {
+    height: 15px;
+    /* background-color: red; */
+}
+.message-status > .tick > img {
+    height: 100%;
 }

@@ -25,17 +25,16 @@ create table if not exists messages (
     foreign key (sender) references users(id),
     foreign key (reciver) references users(id)
 );
-alter table messages add column edited_at datetime;
 -- drop table users;
 -- delete from users where id <> 90;
 select * from users;
 select * from messages order by sent_at desc;
 
-update messages set content = "hii sir" where id = 53;
+-- update messages set content = "hii sir" where id = 53;
 
-select sender, MAX(sent_at) as latest_msg from messages where reciver = 1 group by sender order by latest_msg;
-select reciver, MAX(sent_at) as latest_msg from messages where sender = 1 group by reciver order by latest_msg;
+select sender, MAX(sent_at) as latest_msg from messages where reciver = 2 group by sender order by latest_msg;
+select reciver, MAX(sent_at) as latest_msg from messages where sender = 2 group by reciver order by latest_msg;
 select * from messages where sender = 1 and reciver = 2 order by sent_at desc limit 20;
 
-select * from ((select sender as q, MAX(sent_at) as latest_msg from messages where reciver = 2 and tick in (2, 3) group by sender order by latest_msg desc)
-union (select reciver as q, MAX(sent_at) as latest_msg from messages where sender = 2 group by reciver order by latest_msg desc)) as combined order by latest_msg desc;
+select * from ((select sender, MAX(sent_at) as latest_msg from messages where reciver = 1 and tick in (2, 3) group by sender)
+union (select reciver, MAX(sent_at) as latest_msg from messages where sender = 1 group by reciver)) as combined order by latest_msg desc;

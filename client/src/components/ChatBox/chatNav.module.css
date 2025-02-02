@@ -21,8 +21,9 @@
     /* overflow: hidden; */
 }
 .user-dp {
-    height: 70%;
+    height: 65%;
     aspect-ratio: 1 / 1;
+    cursor: pointer;
 }
 .user-dp > .dp-image {
     height: 100%;
@@ -36,6 +37,7 @@
     flex-direction: column;
     justify-content: center;
     max-width: clamp(50px, 20vw, 300px);
+    overflow: hidden;
 }
 .user-wraper > .username, .user-wraper > .user-status {
     line-height: 1.1rem;

@@ -141,11 +141,13 @@ const useMsgSocket = (contactId) => {
             setSeenMap(prev => prev.set(reciver, true))
             const messageMap = messageRef.get(reciver)
             messageMap.forEach((msg, key) => {
-                if (!msg.seen_at && msg.sender == reciver) {
+                if (!msg.seen_at && msg.reciver == reciver) {
+                    console.log(seen_at)
                     messageMap.set(key, {...msg, seen_at})
                 }
             })
             messageRef.set(reciver, messageMap)
+            console.log(messageRef)
             setMessages(new Map(messageRef))
         }
 
