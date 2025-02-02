@@ -21,8 +21,8 @@ export const register = async (req, res) => {
     res.cookie("secret", token, {
         sameSite: 'None',
         path: '/',
-        secure: true
-        
+        secure: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     })
     res.status(201).json({success: true, msg: "success", data: {id: data[0].insertId}})
 } catch (error) {
@@ -49,7 +49,8 @@ export const login = async (req, res) => {
             res.cookie("secret", token, {
                 sameSite: 'None',
                 path: '/',
-                secure: true
+                secure: true,
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             })
             return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id}})
         } else {

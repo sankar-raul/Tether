@@ -26,7 +26,7 @@ chatRouter.get('/lastMessage/:id', async (req, res) => {
     const userID = req.user.id
     try {
         const data = await pool.execute("select sender, reciver, content from messages where sent_at = (select max(sent_at) from messages where (sender = ? and reciver = ?) or (reciver = ? and sender = ?))", [id, userID, id, userID])
-        console.log(data[0][0])
+        // console.log(data[0][0])
         if (userID != id && !data[0][0]) {
             return res.status(200).json({
                 success: true,
@@ -35,7 +35,7 @@ chatRouter.get('/lastMessage/:id', async (req, res) => {
             })
         } else {
             const unread = await pool.execute('select count(*) as unread from messages where sender = ? and reciver = ? and tick in (1, 2)', [id, userID])
-            console.log(unread)
+            // console.log(unread)
             return res.status(200).json({
                 success: true,
                 msg: "success",
