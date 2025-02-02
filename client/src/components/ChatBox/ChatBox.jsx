@@ -53,11 +53,13 @@ const ChatBox = () => {
                 <ChatContactHeader />
                 {/* <h1>Chatting with {chatingWith.username}</h1> */}
               <main className={styles['msgs']}>
-                <div ref={scrollRef} className={styles['scroll']}>scroll</div>
+                <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
               {
                 chats.slice().reverse().map(msg =>
-                <div key={msg.id}>
-                    <span name={msg.id} style={msg.sender == chatingWith.id ? {float: 'left'} : {float: 'right'}}>{msg.content}</span>
+                <div className={`${styles['message-tag']} ${msg.reciver != chatingWith.id ? styles['not-me'] : styles['me']}`} key={msg.id}>
+                    <div name={msg.id}>
+                        <span className={styles['message-text']}>{msg.content}</span>
+                    </div>
                 </div>
                 )
               }
@@ -77,7 +79,8 @@ const ChatContactHeader = () => {
     
     return (
         <nav className={chatNavStyle['chat-nav']}>
-header
+            <div className={chatNavStyle['user-info']}>op</div>
+            <div className={chatNavStyle['nav-buttons']}></div>
         </nav>
     )
 }

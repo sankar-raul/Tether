@@ -1,3 +1,18 @@
 .chat-nav {
     background-color: var(--secondery-bg);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    position: relative;
+}
+.user-info {
+    width: 100px;
+    border: 1px solid red;
+    height: 100%;
+}
+.nav-buttons {
+    width: 80px;
+    border: 1px solid red;
+    height: 100%;
 }

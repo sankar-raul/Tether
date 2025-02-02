@@ -1,25 +1,65 @@
 .chat-box {
     background-color: #0ff1;
     display: grid;
-    grid-template-rows: 70px 1fr 70px;
+    grid-template-rows: 60px 1fr 60px;
 
-    background-color: red;
+    background-color: var(--secondery-bg);
     overflow-y: hidden;
 }
 .msgs {
     overflow: hidden;
     overflow-y: auto;
-    background-color: blue;
     flex-grow: 1;
     display: flex;
     flex-direction: column-reverse;
     flex-flow: column-reverse;
+    padding: 0 5px;
+    gap: 1px;
 }
-.msgs > span {
-    display: inline;
-    background-color: aqua;
+.scroll {
+    line-height: 1px;
+    width: 100%;
 }
 .msg-send-bar {
-    height: 70px;
+    /* height: 70px; */
     overflow-x: hidden;
+    background: var(--secondery-bg);
+}
+.message-tag {
+    padding: 2px 0px;
+    display: flex;
+    /* background-color: red; */
+    /* justify-content: right; */
+}
+
+.message-tag > div {
+    background-color: var(--chat-msg-bg);
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: clamp(100px, max-content, 600px);
+    min-width: 70px;
+    /* height: ; */
+    font-size: .9rem;
+    cursor: pointer;
+    padding-left: 16px;
+}
+.message-text {
+    user-select: text;
+    cursor: text;
+}
+.message-tag:hover > div {
+    background: #4446;
+}
+.me {
+    justify-content: right;
+}
+.not-me {
+    justify-content: left;
+}
+.not-me > div {
+    justify-content: left;
+    padding-right: 16px;
 }
