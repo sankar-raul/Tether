@@ -36,9 +36,10 @@ const ChatBox = () => {
     }
     useEffect(() => {
         const chat = []
-        messages.get(Number(selectedContact))?.forEach((item) => {
-            chat.push(item)
+        messages.get(Number(selectedContact))?.forEach((item, key) => {
+            chat.push({...item, key})
         })
+        console.log(messages)
         setChats(chat)
         // console.log(messages)
         // console.log(chat)
@@ -68,7 +69,7 @@ const ChatBox = () => {
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
               {
                 chats.slice().reverse().map(msg =>
-                    <MessageTag key={msg.id} msg={msg} chatingWith={chatingWith} />
+                    <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
                 )
               }
               </main>
@@ -96,9 +97,10 @@ const MessageTag = ({msg, chatingWith}) => {
         } else if (msg.recived_at) {
             setTickImg(doubleTickIcon)
         } else if (msg.sent_at) {
-            setTickImg(singleTickIcon)
-        } else {
-            setTickImg(pendingTickIcon)
+            if (msg.tick == 0)
+                setTickImg(pendingTickIcon)
+            else
+                setTickImg(singleTickIcon)
         }
         if (msg.sent_at) {
             setMsgTime(getFormatedTime(msg.sent_at))
@@ -134,7 +136,7 @@ const ChatContactHeader = ({ user }) => {
                     <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src='/me.jpg' alt="" />
                 </div>
                 <div className={chatNavStyle['user-wraper']}>
-                    <div className={chatNavStyle['username']}>{user.username || 'username'}</div>
+                    <div className={chatNavStyle['username']}>{user.username || ''}</div>
                     <div className={chatNavStyle["user-status"]}>online</div>
                 </div>
             </div>

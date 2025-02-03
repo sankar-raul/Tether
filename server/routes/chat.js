@@ -12,10 +12,14 @@ chatRouter.get('/messages/:contact_id', async (req, res) => {
     const { contact_id } = req.params
     if (!contact_id) return res.status(400).json({success: false, msg: "bad request!"})
     try {
-    const msg_sent = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
-    const msg_recived = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])
-    const messages = sortMessages(msg_sent[0], msg_recived[0])
-    res.status(200).json(messages)
+        if (id == contact_id) {
+            const msgs = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
+            return res.status(200).json(msgs[0])
+        }
+        const msg_sent = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
+        const msg_recived = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])
+        const messages = sortMessages(msg_sent[0], msg_recived[0])
+        return res.status(200).json(messages)
     } catch (error) {
         console.log("error")
         return res.status(500).json({success: false, msg: "internal server error!"})

@@ -4,8 +4,14 @@ import apiRequest from "./apiRequest"
 import useContacts from "../context/contacts/contact"
 import NotifyTone from "../utils/notificationSound"
 
-const messageRef = new Map() // contact_id -> message_id -> message_object
+const messageRef = new Map() // contact_id -> local_id -> message_object
 const unreadMsgRef = new Map() // contact_id -> int
+const msgIdToLocalIdRef = new Map() // msg_id -> local_id
+
+const getUniqeMessageId = (...args) => {
+    const uniqueId = `${String(args)}+${Date.now()}+${Math.random()}`
+    return uniqueId
+}
 
 const incrementUnread = (id, value) => {
     if (value == -1) {
@@ -26,43 +32,46 @@ const useMsgSocket = (contactId) => {
     const { shiftUpContact, updateContactInfo, selectedContact } = useContacts()
 
 
-    const seeMsg = useCallback((id) => {
-        if (!id) return
-        console.log(id, "dfdfd")
-        id = Number(id)
-        if (!messageRef.has(id)) return
+    const seeMsg = useCallback((contact_id) => { // ok
+        if (!contact_id) return
+        contact_id = Number(contact_id)
+        if (!messageRef.has(contact_id)) return
         try {
-            socket.emit('message:see', { sender: id })
-            updateContactInfo(id, {unread: 0})
-            const messageMap = messageRef.get(id)
+            socket.emit('message:see', { sender: contact_id })
+            updateContactInfo(contact_id, {unread: 0})
+            const messageMap = messageRef.get(contact_id)
             messageMap.forEach((msg, key) => {
-                if (!msg.seen_at && msg.sender == id) {
+                if (!msg.seen_at && msg.sender == contact_id) {
                     messageMap.set(key, {...msg, seen_at: new Date().toISOString()})
                 }
             })
-            messageRef.set(id, messageMap)
+            messageRef.set(contact_id, messageMap)
             setMessages(new Map(messageRef))
-            incrementUnread(id, -1)
+            incrementUnread(contact_id, -1)
         } catch (error) {
             console.log("Error while seeing messages", error)
         }
     }, [updateContactInfo])
 
     // get past conversations
-    const getInitialMessages = useCallback(async (id) => {
+    const getInitialMessages = useCallback(async (id) => { // ok
         id = Number(id)
         // console.log(id, "opp")
+        let local_id
         if (!id || messageRef.has(id)) return
         const [response, error] = await apiRequest(`/chat/messages/${id}`)
         if (!error) {
+            console.log(response)
             const messageMap = new Map()
             response.forEach(msg => {
                 if (msg.sender == id && !msg.seen_at) {
                     incrementUnread(id, 1)
                 }
-                messageMap.set(msg.id, msg)
+                local_id = getUniqeMessageId(id)
+                messageMap.set(local_id, msg)
+                msgIdToLocalIdRef.set(msg.id, local_id)
             })
-            console.log(unreadMsgRef.get(id))
+            console.log(messageMap, "op")
             updateContactInfo(id, {unread: unreadMsgRef.get(id)})
             // console.log(response)
             messageRef.set(id, messageMap)
@@ -76,19 +85,34 @@ const useMsgSocket = (contactId) => {
     }, [contactId, getInitialMessages])
 
     // send message to selected contact
-    const sendMsg = useCallback(async (content) => {
+    const sendMsg = useCallback(async (content) => { // ok
         content = content.trim()
         if (content) {
             try {
+                const local_id = getUniqeMessageId(contactId)
+                const messageMap = messageRef.get(contactId) || new Map()
+                // *****************************
+                // message sent pending status update
+                const msg = {
+                    content,
+                    sent_at: new Date().toISOString(),
+                    reciver: contactId,
+                    tick: 0
+                }
+                messageMap.set(local_id, msg)
+                messageRef.set(contactId, messageMap)
+                setMessages(new Map(messageRef))
+                shiftUpContact(contactId, msg)
+                // *****************************
                 const message = await socket.emitWithAck('message:send', {content, reciver: contactId})
                 if (message == 'error') {
                     console.log("message send error!")
+                    alert('message sent error!')
                 } else {
-                    const messageMap = messageRef.get(contactId) || new Map()
-                    messageMap.set(message.id, message)
+                    msgIdToLocalIdRef.set(message.id, local_id)
+                    messageMap.set(local_id, message)
                     messageRef.set(contactId, messageMap)
                     setMessages(new Map(messageRef))
-                    shiftUpContact(contactId, message)
                     NotifyTone.sent()
             }
             // console.log(messages)
@@ -100,7 +124,7 @@ const useMsgSocket = (contactId) => {
 
     useEffect(() => {
         // push new message to message Map
-        const msgRecived = (message) => {
+        const msgRecived = (message) => { // op
             console.log(message)
             console.log(message.id, contactId)
             let { sender } = message
@@ -110,9 +134,11 @@ const useMsgSocket = (contactId) => {
             } else {
                 incrementUnread(sender, 1)
             }
+            const local_id = getUniqeMessageId(message.sender, message.reciver)
             console.log(sender)
+            msgIdToLocalIdRef.set(message.id, local_id)
             const messageMap = messageRef.get(sender) || new Map()
-            messageMap.set(message.id, message)
+            messageMap.set(local_id, {...message, local_id})
             messageRef.set(sender, messageMap)
             setMessages(new Map(messageRef))
             shiftUpContact(sender, {...message, unread: unreadMsgRef.get(sender)})
@@ -123,19 +149,20 @@ const useMsgSocket = (contactId) => {
         }
 
         // delete a single message by msg_id
-        const msgDeleted = ({msg_id, sender}) => {
-            msg_id = Number(msg_id)
+        const msgDeleted = ({msg_id, sender}) => { // op
             sender = Number(sender)
-            if (!messageRef.has(sender) || !messageRef.get(sender).has(msg_id)) {
+            const local_id = msgIdToLocalIdRef.get(Number(msg_id))
+            if (!messageRef.has(sender) || !messageRef.get(sender).has(local_id)) {
                 return
             }
             const messageMap = new Map(messageRef.get(sender))
-            messageMap.delete(msg_id)
+            messageMap.delete(local_id)
             messageRef.set(messageMap)
             setMessages(new Map(messageMap))
+            msgIdToLocalIdRef.delete(Number(msg_id))
         }
 
-        const seenAll = async (seen_at, reciver) => {
+        const seenAll = async (seen_at, reciver) => { // op
             reciver = Number(reciver)
             if (!messageRef.has(reciver)) return
             setSeenMap(prev => prev.set(reciver, true))
@@ -152,42 +179,48 @@ const useMsgSocket = (contactId) => {
         }
 
         // seen all messages for a specific contact
-        const msgSeen = ({reciver, seen_at}) => {
+        const msgSeen = ({reciver, seen_at}) => { // op
             seenAll(seen_at, reciver)
         }
 
         // edit message content by msg_id for a specific contact
-        const msgEdited = ({msg_id, newContent, edited_at, sender}) => {
+        const msgEdited = ({msg_id, newContent, edited_at, sender}) => { // op
             sender = Number(sender)
-            msg_id = Number(msg_id)
-            if (!messageRef.has(sender) || !messageRef.get(sender).has(msg_id)) return
+            const local_id = msgIdToLocalIdRef.get(Number(msg_id))
+            if (!messageRef.has(sender) || !messageRef.get(sender).has(local_id)) return
             const messageMap = new Map(messageRef.get(sender))
-            messageMap.set(msg_id, {...messageMap.get(msg_id), content: newContent, edited_at})
+            messageMap.set(local_id, {...messageMap.get(local_id), content: newContent, edited_at})
             messageRef.set(sender, messageMap)
             setMessages(new Map(messageRef))
         }
 
         // update message status based on tick 1|2|3
-        const msgStatus = ({msg_id, tick, reciver, recived_at}) => {
-            msg_id = Number(msg_id)
+        const msgStatus = ({msg_id, tick, reciver, recived_at}) => { // op
             reciver = Number(reciver)
-            if (!messageRef.has(reciver) || !messageRef.get(reciver).has(msg_id)) return
+            const local_id = msgIdToLocalIdRef.get(Number(msg_id))
+            if (!messageRef.has(reciver) || !messageRef.get(reciver).has(local_id)) return
             const messageMap = new Map(messageRef.get(reciver))
-            messageMap.set(msg_id, {...messageMap.get(msg_id), tick, recived_at})
+            messageMap.set(local_id, {...messageMap.get(local_id), tick, recived_at})
             messageRef.set(reciver, messageMap)
             setMessages(new Map(messageRef))
         }
 
         // delete all messages from message Map for given contact
-        const msgDeletedAll = ({sender}) => {
+        const msgDeletedAll = ({sender}) => { // op
             sender = Number(sender)
             if (!messageRef.has(sender)) return
-            messageRef.delete(sender)
+            const messageMap = messageRef.get(sender)
+            messageMap.forEach((msg, key) => {
+                msgIdToLocalIdRef.delete(msg.id)
+                messageMap.delete(key)
+            })
+            messageRef.set(sender, messageMap)
+            // messageRef.delete(sender)
             setMessages(new Map(messageRef))
         }
 
         // listen for undeliverd messages
-        const waitedMessages = (messages) => {
+        const waitedMessages = (messages) => { // done
             messages.forEach(msgRecived)
         }
         // listen for messages
