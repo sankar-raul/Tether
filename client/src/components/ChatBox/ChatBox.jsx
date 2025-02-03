@@ -11,6 +11,7 @@ import dotsIcon from '../../assets/svg/chat/dots.svg'
 import singleTickIcon from '../../assets/svg/chat/single-tick.svg'
 import doubleTickIcon from '../../assets/svg/chat/double-tick.svg'
 import blueTickIcon from '../../assets/svg/chat/blue-tick.svg'
+import pendingTickIcon from '../../assets/svg/chat/pending.svg'
 import { HeroDate } from '../../utils/date'
 
 
@@ -82,7 +83,7 @@ const ChatBox = () => {
     )
 }
 const MessageTag = ({msg, chatingWith}) => {
-    const [ tickImg, setTickImg ] = useState(doubleTickIcon)
+    const [ tickImg, setTickImg ] = useState(singleTickIcon)
     const [ msgTime, setMsgTime ] = useState('')
     const getFormatedTime = useCallback((dateString) => {
         const date = new HeroDate(dateString)
@@ -96,9 +97,11 @@ const MessageTag = ({msg, chatingWith}) => {
             setTickImg(doubleTickIcon)
         } else if (msg.sent_at) {
             setTickImg(singleTickIcon)
+        } else {
+            setTickImg(pendingTickIcon)
         }
         if (msg.sent_at) {
-            setMsgTime(getFormatedTime(msg.seen_at))
+            setMsgTime(getFormatedTime(msg.sent_at))
         }
     }, [msg, getFormatedTime])
     return (
