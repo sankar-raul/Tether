@@ -1,5 +1,5 @@
 import styles from './navbar.module.css'
-import appLogo from '../../assets/svg/app-dark.svg'
+import appLogo from '../../assets/images/app-dark.png'
 import useUserInfo from '../../context/userInfo/userInfo'
 import { useEffect } from 'react'
 const Navbar = () => {
