@@ -9,17 +9,17 @@
     },
     {
       "src": "/svg/app-dark.svg",
-      "type": "image/svg",
+      "type": "image/svg+xml",
       "sizes": "192x192"
     },
     {
       "src": "/svg/app-dark.svg",
-      "type": "image/svg",
+      "type": "image/svg+xml",
       "sizes": "512x512"
     }
   ],
   "start_url": "/login",
   "display": "standalone",
-  "theme_color": "#000",
-  "background_color": ""
+  "theme_color": "#000000",
+  "background_color": "#000000"
 }
