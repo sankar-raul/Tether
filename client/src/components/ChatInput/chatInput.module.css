@@ -1,11 +1,13 @@
 .msg-send-bar {
+    min-height: 55px;
+    height: 55px;
     overflow-x: hidden;
     /* border: 1px solid red; */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 10px;
-    background: var(--secondery-bg);
+    /* background: var(--secondery-bg); */
 
 }
 .msg-send-bar-wraper {
@@ -26,7 +28,7 @@
     flex-grow: 1;
     height: 90%;
 }
-.chat-input > input {
+.chat-input > .input {
     background: var(--secondery-bg);
     height: 100%;
     border-radius: 20px;
@@ -38,10 +40,14 @@
     width: 100%;
     outline: none;
     border: none;
+
     &:focus {
         border: none;
         outline: none;
     }
+}
+.chat-input > .input::spelling-error {
+    text-decoration: none;
 }
 .message-send-btn {
     display: flex;
@@ -54,6 +60,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: .1s ease-out;
 
     &:active {
         opacity: .9;
@@ -69,4 +76,9 @@
     border-radius: 50%;
     object-fit: cover;
     aspect-ratio: 1 / 1;
+    transition: .1s ease-out;
+
+    &:active {
+        opacity: .8;
+    }
 }

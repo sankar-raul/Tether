@@ -95,6 +95,11 @@ const MessageTag = ({msg, chatingWith}) => {
     }, [msg, getFormatedTime])
     return (
         <div className={`${styles['message-tag']} ${msg.reciver != chatingWith.id ? styles['not-me'] : styles['me']}`} key={msg.id}>
+            {msg.reciver == chatingWith.id ? 
+            <div className={styles['msg-options']}>
+                menu
+            </div> : ''
+            }
             <div className={styles['message-body']}>
                 <div className={styles['content']} name={msg.id}>
                     <span className={styles['message-text']}>{msg.content}</span>
@@ -107,6 +112,11 @@ const MessageTag = ({msg, chatingWith}) => {
                     : ''}
                 </div>
             </div>
+            {msg.reciver != chatingWith.id ? 
+            <div className={styles['msg-options']}>
+                op
+            </div> : ''
+            }
         </div>
     )
 }
@@ -114,6 +124,7 @@ MessageTag.propTypes = {
     msg: PropTypes.object.isRequired,
     chatingWith: PropTypes.object.isRequired
 }
+
 const ChatContactHeader = ({ user }) => {
     
     return (

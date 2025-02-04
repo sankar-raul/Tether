@@ -1,7 +1,7 @@
 .chat-box {
     background-color: #0ff1;
     display: grid;
-    grid-template-rows: 60px 1fr 60px;
+    grid-template-rows: 60px 1fr max-content;
 
     background-color: var(--secondery-bg);
     overflow-y: hidden;
@@ -24,6 +24,8 @@
     padding: 2px 0px;
     display: flex;
     position: relative;
+    align-items: center;
+    gap: 5px;
     /* background-color: red; */
     /* justify-content: right; */
 }
@@ -95,4 +97,14 @@
 }
 .message-status > .tick > img {
     height: 100%;
+}
+.msg-options {
+    background-color: var(--secondery-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+.message-tag:hover > .msg-options {
+    display: block;
 }
