@@ -63,7 +63,7 @@ const ChatBox = () => {
         <>
         {selectedContact != null && selectedContact != 0 ?
             <section className={styles['chat-box']}>
-                <ChatContactHeader user={chatingWith}/>
+                <ChatContactHeader user={chatingWith} />
                 {/* <h1>Chatting with {chatingWith.username}</h1> */}
               <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
@@ -133,7 +133,7 @@ const ChatContactHeader = ({ user }) => {
         <nav className={chatNavStyle['chat-nav']}>
             <div className={chatNavStyle['user-info']}>
                 <div className={chatNavStyle['user-dp']}>
-                    <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src='/me.jpg' alt="" />
+                    <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src='/me.jpg' alt={user.username} />
                 </div>
                 <div className={chatNavStyle['user-wraper']}>
                     <div className={chatNavStyle['username']}>{user.username || ''}</div>
