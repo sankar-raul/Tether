@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useContacts from '../../context/contacts/contact'
 import styles from './chatbox.module.css'
-import useMsgSocket from '../../hook/useMsgSocket'
 import chatNavStyle from './chatNav.module.css'
 import PropTypes from 'prop-types'
 import videoIcon from '../../assets/svg/chat/video.svg'
@@ -13,27 +12,18 @@ import doubleTickIcon from '../../assets/svg/chat/double-tick.svg'
 import blueTickIcon from '../../assets/svg/chat/blue-tick.svg'
 import pendingTickIcon from '../../assets/svg/chat/pending.svg'
 import { HeroDate } from '../../utils/date'
+import ChatInput from '../ChatInput/ChatInput'
+import useChat from '../../context/chatSocket/chatSocket'
 
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
     const [ chatingWith, setChatingWith ] = useState(getContactInfo(selectedContact) || {})
-    const { messages, sendMsg, seeMsg } = useMsgSocket(Number(selectedContact))
-    const [ text, setText ] = useState('')
+    const { messages, seeMsg } = useChat()
     const [ chats, setChats ] = useState([])
     const scrollRef = useRef(null)
 
-    const handleInput = (e) => {
-        setText(e.target.value)
-    }
-    const send = () => {
-        scrollRef.current.scrollIntoView()
-        const messageContent = text.trim()
-        if (messageContent.length > 0) {
-            setText('')
-            sendMsg(messageContent)
-        }
-    }
+    
     useEffect(() => {
         const chat = []
         messages.get(Number(selectedContact))?.forEach((item, key) => {
@@ -73,10 +63,7 @@ const ChatBox = () => {
                 )
               }
               </main>
-              <div className={styles['msg-send-bar']}>
-                <input onChange={handleInput} type="text" value={text} />
-                <button onClick={send}>Send</button>
-              </div>
+              <ChatInput scrollRef={scrollRef}/>
             </section>
             : <section>Please select a contact</section>
 }

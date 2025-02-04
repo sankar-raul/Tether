@@ -20,11 +20,6 @@
     line-height: 1px;
     width: 100%;
 }
-.msg-send-bar {
-    /* height: 70px; */
-    overflow-x: hidden;
-    background: var(--secondery-bg);
-}
 .message-tag {
     padding: 2px 0px;
     display: flex;

@@ -1,3 +1,4 @@
+import ChatProvider from "../../context/chatSocket/provider"
 import MessageProvider from "../../context/messages/provider"
 import useTabs from "../../context/Tabs/tabs"
 import CallBox from "../CallBox/CallBox"
@@ -8,9 +9,11 @@ const RightContainer = () => {
     
     return (
         <MessageProvider>
-            <div className={styles['right-container']}>
-                { currentTab == 'chat' ? <ChatBox /> : <CallBox /> }
-            </div>
+            <ChatProvider>
+                <div className={styles['right-container']}>
+                    { currentTab == 'chat' ? <ChatBox /> : <CallBox /> }
+                </div>
+            </ChatProvider>
         </MessageProvider>
     )
 }
