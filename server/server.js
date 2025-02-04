@@ -86,10 +86,12 @@ io.on('connection', (socket) => {
         if (reciversSocketId) {
             const msg = await Message.pushMessage({ sender, reciver, content, tick: 2 })
             
-            // if (reciversSocketId != socket.id) {
+            if (reciversSocketId == socket.id) {
+                return ackFunc(msg)
+            } else {
                 io.to(reciversSocketId).emit("message:recive" , msg)
                 return ackFunc(msg)
-            // }
+            }
         } else {
             const msg = await Message.pushMessage({ sender, reciver, content })
             return ackFunc(msg)

@@ -9,10 +9,14 @@ export default class Msg {
     async pushMessage({sender, reciver, content, tick = 1}) {
         try {
             let data
-            if (tick == 2)
-                data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at) value (?, ?, ?, 2, now())", [sender, reciver, content])
-            else
-                data = await pool.execute("insert into messages (sender, reciver, content, tick) value (?, ?, ?, 1)", [sender, reciver, content])
+            if (sender == reciver) {
+                data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at, seen_at) value (?, ?, ?, 3, now(), now())", [sender, reciver, content])
+            } else {
+                if (tick == 2)
+                    data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at) value (?, ?, ?, 2, now())", [sender, reciver, content])
+                else
+                    data = await pool.execute("insert into messages (sender, reciver, content, tick) value (?, ?, ?, 1)", [sender, reciver, content])
+            }
             const msg = await pool.execute("select * from messages where id = ?", [ data[0].insertId ])
             return msg[0][0]
         } catch (error) {
