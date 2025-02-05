@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
     // console.log(socket.user)
     console.log(socket.user.username, "connected")
 
-    socket.on("message:send", async ({reciver, content}, ackFunc) => { // private chat
+    socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
         console.log(reciver, content)
         if (!ackFunc) return
@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
         }
         const reciversSocketId = getIdFromUser(reciver)
         if (reciversSocketId) {
-            const msg = await Message.pushMessage({ sender, reciver, content, tick: 2 })
+            const msg = await Message.pushMessage({ sender, reciver, content, tick: 2, sent_at })
             
             if (reciversSocketId == socket.id) {
                 return ackFunc(msg)
@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
                 return ackFunc(msg)
             }
         } else {
-            const msg = await Message.pushMessage({ sender, reciver, content })
+            const msg = await Message.pushMessage({ sender, reciver, content, sent_at })
             return ackFunc(msg)
         }
     })

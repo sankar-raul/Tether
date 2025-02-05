@@ -6,16 +6,20 @@ export default class Msg {
     constructor() {
 
     }
-    async pushMessage({sender, reciver, content, tick = 1}) {
+    async pushMessage({sender, reciver, content, tick = 1, sent_at}) {
+        if (!sender || !reciver || !content || !tick || !sent_at) {
+            throw new Error('invalid function call')
+        }
         try {
+            sent_at = sent_at.slice(0, 19).replace('T', ' ')
             let data
             if (sender == reciver) {
-                data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at, seen_at) value (?, ?, ?, 3, now(), now())", [sender, reciver, content])
+                data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at, seen_at, sent_at) value (?, ?, ?, 3, now(), now(), ?)", [sender, reciver, content, sent_at])
             } else {
                 if (tick == 2)
-                    data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at) value (?, ?, ?, 2, now())", [sender, reciver, content])
+                    data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at, sent_at) value (?, ?, ?, 2, now(), ?)", [sender, reciver, content, sent_at])
                 else
-                    data = await pool.execute("insert into messages (sender, reciver, content, tick) value (?, ?, ?, 1)", [sender, reciver, content])
+                    data = await pool.execute("insert into messages (sender, reciver, content, tick, sent_at) value (?, ?, ?, 1, ?)", [sender, reciver, content, sent_at])
             }
             const msg = await pool.execute("select * from messages where id = ?", [ data[0].insertId ])
             return msg[0][0]

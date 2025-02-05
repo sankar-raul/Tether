@@ -93,9 +93,10 @@ const useMsgSocket = (contactId) => {
                 const messageMap = messageRef.get(contactId) || new Map()
                 // *****************************
                 // message sent pending status update 
+                const sent_at = new Date().toISOString();
                 const msg = {
                     content,
-                    sent_at: new Date().toISOString(),
+                    sent_at,
                     reciver: contactId,
                     tick: 0
                 }
@@ -104,7 +105,7 @@ const useMsgSocket = (contactId) => {
                 setMessages(new Map(messageRef))
                 shiftUpContact(contactId, msg)
                 // *^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
-                const message = await socket.emitWithAck('message:send', {content, reciver: contactId})
+                const message = await socket.emitWithAck('message:send', {content, reciver: contactId, sent_at})
                 if (message == 'error') {
                     console.log("message send error!")
                     alert('message sent error!')
