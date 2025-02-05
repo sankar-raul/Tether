@@ -2,6 +2,7 @@ show databases;
 create database tether;
 use tether;
 SET SQL_SAFE_UPDATES = 0;
+
 create table if not exists users (
 	id bigint auto_increment primary key,
     username varchar(50) not null,
@@ -29,7 +30,6 @@ create table if not exists messages (
 -- delete from users where id <> 90;
 select * from users;
 select * from messages order by sent_at desc;
-
 -- update messages set content = "hii sir" where id = 53;
 
 select sender, MAX(sent_at) as latest_msg from messages where reciver = 2 group by sender order by latest_msg;
