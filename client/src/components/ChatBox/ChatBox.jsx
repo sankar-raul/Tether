@@ -51,22 +51,23 @@ const ChatBox = () => {
     }, [scrollRef, selectedContact])
     return (
         <>
-        {selectedContact != null && selectedContact != 0 ?
             <section className={styles['chat-box']}>
+            {selectedContact != null && selectedContact != 0 ?
+            <>
                 <ChatContactHeader user={chatingWith} />
-                {/* <h1>Chatting with {chatingWith.username}</h1> */}
-              <main className={styles['msgs']}>
+                <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
-              {
-                chats.slice().reverse().map(msg =>
-                    <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
-                )
-              }
-              </main>
-              <ChatInput scrollRef={scrollRef}/>
-            </section>
+                {
+                    chats.slice().reverse().map(msg =>
+                        <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
+                    )
+                }
+                </main>
+                <ChatInput scrollRef={scrollRef}/>
+            </>
             : <section>Please select a contact</section>
-}
+            }
+            </section>
         </>
     )
 }
@@ -95,11 +96,6 @@ const MessageTag = ({msg, chatingWith}) => {
     }, [msg, getFormatedTime])
     return (
         <div className={`${styles['message-tag']} ${msg.reciver != chatingWith.id ? styles['not-me'] : styles['me']}`} key={msg.id}>
-            {msg.reciver == chatingWith.id ? 
-            <div className={styles['msg-options']}>
-                menu
-            </div> : ''
-            }
             <div className={styles['message-body']}>
                 <div className={styles['content']} name={msg.id}>
                     <span className={styles['message-text']}>{msg.content}</span>
@@ -112,17 +108,58 @@ const MessageTag = ({msg, chatingWith}) => {
                     : ''}
                 </div>
             </div>
-            {msg.reciver != chatingWith.id ? 
-            <div className={styles['msg-options']}>
-                op
-            </div> : ''
-            }
+            <MsgContextMenu />
         </div>
     )
 }
 MessageTag.propTypes = {
     msg: PropTypes.object.isRequired,
     chatingWith: PropTypes.object.isRequired
+}
+
+const MsgContextMenu = () => {
+    const [ menuDisplay, setMenuDisplay ] = useState('none')
+    const [ mousePositions, setMousePositions ] = useState({})
+    const [ menuPositions, setMenuPositions ] = useState({})
+
+    const menuRef = useRef(null)
+    const handleDisplay = (isShow, e) => {
+        console.log(isShow)
+        setMenuDisplay(isShow ? 'block' : 'none')
+        if (isShow) {
+            console.log(e.clientX, e.clientY)
+            setMousePositions({x: e.clientX, y: e.clientY})
+        }
+    }
+    useEffect(() => {
+        if (menuDisplay == 'block') {
+            const { offsetWidth:menuWidth, offsetHeight:menuHeight } = menuRef.current
+            console.log(menuRef)
+            setMenuPositions({top: mousePositions.y, left: mousePositions.x - menuWidth})
+        }
+    }, [menuDisplay, mousePositions])
+    return (
+        <>
+            <div className={styles['msg-context-menu']}>
+                <div onClick={(e) => handleDisplay(true, e)} className={styles['context-icon-wraper']}>
+                    <img className={styles['context-menu-icon']} src={dotsIcon} alt="context menu" />
+                </div>
+            </div>
+            <div onClick={() => handleDisplay(false)} style={{display: menuDisplay}} className={styles['main-context-menu']}>
+                <div ref={menuRef} style={{marginTop: `${menuPositions.top}px`, marginLeft: `${menuPositions.left}px`}} className={styles['menu']}>
+                    <div>
+                        <p>Copy</p>
+                    </div>
+                    <div>
+                        <p>Edit</p>
+                    </div>
+                    <div>
+                        <p>Delete</p>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
 }
 
 const ChatContactHeader = ({ user }) => {

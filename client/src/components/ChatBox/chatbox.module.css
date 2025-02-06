@@ -7,8 +7,9 @@
     overflow-y: hidden;
 }
 .msgs {
-    overflow: hidden;
+    /* overflow: hidden; */
     overflow-y: auto;
+    max-width: 100%;
     flex-grow: 1;
     display: flex;
     flex-direction: column-reverse;
@@ -25,17 +26,19 @@
     display: flex;
     position: relative;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
+    flex-flow: row-reverse;
     /* background-color: red; */
     /* justify-content: right; */
 }
 
 .message-tag > .message-body {
-    background-color: var(--secondery-bg);
+    background: var(--secondery-bg);
     padding: 6px 55px 12px 8px;
     padding-bottom: 12px;
     padding-right: 55px;
     border-radius: 12px;
+    border-radius: 12px 12px 12px 12px;
     display: flex;
     justify-content: right;
     align-items: center;
@@ -66,6 +69,7 @@
 }
 .not-me {
     justify-content: left;
+    flex-flow: row;
 }
 .not-me > .message-body {
     padding-right: 35px;
@@ -98,13 +102,76 @@
 .message-status > .tick > img {
     height: 100%;
 }
-.msg-options {
-    background-color: var(--secondery-bg);
+.msg-context-menu {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 20px;
+    /* border: 1px solid blue; */
+    aspect-ratio: 1 / 1;
     display: none;
 }
-.message-tag:hover > .msg-options {
-    display: block;
+.message-tag:hover > .msg-context-menu {
+    display: flex;
+}
+.context-icon-wraper {
+    /* border: 1px solid #f00; */
+    height: 100%;
+    background: var(--brand-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border-radius: 50% 0% 50% 50%;
+    cursor: pointer;
+    transform: rotate(45deg);
+}
+.context-icon-wraper > .context-menu-icon {
+    /* background-color: #fff; */
+    height: 50%;
+    transform: rotate(-45deg);
+}
+.main-context-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    backdrop-filter: brightness(90%);
+}
+.main-context-menu .menu {
+    background-color: var(--solid-bg);
+    border-radius: var(--radius-small);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 40%;
+    overflow: hidden;
+    max-width: 200px;
+    animation: fade-in .1s ease;
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translate(50%) scale(.5);
+    } to {
+        opacity: 1;
+        transform: translate(0%) scale(1);
+    }
+}
+.menu > div {
+    padding: 10px 10px;
+    width: 100%;
+    cursor: pointer;
+    /* border: 1px solid red; */
+    &:hover {
+        background-color: #4446;
+    }
+}
+.menu > div > p {
+    font-size: .8rem;
 }
