@@ -108,7 +108,7 @@ const MessageTag = ({msg, chatingWith}) => {
                     : ''}
                 </div>
             </div>
-            <MsgContextMenu />
+            <MsgContextMenu msg_id={msg?.id} chatingWith={chatingWith?.id}/>
         </div>
     )
 }
@@ -117,20 +117,21 @@ MessageTag.propTypes = {
     chatingWith: PropTypes.object.isRequired
 }
 
-const MsgContextMenu = () => {
+const MsgContextMenu = ({msg_id, chatingWith}) => {
     const [ menuDisplay, setMenuDisplay ] = useState('none')
     const [ mousePositions, setMousePositions ] = useState({})
     const [ menuPositions, setMenuPositions ] = useState({})
+    const { deleteMsg } = useChat()
 
     const menuRef = useRef(null)
-    const handleDisplay = (isShow, e) => {
+    const handleDisplay = useCallback((isShow, e) => {
         console.log(isShow)
         setMenuDisplay(isShow ? 'block' : 'none')
         if (isShow) {
             console.log(e.clientX, e.clientY)
             setMousePositions({x: e.clientX, y: e.clientY})
         }
-    }
+    }, [])
     useEffect(() => {
         if (menuDisplay == 'block') {
             const { offsetWidth:menuWidth, offsetHeight:menuHeight } = menuRef.current
@@ -138,6 +139,7 @@ const MsgContextMenu = () => {
             setMenuPositions({top: mousePositions.y, left: mousePositions.x - menuWidth})
         }
     }, [menuDisplay, mousePositions])
+
     return (
         <>
             <div className={styles['msg-context-menu']}>
@@ -154,14 +156,17 @@ const MsgContextMenu = () => {
                         <p>Edit</p>
                     </div>
                     <div>
-                        <p>Delete</p>
+                        <p onClick={() => deleteMsg(chatingWith, msg_id)}>Delete</p>
                     </div>
                 </div>
             </div>
         </>
     )
 }
-
+MsgContextMenu.propTypes = {
+    msg_id: PropTypes.number,
+    chatingWith: PropTypes.number
+}
 const ChatContactHeader = ({ user }) => {
     
     return (

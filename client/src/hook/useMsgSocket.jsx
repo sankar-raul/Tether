@@ -31,6 +31,20 @@ const useMsgSocket = (contactId) => {
     const [ seenMap, setSeenMap ] = useState(new Map()) // contact_id -> boolean
     const { shiftUpContact, updateContactInfo, selectedContact } = useContacts()
 
+    const deleteMsg = (reciver, msg_id) => {
+        if (!msg_id || !reciver || !messageRef.has(reciver)) return
+        try {
+            socket.emit("message:delete", {msg_id})
+            const messageMap = messageRef.get(reciver)
+            const local_id = msgIdToLocalIdRef.get(msg_id)
+            messageMap.delete(local_id)
+            messageRef.set(reciver, messageMap)
+            setMessages(new Map(messageRef))
+            msgIdToLocalIdRef.delete(msg_id)
+        } catch (error) {
+            console.log("Socket Error : ", error)
+        }
+    }
 
     const seeMsg = useCallback((contact_id) => { // ok
         if (!contact_id) return
@@ -243,6 +257,6 @@ const useMsgSocket = (contactId) => {
             socket.off('message:deleted:all', msgDeletedAll)
         }
     }, [contactId])
-    return {messages, seenMap, sendMsg, seeMsg}
+    return {messages, seenMap, sendMsg, seeMsg, deleteMsg}
 }
 export default useMsgSocket

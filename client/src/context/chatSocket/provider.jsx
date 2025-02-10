@@ -5,10 +5,10 @@ import PropTypes from 'prop-types'
 
 const ChatProvider = ({children}) => {
     const { selectedContact } = useContacts()
-    const { messages, seeMsg, sendMsg } = useMsgSocket(Number(selectedContact))
+    const { messages, seeMsg, sendMsg, deleteMsg } = useMsgSocket(Number(selectedContact))
 
     return (
-        <chatContext.Provider value={{messages, seeMsg, sendMsg}}>
+        <chatContext.Provider value={{messages, seeMsg, sendMsg, deleteMsg}}>
             {children}
         </chatContext.Provider>
     )
