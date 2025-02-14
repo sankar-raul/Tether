@@ -5,33 +5,38 @@ import { memo, useCallback } from 'react'
 import apiRequest from '../../hook/apiRequest'
 // import useUserInfo from '../../context/userInfo/userInfo' // if use logged in provide user info
 import { useForm } from 'react-hook-form'
+import useUserInfo from '../../context/userInfo/userInfo'
 
 const Login = () => {
-
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({
         defaultValues: {
             email: ''
         }
     })
+    const { setIsLoggedIn } = useUserInfo()
     const navigate = useNavigate()
 
     const login = useCallback(async (formData) => {
         console.log(formData)
-            const [ data, error ] = await apiRequest('/auth/login', {
-                method: "POST",
-                body: formData
-            })
-            if (data) {
-                if (data.success) navigate('/chat')
-            } else {
-                console.log(error)
-                if (error.msg == "incorrect password!") {
-                    setError('password', {message: "incorrect password"})
-                } else if (error.msg == "user not found!") {
-                    setError('email', {message: 'user not found'})
-                }
+        const [ data, error ] = await apiRequest('/auth/login', {
+            method: "POST",
+            body: formData
+        })
+        if (data) {
+            console.log(data)
+            if (data.success) {
+                setIsLoggedIn(true)
+                navigate('/chat')
             }
-    }, [ navigate, setError ])
+        } else {
+            console.log(error)
+            if (error.msg == "incorrect password!") {
+                setError('password', {message: "incorrect password"})
+            } else if (error.msg == "user not found!") {
+                setError('email', {message: 'user not found'})
+            }
+        }
+    }, [ navigate, setError, setIsLoggedIn ])
 
     return (
         <NetBackground>

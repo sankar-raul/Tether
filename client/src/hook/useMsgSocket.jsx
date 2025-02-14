@@ -119,11 +119,14 @@ const useMsgSocket = (contactId) => {
                 setMessages(new Map(messageRef))
                 shiftUpContact(contactId, msg)
                 // *^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
+                console.log(msg)
                 const message = await socket.emitWithAck('message:send', {content, reciver: contactId, sent_at})
+                console.log(message)
                 if (message == 'error') {
                     console.log("message send error!")
                     alert('message sent error!')
                 } else {
+                    console.log(message)
                     msgIdToLocalIdRef.set(message.id, local_id)
                     messageMap.set(local_id, message)
                     messageRef.set(contactId, messageMap)

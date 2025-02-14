@@ -63,7 +63,7 @@ export const login = async (req, res) => {
 }
 export const logout = (req, res) => {
     res.clearCookie('secret', { path: '/' })
-    res.end()
+    res.status(200).json({success: true})
 }
 export const update = async (req, res) => {
     const what = req.params.what

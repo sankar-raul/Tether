@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp/SignUp"
 import Layout from "./pages/Layout/Layout"
 import ChatLayout from "./pages/ChatLayout/ChatLayout"
 import Chat from "./pages/Chat/Chat"
+import { ProtectedRoute } from "./hook/authSecurity"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -19,7 +20,11 @@ export const router = createBrowserRouter(
 
             <Route path="*" element={<h1>Not Found!</h1>}/>
         </Route>
-        <Route path="/chat" element={<ChatLayout />}>
+        <Route path="/chat" element={(
+            <ProtectedRoute>
+                <ChatLayout />
+            </ProtectedRoute>
+            )}>
             <Route index element={<Chat />} />
         </Route>
         </>

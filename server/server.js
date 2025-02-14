@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
 
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
-        console.log(reciver, content)
+        console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
         if (!ackFunc) return
         if (!reciver || !content) {
             // return io.to(socket.id).emit('message:send:error', "error")
@@ -85,7 +85,6 @@ io.on('connection', (socket) => {
         const reciversSocketId = getIdFromUser(reciver)
         if (reciversSocketId) {
             const msg = await Message.pushMessage({ sender, reciver, content, tick: 2, sent_at })
-            
             if (reciversSocketId == socket.id) {
                 return ackFunc(msg)
             } else {
@@ -94,6 +93,7 @@ io.on('connection', (socket) => {
             }
         } else {
             const msg = await Message.pushMessage({ sender, reciver, content, sent_at })
+            console.log(msg, 'op', msg.sent_at, new Date(msg.sent_at).toLocaleString())
             return ackFunc(msg)
         }
     })

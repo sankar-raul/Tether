@@ -4,9 +4,11 @@ import styles from './signup.module.css'
 import { useCallback } from "react"
 import apiRequest from "../../hook/apiRequest"
 import { useForm } from "react-hook-form"
+import useUserInfo from "../../context/userInfo/userInfo"
 
 const SignUp = () => {
     const navigate = useNavigate()
+    const { setIsLoggedIn } = useUserInfo()
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({defaultValues: {
         email: ''
     }})
@@ -17,7 +19,10 @@ const SignUp = () => {
             body: formData
         })
         if (data) {
-            if (data.success) navigate('/chat?new_user=true')
+            if (data.success) {
+                setIsLoggedIn(true)
+                navigate('/chat?new_user=true')
+            }
             // console.log(data)
         } else {
             console.log(error)

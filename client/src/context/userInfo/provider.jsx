@@ -5,18 +5,21 @@ import apiRequest from '../../hook/apiRequest'
 
 const UserInfoProvider = ({ children }) => {
     const [ userInfo, setUserInfo ] = useState(null)
-    const [ isloggedIn, setIsLoggedIn ] = useState(false)
+    const [ isloggedIn, setIsLoggedIn ] = useState()
+
     const getUserInfo = useCallback(async () => {
         const [ userData, error ] = await apiRequest('/user')
         if (userData) {
             setUserInfo(userData.user)
             setIsLoggedIn(true)
         } else {
+            setIsLoggedIn(false)
             console.log(error)
         }
     }, [])
     useEffect(() => {
         userInfo || getUserInfo()
+
     }, [isloggedIn, getUserInfo, userInfo])
     return (
         <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn}}>
