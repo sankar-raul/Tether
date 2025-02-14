@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import NetBackground from '../../components/NetBackground/NetBackground'
 import styles from './login.module.css'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import apiRequest from '../../hook/apiRequest'
 // import useUserInfo from '../../context/userInfo/userInfo' // if use logged in provide user info
 import { useForm } from 'react-hook-form'
@@ -13,7 +13,7 @@ const Login = () => {
             email: ''
         }
     })
-    const { setIsLoggedIn } = useUserInfo()
+    const { setIsLoggedIn, isloggedIn } = useUserInfo()
     const navigate = useNavigate()
 
     const login = useCallback(async (formData) => {
@@ -37,6 +37,13 @@ const Login = () => {
             }
         }
     }, [ navigate, setError, setIsLoggedIn ])
+
+    useEffect(() => {
+        console.log(isloggedIn)
+        if (isloggedIn) {
+            navigate('/chat')
+        }
+    }, [isloggedIn, navigate])
 
     return (
         <NetBackground>
