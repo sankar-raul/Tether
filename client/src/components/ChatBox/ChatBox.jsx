@@ -108,7 +108,7 @@ const MessageTag = ({msg, chatingWith}) => {
                     : ''}
                 </div>
             </div>
-            <MsgContextMenu msg_id={msg?.id} chatingWith={chatingWith?.id}/>
+            <MsgContextMenu msg_id={msg?.id} chatingWith={chatingWith?.id} content={msg.content}/>
         </div>
     )
 }
@@ -117,7 +117,7 @@ MessageTag.propTypes = {
     chatingWith: PropTypes.object.isRequired
 }
 
-const MsgContextMenu = ({msg_id, chatingWith}) => {
+const MsgContextMenu = ({msg_id, chatingWith, content}) => {
     const [ menuDisplay, setMenuDisplay ] = useState('none')
     const [ mousePositions, setMousePositions ] = useState({})
     const [ menuPositions, setMenuPositions ] = useState({})
@@ -132,6 +132,9 @@ const MsgContextMenu = ({msg_id, chatingWith}) => {
             setMousePositions({x: e.clientX, y: e.clientY})
         }
     }, [])
+    const handleCopy = useCallback(() => {
+        navigator.clipboard.writeText(content)
+    }, [content])
     useEffect(() => {
         if (menuDisplay == 'block') {
             const { offsetWidth:menuWidth, offsetHeight:menuHeight } = menuRef.current
@@ -149,14 +152,14 @@ const MsgContextMenu = ({msg_id, chatingWith}) => {
             </div>
             <div onClick={() => handleDisplay(false)} style={{display: menuDisplay}} className={styles['main-context-menu']}>
                 <div ref={menuRef} style={{marginTop: `${menuPositions.top}px`, marginLeft: `${menuPositions.left}px`}} className={styles['menu']}>
-                    <div>
+                    <div onClick={handleCopy}>
                         <p>Copy</p>
                     </div>
                     <div>
                         <p>Edit</p>
                     </div>
-                    <div>
-                        <p onClick={() => deleteMsg(chatingWith, msg_id)}>Delete</p>
+                    <div onClick={() => deleteMsg(chatingWith, msg_id)}>
+                        <p>Delete</p>
                     </div>
                 </div>
             </div>
@@ -165,7 +168,8 @@ const MsgContextMenu = ({msg_id, chatingWith}) => {
 }
 MsgContextMenu.propTypes = {
     msg_id: PropTypes.number,
-    chatingWith: PropTypes.number
+    chatingWith: PropTypes.number,
+    content: PropTypes.string
 }
 const ChatContactHeader = ({ user }) => {
     
