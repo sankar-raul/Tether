@@ -127,6 +127,17 @@
     repeating-linear-gradient(to right, transparent 0 6px, #0001 6px 12px), #fff;
     }
 }
+.submitBtn > input::before {
+    content: 'op';
+    position: absolute;
+    /* inset: 0; */
+    background-color: red;
+    z-index: 3;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
 .submitBtn:hover > input {
     background: repeating-linear-gradient(to bottom, transparent 0 6px,#0001 6px 12px),
     repeating-linear-gradient(to right, transparent 0 6px, #0001 6px 12px), #ffffffee;

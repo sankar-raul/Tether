@@ -68,7 +68,7 @@ const Login = () => {
                     <Link to='/forgot'>forgot password</Link>
                 </div>
                 <div className={styles.submitBtn}>
-                    <input disabled={isSubmitting} type="submit" value="Login"/>
+                    <input disabled={isSubmitting} style={{'--display-loader': 'block'}} type="submit" value={isSubmitting ? 'Loading...' : 'Login'}/>
                 </div>
                 <div className={styles.submitBtn + " " + styles.help}>
                     <p>Have no account. <Link to='/signup'>create an account</Link></p>
