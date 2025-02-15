@@ -105,7 +105,7 @@
     position: relative;
     margin: 25px auto 25px auto;
 }
-.submitBtn > input {
+.submitBtn > button {
     all: unset;
     text-align: center;
     width: clamp(150px, 80%, 350px);
@@ -120,6 +120,7 @@
     transition: .3s;
     position: relative;
     font-size: 1.1rem;
+    
 
     &:active {
         transform: scale(.96);
@@ -127,20 +128,32 @@
     repeating-linear-gradient(to right, transparent 0 6px, #0001 6px 12px), #fff;
     }
 }
-.submitBtn > input::before {
-    content: 'op';
+.submitBtn > button::before {
+    content: '';
     position: absolute;
-    /* inset: 0; */
-    background-color: red;
+    display: var(--display-loader);
     z-index: 3;
-    height: 100%;
-    width: 100%;
-    left: 0;
-    top: 0;
+    height: 50%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 3px solid #000;
+    border-left: 3px solid transparent;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: loader .6s linear infinite;
 }
-.submitBtn:hover > input {
+@keyframes loader {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    } to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+.submitBtn:hover > button {
     background: repeating-linear-gradient(to bottom, transparent 0 6px,#0001 6px 12px),
     repeating-linear-gradient(to right, transparent 0 6px, #0001 6px 12px), #ffffffee;
+    background-color: #fffd;
 }
 .help {
     text-align: center;
