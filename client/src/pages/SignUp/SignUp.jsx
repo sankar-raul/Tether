@@ -1,14 +1,14 @@
 import { Link, useNavigate } from "react-router-dom"
 import NetBackground from "../../components/NetBackground/NetBackground"
 import styles from './signup.module.css'
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 import apiRequest from "../../hook/apiRequest"
 import { useForm } from "react-hook-form"
 import useUserInfo from "../../context/userInfo/userInfo"
 
 const SignUp = () => {
     const navigate = useNavigate()
-    const { setIsLoggedIn } = useUserInfo()
+    const { setIsLoggedIn, isloggedIn } = useUserInfo()
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({defaultValues: {
         email: ''
     }})
@@ -30,8 +30,14 @@ const SignUp = () => {
                 setError('email', {message: "user allready exists"})
             }
         }
-    }, [navigate, setError])
-  
+    }, [navigate, setError, setIsLoggedIn])
+
+    useEffect(() => {
+        // console.log(isloggedIn)
+        if (isloggedIn) {
+            navigate('/chat')
+        }
+    }, [isloggedIn, navigate])
     return (
         <NetBackground>
                 <div className={styles.login}>
@@ -62,8 +68,8 @@ const SignUp = () => {
                         </div>
                         
                        <div className={styles.submitBtn}>
-                            <input disabled={isSubmitting} type="submit" value="Sign Up"/>
-                       </div>
+                            <button disabled={isSubmitting} style={{'--display-loader': isSubmitting ? 'block' : 'none'}} type="submit">{isSubmitting ? '' : 'Login'}</button>
+                        </div>
                        <div className={styles.submitBtn + " " + styles.help}>
                             <p>Allready have an account. <Link to='/login'>Login here</Link></p>
                         </div>
