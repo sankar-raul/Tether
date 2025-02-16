@@ -1,0 +1,9 @@
+.alert-container {
+    background-color: red;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    height: max-content;
+    max-height: 60vh;
+}

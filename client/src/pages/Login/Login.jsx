@@ -6,6 +6,7 @@ import apiRequest from '../../hook/apiRequest'
 // import useUserInfo from '../../context/userInfo/userInfo' // if use logged in provide user info
 import { useForm } from 'react-hook-form'
 import useUserInfo from '../../context/userInfo/userInfo'
+import useAlert from '../../context/alert/alert'
 
 const Login = () => {
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({
@@ -13,6 +14,7 @@ const Login = () => {
             email: ''
         }
     })
+    const { Alert } = useAlert()
     const { setIsLoggedIn, isloggedIn } = useUserInfo()
     const navigate = useNavigate()
 
@@ -35,8 +37,9 @@ const Login = () => {
             } else if (error.msg == "user not found!") {
                 setError('email', {message: 'user not found'})
             }
+            Alert({message: error.msg})
         }
-    }, [ navigate, setError, setIsLoggedIn ])
+    }, [ navigate, setError, setIsLoggedIn, Alert ])
 
     useEffect(() => {
         // console.log(isloggedIn)

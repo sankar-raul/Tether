@@ -2,12 +2,15 @@ import { RouterProvider } from 'react-router-dom'
 import './App.css'
 import { router } from './routes'
 import UserInfoProvider from './context/userInfo/provider'
+import AlertProvider from './context/alert/alertProvider'
 
 function App() {
 
   return (
       <UserInfoProvider>
-        <RouterProvider router={router} />
+        <AlertProvider>
+          <RouterProvider router={router} />
+        </AlertProvider>
       </UserInfoProvider>
   )
 }
