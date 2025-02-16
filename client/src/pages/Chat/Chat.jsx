@@ -15,7 +15,7 @@ const Chat = () => {
                     <ResizeableAsideProvider>
                         <NavAndContact />
                     </ResizeableAsideProvider>
-                    <RightContainer />      
+                    <RightContainer />
                 </section>
             </ContactsProvider>
         </TabsProvider>

@@ -22,10 +22,11 @@
     transition-duration: .2s;
     position: relative;
     --bg: var(--solid-bg);
+    /* background-color: blue; */
 
     &:hover {
         opacity: 1;
-        --bg: #555;
+        --bg: #444;
     }
     &:active {
         --bg: var(--brand-color);
@@ -40,7 +41,6 @@
     left: 50%;
     transform: translate(-50%);
     background-color: var(--bg);
-    z-index: -1;
 }
 
 
