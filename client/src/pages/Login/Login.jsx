@@ -6,7 +6,7 @@ import apiRequest from '../../hook/apiRequest'
 // import useUserInfo from '../../context/userInfo/userInfo' // if use logged in provide user info
 import { useForm } from 'react-hook-form'
 import useUserInfo from '../../context/userInfo/userInfo'
-import useAlert from '../../context/alert/alert'
+import useAlert from '../../context/alert/Alert'
 
 const Login = () => {
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({

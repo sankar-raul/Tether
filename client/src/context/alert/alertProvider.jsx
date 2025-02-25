@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { AlertContext } from "./alert"
+import { AlertContext } from "./Alert"
 import PropTypes from 'prop-types'
 import styles from './alert.module.css'
 
