@@ -32,7 +32,7 @@ const AlertProvider = ({children}) => {
                         prev.shift()
                         return prev
                     })
-                }, 500)
+                }, 500) // fix it
             }
         } 
     }, [messages])

@@ -74,6 +74,7 @@ const ChatBox = () => {
 const MessageTag = ({msg, chatingWith}) => {
     const [ tickImg, setTickImg ] = useState(singleTickIcon)
     const [ msgTime, setMsgTime ] = useState('')
+    const [ rightClick, setRightClick ] = useState()
     const getFormatedTime = useCallback((dateString) => {
         const date = new HeroDate(dateString)
         return date.formatedTime()
@@ -96,7 +97,7 @@ const MessageTag = ({msg, chatingWith}) => {
     }, [msg, getFormatedTime])
     return (
         <div className={`${styles['message-tag']} ${msg.reciver != chatingWith.id ? styles['not-me'] : styles['me']}`} key={msg.id}>
-            <div className={styles['message-body']}>
+            <div className={styles['message-body']} onContextMenu={setRightClick}>
                 <div className={styles['content']} name={msg.id}>
                     <span className={styles['message-text']}>{msg.content}</span>
                 </div>
@@ -108,7 +109,7 @@ const MessageTag = ({msg, chatingWith}) => {
                     : ''}
                 </div>
             </div>
-            <MsgContextMenu msg_id={msg?.id} chatingWith={chatingWith?.id} content={msg.content}/>
+            <MsgContextMenu msg_id={msg?.id} chatingWith={chatingWith?.id} content={msg.content} rightClick={rightClick}/>
         </div>
     )
 }
@@ -117,7 +118,7 @@ MessageTag.propTypes = {
     chatingWith: PropTypes.object.isRequired
 }
 
-const MsgContextMenu = ({msg_id, chatingWith, content}) => {
+const MsgContextMenu = ({msg_id, chatingWith, content, rightClick}) => {
     const [ menuDisplay, setMenuDisplay ] = useState('none')
     const [ mousePositions, setMousePositions ] = useState({})
     const [ menuPositions, setMenuPositions ] = useState({})
@@ -132,9 +133,16 @@ const MsgContextMenu = ({msg_id, chatingWith, content}) => {
             setMousePositions({x: e.clientX, y: e.clientY})
         }
     }, [])
+    useEffect(() => {
+        if (rightClick) {
+            rightClick.preventDefault()
+            handleDisplay(true, rightClick)
+        }
+    }, [rightClick, handleDisplay])
     const handleCopy = useCallback(() => {
         navigator.clipboard.writeText(content)
     }, [content])
+
     useEffect(() => {
         if (menuDisplay == 'block') {
             const { offsetWidth:menuWidth, offsetHeight:menuHeight } = menuRef.current
@@ -150,7 +158,7 @@ const MsgContextMenu = ({msg_id, chatingWith, content}) => {
                     <img className={styles['context-menu-icon']} src={dotsIcon} alt="context menu" />
                 </div>
             </div>
-            <div onClick={() => handleDisplay(false)} style={{display: menuDisplay}} className={styles['main-context-menu']}>
+            <div onContextMenu={(e) => e.preventDefault()} onClick={() => handleDisplay(false)} style={{display: menuDisplay}} className={styles['main-context-menu']}>
                 <div ref={menuRef} style={{marginTop: `${menuPositions.top}px`, marginLeft: `${menuPositions.left}px`}} className={styles['menu']}>
                     <div onClick={handleCopy}>
                         <p>Copy</p>
@@ -169,7 +177,8 @@ const MsgContextMenu = ({msg_id, chatingWith, content}) => {
 MsgContextMenu.propTypes = {
     msg_id: PropTypes.number,
     chatingWith: PropTypes.number,
-    content: PropTypes.string
+    content: PropTypes.string,
+    rightClick: PropTypes.object
 }
 const ChatContactHeader = ({ user }) => {
     
