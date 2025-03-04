@@ -24,6 +24,9 @@
         transform: translateY(0);
     }
 }
+input {
+    color: #fff;
+}
 .wellcome {
     text-align: center;
     color: #fff;
