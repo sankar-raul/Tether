@@ -30,7 +30,6 @@ const SignUp = () => {
             console.log(error)
             if (error.msg == "user already exists") {
                 setError('email', {message: error.msg})
-                Alert({message: error.msg, type: 'error'})
             }
         }
     }, [navigate, setError, setIsLoggedIn, Alert])
