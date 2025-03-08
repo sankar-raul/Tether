@@ -4,7 +4,7 @@
     right: 10px;
     z-index: 10;
     height: max-content;
-    max-height: 60vh;
+    max-height: 90vh;
     /* overflow: hidden; */
     width: 35%;
     max-width: clamp(150px, 30%, 300px);

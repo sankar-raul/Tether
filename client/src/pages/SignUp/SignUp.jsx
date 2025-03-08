@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom"
 import NetBackground from "../../components/NetBackground/NetBackground"
 import styles from './signup.module.css'
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import apiRequest from "../../hook/apiRequest"
 import { useForm } from "react-hook-form"
 import useUserInfo from "../../context/userInfo/userInfo"
+import useAlert from "../../context/alert/Alert"
 
 const SignUp = () => {
     const navigate = useNavigate()
@@ -12,7 +13,7 @@ const SignUp = () => {
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({defaultValues: {
         email: ''
     }})
-
+    const { Alert } = useAlert();
     const signup = useCallback(async (formData) => {
         const [ data, error ] = await apiRequest('/auth/register', {
             method: "POST",
@@ -22,15 +23,29 @@ const SignUp = () => {
             if (data.success) {
                 setIsLoggedIn(true)
                 navigate('/chat?new_user=true')
+                Alert({message: `Hii ${formData.username}!`, type: 'info'});
             }
             // console.log(data)
         } else {
             console.log(error)
             if (error.msg == "user already exists") {
-                setError('email', {message: "user allready exists"})
+                setError('email', {message: error.msg})
+                Alert({message: error.msg, type: 'error'})
             }
         }
-    }, [navigate, setError, setIsLoggedIn])
+    }, [navigate, setError, setIsLoggedIn, Alert])
+
+    const showFeedBack = () => {
+        if (errors?.email) {
+            Alert({message: errors.email.message, type: 'error'})
+        }
+        if (errors?.password) {
+            Alert({message: errors.password.message, type: 'error'})
+        }
+        if (errors?.username) {
+            Alert({message: errors.username.message, type: 'error'})
+        }
+    }
 
     useEffect(() => {
         // console.log(isloggedIn)
@@ -44,7 +59,10 @@ const SignUp = () => {
                     <h1 className={styles.wellcome}>
                         Sign Up
                     </h1>
-                    <form onSubmit={handleSubmit(signup)} className={styles.form}>
+                    <form onSubmit={(e) => {
+                        handleSubmit(signup)(e)
+                        showFeedBack()
+                    }} className={styles.form}>
 
                         <div className={styles.inputBox}>
                             <div name={!errors.username ? 'true' : 'incorrect'} className={styles['input-wraper']}>
