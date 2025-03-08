@@ -29,7 +29,7 @@ const Login = () => {
             if (data.success) {
                 setIsLoggedIn(true)
                 navigate('/chat')
-                Alert({message: "Wellcome Back " + data?.data?.username, type: 'info'});
+                Alert({message: "Wellcome Back " + data?.data?.username + '!', type: 'info'});
             }
         } else {
             console.log(error)
