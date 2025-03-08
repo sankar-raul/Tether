@@ -37,7 +37,7 @@ const Login = () => {
             } else if (error.msg == "user not found!") {
                 setError('email', {message: 'user not found'})
             }
-            Alert({message: error.msg})
+            Alert({message: error.msg, type: 'error'})
         }
     }, [ navigate, setError, setIsLoggedIn, Alert ])
 

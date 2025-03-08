@@ -1,14 +1,34 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { AlertContext } from "./Alert"
 import PropTypes from 'prop-types'
 import styles from './alert.module.css'
 
 const AlertBanner = ({title, message, type}) => {
-
+    const [ display, setDisplay ] = useState(true)
+    const msgAcentColor = useMemo(() => {
+        switch(type) {
+            case 'error':
+                return 'var(--danger-color)'
+            case 'info':
+                return 'var(--brand-color)'
+            default:
+                return 'green'
+        }
+    }, [type])
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            setDisplay(false)
+        }, 3000)
+        return () => clearTimeout(timeOut)
+    }, [type])
     return (
-        <div>
+        <>
+        {display ? 
+        <div className={styles['alert-msg']} style={{'--acent-color': msgAcentColor}}>
             <p>{message}</p>
         </div>
+        : ''}
+        </>
     )
 }
 AlertBanner.propTypes = {
@@ -40,7 +60,6 @@ const AlertProvider = ({children}) => {
         <AlertContext.Provider value={{Alert}}>
             {children}
             <div className={styles['alert-container']}>
-                ok si
                 {messages.map((msg, idx) => (
                     <AlertBanner key={idx} title={msg.title} message={msg.message} type={msg.type} />
                 ))}
