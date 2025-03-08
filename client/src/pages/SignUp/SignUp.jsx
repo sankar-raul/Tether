@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import NetBackground from "../../components/NetBackground/NetBackground"
 import styles from './signup.module.css'
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect } from "react"
 import apiRequest from "../../hook/apiRequest"
 import { useForm } from "react-hook-form"
 import useUserInfo from "../../context/userInfo/userInfo"
