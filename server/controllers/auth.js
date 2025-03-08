@@ -52,7 +52,7 @@ export const login = async (req, res) => {
                 secure: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             })
-            return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id}})
+            return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id, username: tuples[0].username}})
         } else {
             return res.status(401).json({success: false, msg: "incorrect password!"})
         }
