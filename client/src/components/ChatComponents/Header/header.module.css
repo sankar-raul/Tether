@@ -20,12 +20,18 @@
     border-radius: 50%;
     max-height: 100%;
 }
+.search-wraper {
+    width: clamp(300px, 60%, 600px);
+    display: grid;
+    position: relative;
+    z-index: 2;
+}
 .search-box {
     display: grid;
     grid-template-columns: 1fr 44px;
     grid-template-rows: 1fr;
     place-items: center;
-    width: clamp(300px, 60%, 600px);
+    width: 100%;
     /* background-color: red; */
     
 }

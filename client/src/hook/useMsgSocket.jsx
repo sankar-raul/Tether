@@ -3,6 +3,7 @@ import socket from '../utils/chatSocket'
 import apiRequest from "./apiRequest"
 import useContacts from "../context/contacts/contact"
 import NotifyTone from "../utils/notificationSound"
+import useAlert from "../context/alert/Alert"
 
 const messageRef = new Map() // contact_id -> local_id -> message_object
 const unreadMsgRef = new Map() // contact_id -> int
@@ -30,7 +31,7 @@ const useMsgSocket = (contactId) => {
     const [ messages, setMessages ] = useState(new Map()) // contact_id -> message_id -> message_object
     const [ seenMap, setSeenMap ] = useState(new Map()) // contact_id -> boolean
     const { shiftUpContact, updateContactInfo, selectedContact } = useContacts()
-
+    const { Alert } = useAlert()
     const deleteMsg = (reciver, msg_id) => {
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
         try {
@@ -64,8 +65,9 @@ const useMsgSocket = (contactId) => {
             incrementUnread(contact_id, -1)
         } catch (error) {
             console.log("Error while seeing messages", error)
+            Alert({message: "Error while seeing messages", type: "error"})
         }
-    }, [updateContactInfo])
+    }, [updateContactInfo, Alert])
 
     // get past conversations
     const getInitialMessages = useCallback(async (id) => { // ok
@@ -124,7 +126,7 @@ const useMsgSocket = (contactId) => {
                 console.log(message)
                 if (message == 'error') {
                     console.log("message send error!")
-                    alert('message sent error!')
+                    Alert({message: "Something went wrong!", type: 'error'})
                 } else {
                     console.log(message)
                     msgIdToLocalIdRef.set(message.id, local_id)
@@ -136,9 +138,10 @@ const useMsgSocket = (contactId) => {
             // console.log(messages)
             } catch (error) {
                 console.log("Error sending message", error)
+                Alert({message: "Something went wrong!", type: 'error'})
             }
         }
-    }, [contactId, shiftUpContact])
+    }, [contactId, shiftUpContact, Alert])
 
     useEffect(() => {
         // push new message to message Map
@@ -150,7 +153,7 @@ const useMsgSocket = (contactId) => {
             if (!messageRef.has(sender)) {
                 getInitialMessages(sender)
             } else {
-                incrementUnread(sender, 1)
+                selectedContact != sender && incrementUnread(sender, 1)
             }
             const local_id = getUniqeMessageId(message.sender, message.reciver)
             console.log(sender)
@@ -162,8 +165,10 @@ const useMsgSocket = (contactId) => {
             shiftUpContact(sender, {...message, unread: unreadMsgRef.get(sender)})
             if (selectedContact == sender)
                 NotifyTone.sent()
-            else
+            else {
                 NotifyTone.recive()
+                // Alert({message: message.content, type: 'info'})
+            }
         }
 
         // delete a single message by msg_id

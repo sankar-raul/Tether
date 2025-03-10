@@ -1,4 +1,5 @@
 import axios from "axios"
+import PropTypes from 'prop-types'
 
 const apiRequest = async (endpoint, details) => {
     let body = details?.body
@@ -21,6 +22,9 @@ const apiRequest = async (endpoint, details) => {
         }
         return [null, e.response.data]
     }
-    
+}
+apiRequest.propTypes = {
+    endpoint: PropTypes.string.isRequired,
+    details: PropTypes.object
 }
 export default apiRequest

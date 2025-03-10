@@ -10,9 +10,11 @@ export const userRoot = (req, res) => {
 
 export const search = async (req, res) => {
     let { q, part } = req.query
-    const results_per_part = 5
-    let offset = 2
+    const results_per_part = 4
+    let offset = 0
+    console.log(part)
     if (part) {
+        part = Number(part)
         offset = (part - 1) * results_per_part
     }
     q = q?.trim()
@@ -20,11 +22,16 @@ export const search = async (req, res) => {
         return res.status(400).json({success: false, msg: "bad request!"})
     }
     try {
-        const searchRes = await pool.execute(`select id, username, profile_pic_url, bio from users where username like ? limit ${results_per_part} offset ${offset}`, [`%${q}%`])
+        const searchRes = await pool.execute(`select id, username, profile_pic_url, bio from users where username like ? limit ${results_per_part + 1} offset ${offset}`, [`%${q}%`])
         const result = searchRes[0]
+        const totalResults = result?.length
+        if (totalResults == results_per_part + 1) {
+            result.pop()
+        }
         const response = {
-            data: result,
-            part: Number(part),
+            data: totalResults == 0 ? null : result,
+            part: part || 1,
+            next: totalResults == results_per_part + 1 ? `/user/search?q=${q}&part=${part ? part + 1 : 2}` : null,
             query: q
         }
         return res.status(200).json(response)
