@@ -8,6 +8,8 @@ import { HeroDate } from '../../utils/date'
 import apiRequest from '../../hook/apiRequest'
 import useUserInfo from '../../context/userInfo/userInfo'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
+import { Loader } from '../Loader/Loader'
+import { Skeleton } from '@mui/material'
 
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -33,13 +35,15 @@ const Calls = () => {
     )
 }
 const Chats = () => {
-    const { contactMap } = useContacts()
+    const { contactMap, isLoading } = useContacts()
+
     return (
         <>
         {
+            !isLoading ? 
             [...contactMap.values()]?.map(user => (
                 <Contact key={user?.id} user={user} />
-            ))
+            )) : <Loader />
         }
         </>
     )
@@ -55,7 +59,9 @@ const Contact = ({ user }) => {
     const { userInfo:localUserInfo } = useUserInfo()
 
     const togglwActive = useCallback(() => {
-        setSelectedContact(Number(user?.id))
+        setSelectedContact(prev => {
+            return prev == user?.id ? 0 : Number(user?.id)
+        })
     }, [user, setSelectedContact])
     
     const lastMsg = useCallback(async () => {
@@ -121,9 +127,10 @@ const Contact = ({ user }) => {
             </div>
             <div className={styles['user-info']}>
                 <div className={styles['user-meta-data']}>
-                    <div className={styles['username']}>{`${userInfo?.username}${isChatingWithMyself ? ' (You)' : ''}`}</div>
+                    <div className={styles['username']}>{userInfo?.username ? `${userInfo.username}${isChatingWithMyself ? ' (You)' : ''}` : <Skeleton variant='text' width={'clamp(10px, 90%, 120px)'} height={'100%'} sx={{backgroundColor: "#6663"}} />}</div>
                     <div className={styles['last-msg']}>
-                        {lastMessage?.content || lastMessage}
+                        { lastMessage?.content || lastMessage || <Skeleton variant='text' width={'clamp(6px, 60%, 65px)'} height={'100%'} sx={{backgroundColor: "#6663"}} /> || <Loader dotWidth={'4px'} align={'left'} color={'#888'} speed={'.4s'}/>}
+                        {console.log(lastMessage)}
                     </div>
                 </div>
                 <div className={styles['user-status']}>

@@ -4,16 +4,16 @@
     /* background-color: red; */
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: var(--align);
     gap: 5px;
     align-items: center;
 }
 .loading-animation > div {
     aspect-ratio: 1 / 1;
-    background-color: var(--brand-color);
-    height: 8px;
+    background-color: var(--dot-color);
+    height: var(--dot-width);
     border-radius: 50%;
-    animation: loading .8s linear infinite var(--delay);
+    animation: loading var(--speed) linear infinite var(--delay);
 }
 @keyframes loading {
     0%, 100% {

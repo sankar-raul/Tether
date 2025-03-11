@@ -32,6 +32,7 @@ const useMsgSocket = (contactId) => {
     const [ seenMap, setSeenMap ] = useState(new Map()) // contact_id -> boolean
     const { shiftUpContact, updateContactInfo, selectedContact } = useContacts()
     const { Alert } = useAlert()
+    const [ isLoading, setIsLoading ] = useState(false)
     const deleteMsg = (reciver, msg_id) => {
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
         try {
@@ -70,12 +71,14 @@ const useMsgSocket = (contactId) => {
     }, [updateContactInfo, Alert])
 
     // get past conversations
-    const getInitialMessages = useCallback(async (id) => { // ok
+    const getInitialMessages = useCallback(async (id, {feedback}) => { // ok
         id = Number(id)
         // console.log(id, "opp")
         let local_id
         if (!id || messageRef.has(id)) return
+        feedback && setIsLoading(true)
         const [response, error] = await apiRequest(`/chat/messages/${id}`)
+        feedback && setIsLoading(false)
         if (!error) {
             console.log(response)
             const messageMap = new Map()
@@ -97,7 +100,7 @@ const useMsgSocket = (contactId) => {
 
     useEffect(() => {
         console.log(contactId)
-        contactId && getInitialMessages(contactId)
+        contactId && getInitialMessages(contactId, {feedback: true})
     }, [contactId, getInitialMessages])
 
     // send message to selected contact
@@ -265,6 +268,6 @@ const useMsgSocket = (contactId) => {
             socket.off('message:deleted:all', msgDeletedAll)
         }
     }, [contactId])
-    return {messages, seenMap, sendMsg, seeMsg, deleteMsg}
+    return {messages, seenMap, sendMsg, seeMsg, deleteMsg, isLoading}
 }
 export default useMsgSocket

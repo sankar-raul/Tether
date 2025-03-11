@@ -15,12 +15,13 @@ import { HeroDate } from '../../utils/date'
 import ChatInput from '../ChatInput/ChatInput'
 import useChat from '../../context/chatSocket/chatSocket'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
+import { Loader } from '../Loader/Loader'
 
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
     const [ chatingWith, setChatingWith ] = useState(getContactInfo(selectedContact) || {})
-    const { messages, seeMsg } = useChat()
+    const { messages, seeMsg, isLoading } = useChat()
     const [ chats, setChats ] = useState([])
     const scrollRef = useRef(null)
 
@@ -59,9 +60,10 @@ const ChatBox = () => {
                 <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
                 {
+                    !isLoading ? 
                     chats.slice().reverse().map(msg =>
                         <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
-                    )
+                    ) : <Loader />
                 }
                 </main>
                 <ChatInput scrollRef={scrollRef}/>
