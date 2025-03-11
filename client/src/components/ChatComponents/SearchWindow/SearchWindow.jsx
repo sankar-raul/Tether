@@ -3,7 +3,7 @@ import useSearch from '../../../context/search/searchContext'
 import styles from './search-window.module.css'
 
 const SearchWindow = () => {
-    const { setIsSearchFocused, searchValue, clearSearchCache, searchResults } = useSearch()
+    const { setIsSearchFocused, searchValue, clearSearchCache, searchResults, isLoading } = useSearch()
 
     useEffect(() => {
         const hideSearchWindow = () => setIsSearchFocused(false)
@@ -19,11 +19,15 @@ const SearchWindow = () => {
             <div onClick={(e) => e.stopPropagation()} className={styles['search-results']}>
                 Search results for {`"${searchValue}"`}
                 <div>
-                    {searchResults ? searchResults.map((user, idx) => (
+                    <>
+                    {isLoading ? "Loading..." :
+                    searchResults ? searchResults.map((user, idx) => (
                         <p key={idx}>
                             {user.username}
                         </p>
-                    )) : 'Nothing here!'}
+                    )) : 'Nothing here!'
+                }
+                </>
                 </div>
             </div>
         </div>
