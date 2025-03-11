@@ -14,12 +14,6 @@
     place-self: center;
     padding: 0px 5px;
 }
-.user > img {
-    object-fit: cover;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    max-height: 100%;
-}
 .search-wraper {
     width: clamp(300px, 60%, 600px);
     display: grid;
@@ -52,6 +46,7 @@
     font-size: 15px;
     caret-color: #fff;
     letter-spacing: 1px;
+    color: #fff;
 
     &:focus {
         outline: 2px solid var(--brand-color);

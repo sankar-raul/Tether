@@ -7,6 +7,7 @@ import useTabs from '../../context/Tabs/tabs'
 import { HeroDate } from '../../utils/date'
 import apiRequest from '../../hook/apiRequest'
 import useUserInfo from '../../context/userInfo/userInfo'
+import { DefaultUser } from '../DefaultUser/DefaultUser'
 
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -114,7 +115,9 @@ const Contact = ({ user }) => {
     return (
         <div onClick={togglwActive} className={`${styles['contact']} ${isActive ? styles['active'] : ''}`}>
             <div className={styles['profile']}>
-                <img src={userInfo?.profile_pic_url || "/me.jpg"} alt="user" />
+                {
+                    userInfo?.profile_pic_url ? <img src={userInfo.profile_pic_url} alt="user" /> : <DefaultUser />
+                }
             </div>
             <div className={styles['user-info']}>
                 <div className={styles['user-meta-data']}>

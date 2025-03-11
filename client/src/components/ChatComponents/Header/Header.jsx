@@ -4,6 +4,7 @@ import { SearchWindow } from '../SearchWindow/SearchWindow'
 import SearchProvider from '../../../context/search/searchProvider'
 import useSearch from '../../../context/search/searchContext'
 import { useCallback } from 'react'
+import { DefaultUser } from '../../DefaultUser/DefaultUser'
 
 const Header = () => {
 
@@ -14,7 +15,7 @@ const Header = () => {
                 <Search />
             </SearchProvider>
             <div className={styles['user']}>
-                <img src="/me.jpg" alt="" />
+                <DefaultUser />
             </div>
         </div>
     )
