@@ -24,6 +24,7 @@ const SearchProvider = ({children}) => {
         if (SearchCache.has(endPoint)) {
             data = SearchCache.get(endPoint)
             setSearchResults(data)
+            setIsLoading(false)
         } else {
             setIsLoading(true);
             [data, error] = await apiRequest(endPoint, {signal})
