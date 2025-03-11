@@ -11,7 +11,7 @@ const ContactsProvider = ({children}) => {
     const { userInfo } = useUserInfo()
     const [ contactMap, setContactMap ] = useState(new Map())
     const [ isContactFetched, setIsContactFetched ] = useState(false)
-    const [ isLoading, setIsLoading ] = useState(false)
+    const [ isLoading, setIsLoading ] = useState(true)
 
     const fetchContactInfo = useCallback(async (id) => {
         if (!userInfo || !id || contactRef.get(userInfo.id)?.username) return

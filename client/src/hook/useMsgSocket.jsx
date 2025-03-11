@@ -32,7 +32,8 @@ const useMsgSocket = (contactId) => {
     const [ seenMap, setSeenMap ] = useState(new Map()) // contact_id -> boolean
     const { shiftUpContact, updateContactInfo, selectedContact } = useContacts()
     const { Alert } = useAlert()
-    const [ isLoading, setIsLoading ] = useState(false)
+    const [ isLoading, setIsLoading ] = useState(true)
+
     const deleteMsg = (reciver, msg_id) => {
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
         try {
@@ -71,9 +72,10 @@ const useMsgSocket = (contactId) => {
     }, [updateContactInfo, Alert])
 
     // get past conversations
-    const getInitialMessages = useCallback(async (id, {feedback}) => { // ok
+    const getInitialMessages = useCallback(async (id, config = {}) => { // ok
         id = Number(id)
-        // console.log(id, "opp")
+        const { feedback } = config
+        console.log(id, "opp")
         let local_id
         if (!id || messageRef.has(id)) return
         feedback && setIsLoading(true)
