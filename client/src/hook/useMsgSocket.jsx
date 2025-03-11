@@ -50,6 +50,7 @@ const useMsgSocket = (contactId) => {
     }
 
     const seeMsg = useCallback((contact_id) => { // ok
+        console.log(contactId, "oppppp")
         if (!contact_id) return
         contact_id = Number(contact_id)
         if (!messageRef.has(contact_id)) return

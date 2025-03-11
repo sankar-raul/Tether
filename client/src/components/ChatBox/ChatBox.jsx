@@ -33,6 +33,7 @@ const ChatBox = () => {
         })
         console.log(messages)
         setChats(chat)
+        seeMsg(selectedContact)
         // console.log(messages)
         // console.log(chat)
     }, [messages, selectedContact, seeMsg, chatingWith])
