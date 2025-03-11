@@ -14,6 +14,7 @@ import pendingTickIcon from '../../assets/svg/chat/pending.svg'
 import { HeroDate } from '../../utils/date'
 import ChatInput from '../ChatInput/ChatInput'
 import useChat from '../../context/chatSocket/chatSocket'
+import { DefaultUser } from '../DefaultUser/DefaultUser'
 
 
 const ChatBox = () => {
@@ -186,7 +187,9 @@ const ChatContactHeader = ({ user }) => {
         <nav className={chatNavStyle['chat-nav']}>
             <div className={chatNavStyle['user-info']}>
                 <div className={chatNavStyle['user-dp']}>
-                    <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src='/me.jpg' alt={user.username} />
+                {
+                 user.profile_pic_url ? <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src={user.profile_pic_url} alt={user.username} /> : <DefaultUser />
+                }
                 </div>
                 <div className={chatNavStyle['user-wraper']}>
                     <div className={chatNavStyle['username']}>{user.username || ''}</div>
