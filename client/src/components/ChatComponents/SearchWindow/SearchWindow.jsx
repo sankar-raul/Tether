@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import useSearch from '../../../context/search/searchContext'
 import styles from './search-window.module.css'
+import { Loader } from '../../Loader/Loader'
 
-const SearchWindow = () => {
+export const SearchWindow = () => {
     const { setIsSearchFocused, searchValue, clearSearchCache, searchResults, isLoading } = useSearch()
 
     useEffect(() => {
@@ -20,7 +21,7 @@ const SearchWindow = () => {
                 Search results for {`"${searchValue}"`}
                 <div>
                     <>
-                    {isLoading ? "Loading..." :
+                    {isLoading ? <Loader /> :
                     searchResults ? searchResults.map((user, idx) => (
                         <p key={idx}>
                             {user.username}
@@ -34,4 +35,3 @@ const SearchWindow = () => {
         </>
     )
 }
-export default SearchWindow

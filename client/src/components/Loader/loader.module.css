@@ -1,0 +1,24 @@
+.loading-animation {
+    width: 100%;
+    height: 30px;
+    /* background-color: red; */
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+}
+.loading-animation > div {
+    aspect-ratio: 1 / 1;
+    background-color: var(--brand-color);
+    height: 8px;
+    border-radius: 50%;
+    animation: loading .8s linear infinite var(--delay);
+}
+@keyframes loading {
+    0%, 100% {
+        transform: scale(0.4);
+    } 50% {
+        transform: scale(1.3);
+    }
+}

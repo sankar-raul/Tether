@@ -1,6 +1,6 @@
 import styles from './header.module.css'
 import searchIcon from '../../../assets/svg/chat/search-icon.svg'
-import SearchWindow from '../SearchWindow/SearchWindow'
+import { SearchWindow } from '../SearchWindow/SearchWindow'
 import SearchProvider from '../../../context/search/searchProvider'
 import useSearch from '../../../context/search/searchContext'
 import { useCallback } from 'react'
