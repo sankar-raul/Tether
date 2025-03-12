@@ -20,7 +20,7 @@ const app = express()
 const server = http.createServer(app)
 const DEV_MODE = process.env.DEV_MODE == 'true'
 app.use(cors({
-    origin: DEV_MODE ? "http://localhost:5173" : "https://tether-xi.vercel.app",
+    origin: DEV_MODE ? ["http://localhost:5173", "http://localhost:5174", "http://localhost:4173"] : "https://tether-xi.vercel.app",
     credentials: true
 }))
 
@@ -50,7 +50,7 @@ app.use((req, res) => {
 // chat logic
 export const io = new Server(server, {
     cors: {
-        origin: DEV_MODE ? "http://localhost:5173" : "https://tether-xi.vercel.app",
+        origin: DEV_MODE ? ["http://localhost:5173", "http://localhost:5174", "http://localhost:4173"] : "https://tether-xi.vercel.app",
         credentials: true
       }
 })
