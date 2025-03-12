@@ -32,7 +32,7 @@ const useMsgSocket = (contactId) => {
     const [ seenMap, setSeenMap ] = useState(new Map()) // contact_id -> boolean
     const { shiftUpContact, updateContactInfo, selectedContact } = useContacts()
     const { Alert } = useAlert()
-    const [ isLoading, setIsLoading ] = useState(true)
+    const [ isLoading, setIsLoading ] = useState({state: true, for: contactId})
 
     const deleteMsg = (reciver, msg_id) => {
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
@@ -70,7 +70,7 @@ const useMsgSocket = (contactId) => {
             console.log("Error while seeing messages", error)
             Alert({message: "Error while seeing messages", type: "error"})
         }
-    }, [updateContactInfo, Alert])
+    }, [updateContactInfo, Alert, contactId])
 
     // get past conversations
     const getInitialMessages = useCallback(async (id, config = {}) => { // ok
@@ -79,9 +79,9 @@ const useMsgSocket = (contactId) => {
         console.log(id, "opp")
         let local_id
         if (!id || messageRef.has(id)) return
-        feedback && setIsLoading(true)
+        feedback && setIsLoading(prev => ({...prev, for: id, state: true}))
         const [response, error] = await apiRequest(`/chat/messages/${id}`)
-        feedback && setIsLoading(false)
+        feedback && setIsLoading(prev => ({...prev, for: id, state: false}))
         if (!error) {
             console.log(response)
             const messageMap = new Map()

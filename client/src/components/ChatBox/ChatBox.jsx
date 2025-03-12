@@ -61,7 +61,7 @@ const ChatBox = () => {
                 <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
                 {
-                    !isLoading ? 
+                    isLoading.for != chatingWith.id || isLoading.state == false ? 
                     chats.slice().reverse().map(msg =>
                         <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
                     ) : <Loader />
