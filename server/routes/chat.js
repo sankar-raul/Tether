@@ -19,6 +19,7 @@ chatRouter.get('/messages/:contact_id', async (req, res) => {
         const msg_sent = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
         const msg_recived = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])
         const messages = sortMessages(msg_sent[0], msg_recived[0])
+        console.log(contact_id, "opp")
         return res.status(200).json(messages)
     } catch (error) {
         console.log("error")

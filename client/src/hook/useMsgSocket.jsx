@@ -161,6 +161,9 @@ const useMsgSocket = (contactId) => {
             } else {
                 selectedContact != sender && incrementUnread(sender, 1)
             }
+            if (selectedContact == sender) {
+                seeMsg(sender) // see msg if selected contact == sender
+            }
             const local_id = getUniqeMessageId(message.sender, message.reciver)
             console.log(sender)
             msgIdToLocalIdRef.set(message.id, local_id)

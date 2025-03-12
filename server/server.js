@@ -62,7 +62,7 @@ io.use((socket, next) => {
         return next(new Error("unauthorized!"))
     }
     const user = getUser(token)
-    // console.log(token)
+    console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     socket.user = user
     registerUser(socket.id, user.id)

@@ -33,10 +33,9 @@ const ChatBox = () => {
         })
         console.log(messages)
         setChats(chat)
-        seeMsg(selectedContact)
         // console.log(messages)
         // console.log(chat)
-    }, [messages, selectedContact, seeMsg, chatingWith])
+    }, [messages, selectedContact, chatingWith])
 
     useEffect(() => {
         if (!chatingWith || !chatingWith.unread) return
