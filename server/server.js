@@ -160,6 +160,6 @@ io.on('connection', (socket) => {
 })
 
 
-server.listen(8080, () => {
+server.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`)
 })
