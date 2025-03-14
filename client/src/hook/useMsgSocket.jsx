@@ -15,7 +15,7 @@ const getUniqeMessageId = (...args) => {
 }
 
 const incrementUnread = (id, value) => {
-    if (value == -1) {
+    if (value == 0) {
         unreadMsgRef.set(id, 0)
         return
     }
@@ -65,7 +65,7 @@ const useMsgSocket = (contactId) => {
             })
             messageRef.set(contact_id, messageMap)
             setMessages(new Map(messageRef))
-            incrementUnread(contact_id, -1)
+            incrementUnread(contact_id, 0)
         } catch (error) {
             console.log("Error while seeing messages", error)
             Alert({message: "Error while seeing messages", type: "error"})
@@ -93,7 +93,7 @@ const useMsgSocket = (contactId) => {
                 messageMap.set(local_id, msg)
                 msgIdToLocalIdRef.set(msg.id, local_id)
             })
-            console.log(messageMap, "op")
+            // console.log(messageMap, "op")
             updateContactInfo(id, {unread: unreadMsgRef.get(id)})
             // console.log(response)
             messageRef.set(id, messageMap)
@@ -188,9 +188,13 @@ const useMsgSocket = (contactId) => {
                 return
             }
             const messageMap = new Map(messageRef.get(sender))
+            if (messageMap.get(local_id).tick < 3) {
+                incrementUnread(sender, -1)
+                updateContactInfo(sender, {unread: unreadMsgRef.get(sender)})
+            }
             messageMap.delete(local_id)
-            messageRef.set(messageMap)
-            setMessages(new Map(messageMap))
+            messageRef.set(sender, messageMap)
+            setMessages(new Map(messageRef))
             msgIdToLocalIdRef.delete(Number(msg_id))
         }
 
