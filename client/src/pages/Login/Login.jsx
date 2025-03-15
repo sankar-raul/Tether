@@ -58,13 +58,13 @@ const Login = () => {
             <form className={styles.form} onSubmit={handleSubmit(login)}>
                 <div className={styles.inputBox}>
                     <div name={!errors.email ? 'true' : 'incorrect'} className={styles['input-wraper']}>
-                        <input type="text" {...register("email", {required: { value: true, message: "required" }, pattern: { value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "invalid email" }})} autoComplete='email' />
+                        <input name='email' type="text" {...register("email", {required: { value: true, message: "required" }, pattern: { value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "invalid email" }})} autoComplete='email' />
                         <label htmlFor='email'>Email</label>
                     </div>
                 </div>
                 <div className={styles.inputBox}>
                     <div name={!errors.password ? 'true' : 'incorrect'} className={styles['input-wraper']}>
-                        <input type="password" {...register('password', {required: {value: true, message: "password required"}, minLength: {value: 6, message: "password lengtth must be greater than 6"}})} />
+                        <input name='password' type="password" {...register('password', {required: {value: true, message: "password required"}, minLength: {value: 6, message: "password lengtth must be greater than 6"}})} />
                         <label htmlFor='password'>Password</label>
                     </div>
                 </div>
