@@ -24,7 +24,7 @@ const incrementUnread = (id, value) => {
     } else {
         unreadMsgRef.set(id, 1)
     }
-    console.log(unreadMsgRef)
+    // console.log(unreadMsgRef)
 }
 
 const useMsgSocket = (contactId) => {
@@ -76,7 +76,7 @@ const useMsgSocket = (contactId) => {
     const getInitialMessages = useCallback(async (id, config = {}) => { // ok
         id = Number(id)
         const { feedback } = config
-        console.log(id, "opp")
+        // console.log(id, "opp")
         let local_id
         if (!id || messageRef.has(id)) return
         feedback && setIsLoading(prev => ({...prev, for: id, state: true}))
@@ -102,7 +102,7 @@ const useMsgSocket = (contactId) => {
     }, [updateContactInfo])
 
     useEffect(() => {
-        console.log(contactId)
+        // console.log(contactId)
         contactId && getInitialMessages(contactId, {feedback: true})
     }, [contactId, getInitialMessages])
 
@@ -127,14 +127,14 @@ const useMsgSocket = (contactId) => {
                 setMessages(new Map(messageRef))
                 shiftUpContact(contactId, msg)
                 // *^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
-                console.log(msg)
+                // console.log(msg)
                 const message = await socket.emitWithAck('message:send', {content, reciver: contactId, sent_at})
-                console.log(message)
+                // console.log(message)
                 if (message == 'error') {
                     console.log("message send error!")
                     Alert({message: "Something went wrong!", type: 'error'})
                 } else {
-                    console.log(message)
+                    // console.log(message)
                     msgIdToLocalIdRef.set(message.id, local_id)
                     messageMap.set(local_id, message)
                     messageRef.set(contactId, messageMap)
@@ -152,8 +152,8 @@ const useMsgSocket = (contactId) => {
     useEffect(() => {
         // push new message to message Map
         const msgRecived = (message) => { // op
-            console.log(message)
-            console.log(message.id, contactId)
+            // console.log(message)
+            // console.log(message.id, contactId)
             let { sender } = message
             sender = Number(sender)
             if (!messageRef.has(sender)) {
@@ -210,7 +210,7 @@ const useMsgSocket = (contactId) => {
                 }
             })
             messageRef.set(reciver, messageMap)
-            console.log(messageRef)
+            // console.log(messageRef)
             setMessages(new Map(messageRef))
         }
 
