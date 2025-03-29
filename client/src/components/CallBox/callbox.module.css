@@ -1,3 +1,97 @@
 .call-box {
-    /* background-color: lime; */
+    background-color: var(--solid-bg);
+    backdrop-filter: blur(2px);
+    position: fixed;
+    /* top: 10%; */
+    /* right: 10%; */
+    width: 300px;
+    min-width: 50px;
+    aspect-ratio: 5 / 4;
+    border-radius: 10px;
+    box-shadow: 3px 4px 40px 0px #0001;
+    z-index: 3;
+    transition: .3s;
+    border: 3px solid #7771;
+}
+.call-box-controll-bar {
+    height: 35px;
+    /* border-bottom: 1px solid #333; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    border-top-right-radius: 10px;
+}
+.call-box-controll-bar > div:nth-of-type(1) {
+    padding-left: 10px;
+    display: grid;
+    place-items: center;
+    opacity: .9;
+}
+.controll-btns {
+    display: flex;
+    background-color: #222;
+    background-color: var(--secondery-bg);
+    height: 100%;
+}
+.controll-btns > div {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    color: var(--secondery-icon);
+}
+.controll-btns .controll-icons {
+    font-size: 16px;
+    color: inherit;
+}
+.controll-btns div:not(:nth-last-child(1)):hover {
+    background-color: #222;
+}
+.controll-btns div:nth-last-child(1):hover {
+    background-color: var(--danger-bg);
+    color: red;
+}
+.call-container {
+    padding: 10px;
+
+}
+.resizer {
+    background-color: #7774;
+    position: absolute;
+    --resizer-size: 15px;
+}
+.left-resize, .right-resize {
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    width: var(--resizer-size);
+    cursor: ew-resize;
+}
+body:has(.left-resize:active), body:has(.right-resize:active) {
+    cursor: ew-resize;
+}
+body:has(.top-resize:active), body:has(.bottom-resize:active) {
+    cursor: n-resize;
+}
+.left-resize {
+    left: calc(var(--resizer-size) * -1);
+}
+.right-resize {
+    right: calc(var(--resizer-size) * -1);
+}
+.top-resize, .bottom-resize {
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: var(--resizer-size);
+    cursor: n-resize;
+}
+.top-resize {
+    top: calc(var(--resizer-size) * -1);
+}
+.bottom-resize {
+    bottom: calc(var(--resizer-size) * -1);
 }

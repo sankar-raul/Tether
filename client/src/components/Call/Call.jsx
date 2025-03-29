@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 export const Call = ({type = 'audio', to}={}) => {
     
     return (
-        <section>
+        <section className={styles['']}>
             Calling...
         </section>
     )
 }
 Call.propTypes = {
     type: PropTypes.string,
-    to: PropTypes.string.isRequired
+    to: PropTypes.any.isRequired
 }
 
 const AudioCall = () => {
