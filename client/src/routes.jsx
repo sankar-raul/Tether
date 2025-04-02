@@ -6,6 +6,7 @@ import Layout from "./pages/Layout/Layout"
 import ChatLayout from "./pages/ChatLayout/ChatLayout"
 import Chat from "./pages/Chat/Chat"
 import { ProtectedRoute } from "./hook/authSecurity"
+import ContactsProvider from './context/contacts/provider'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,7 +23,9 @@ export const router = createBrowserRouter(
         </Route>
         <Route path="/chat" element={(
             <ProtectedRoute>
-                <ChatLayout />
+                <ContactsProvider>
+                    <ChatLayout />
+                </ContactsProvider>
             </ProtectedRoute>
             )}>
             <Route index element={<Chat />} />

@@ -1,7 +1,9 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useSearch from '../../../context/search/searchContext'
 import styles from './search-window.module.css'
+import PropTypes from 'prop-types'
 import { Loader } from '../../Loader/Loader'
+import useContacts from '../../../context/contacts/contact'
 
 export const SearchWindow = () => {
     const { setIsSearchFocused, searchValue, clearSearchCache, searchResults, isLoading } = useSearch()
@@ -14,6 +16,9 @@ export const SearchWindow = () => {
             window.removeEventListener('click', hideSearchWindow)
         }
     }, [setIsSearchFocused, clearSearchCache])
+    useEffect(() => {
+        console.log(searchResults)
+    }, [searchResults])
     return (
         <>
         <div className={styles['search-window']}>
@@ -23,9 +28,7 @@ export const SearchWindow = () => {
                     <>
                     {isLoading ? <Loader /> :
                     searchResults ? searchResults.map((user, idx) => (
-                        <p key={idx}>
-                            {user.username}
-                        </p>
+                        <ShowUser key={idx} info={user} />
                     )) : 'Nothing here!'
                 }
                 </>
@@ -34,4 +37,26 @@ export const SearchWindow = () => {
         </div>
         </>
     )
+}
+
+const ShowUser = ({info}) => {
+    const { shiftUpContact, setSelectedContact, updateContactInfo, contactMap, selectedContact } = useContacts()
+    const { setIsSearchFocused } = useSearch()
+
+    const startTethering = useCallback(() => {
+        updateContactInfo(info.id, info)
+        setSelectedContact(info.id)
+        setIsSearchFocused(false)
+        shiftUpContact(info.id, {})
+        console.log('first')
+    }, [info, updateContactInfo, shiftUpContact, setSelectedContact, setIsSearchFocused])
+
+    return (
+        <p onClick={startTethering}>
+            {info.username}
+        </p>
+    )
+}
+ShowUser.propTypes = {
+    info: PropTypes.object.isRequired
 }
