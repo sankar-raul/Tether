@@ -76,7 +76,7 @@ const Contact = ({ user }) => {
                 setLastMessage(userInfo?.bio || 'bio')
             }
         }
-    }, [setLastMessage, userInfo, lastMessage, updateContactInfo, localUserInfo])
+    }, [setLastMessage, userInfo, lastMessage, updateContactInfo])
 
     // useEffect(() => {
     //     setUserInfo(contactMap?.get(user?.id))
