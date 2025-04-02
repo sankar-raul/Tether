@@ -7,7 +7,7 @@
     height: 100%;
     z-index: -1;
     /* background-color: #7003; */
-    backdrop-filter: blur(1px) brightness(70%);
+    backdrop-filter: blur(2px) brightness(50%);
     display: flex;
     justify-content: center;
 }
@@ -15,10 +15,84 @@
     /* max-height: clamp(200px, 40vh, 350px); */
     max-width: clamp(300px, 90%, 600px);
     width: 60%;
-    box-shadow: 0px 5px 30px 3px #0005;
-    height: 250px;
+    box-shadow: 0px 5px 40px 3px #0004;
+    /* max-height: max-content; */
+    height: max-content;
     border-radius: 10px;
-    background: #111;
+    background: #181818;
     margin-left: clamp(10px, 40%, 40px);
-    /* width: 400px; */
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 500px;
+    scroll-behavior: smooth;
+}
+.result-for {
+    padding: 10px;
+}
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+.search-results .show-user {
+    background-color: var(--secondery-color);
+    height: 60px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    overflow: hidden;
+
+    &:hover {
+        background-color: #0006;
+    }
+}
+.msg-btn {
+    width: max-content;
+    max-width: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.msg-btn > button {
+    all: unset;
+    padding: 6px;
+    font-size: .8rem;
+    background-color: transparent;
+    border: 1px solid var(--brand-color);
+    color: var(--brand-color);
+    cursor: pointer;
+}
+.show-user:hover .msg-btn button {
+    background-color: var(--brand-color);
+    color: #fff;
+}
+
+.show-user-info {
+    flex-grow: 1;
+    display: flex;
+    gap: 8px;
+    overflow: hidden;
+}
+.show-user-info > div:nth-of-type(2) {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.username {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.bio {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: .8rem;
+    color: #fffa;
+}
+.show-user-info > .avatar {
+    /* border: 1px solid lime; */
 }

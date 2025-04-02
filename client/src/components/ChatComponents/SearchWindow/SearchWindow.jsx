@@ -3,6 +3,7 @@ import useSearch from '../../../context/search/searchContext'
 import styles from './search-window.module.css'
 import PropTypes from 'prop-types'
 import { Loader } from '../../Loader/Loader'
+import { DefaultUser } from '../../DefaultUser/DefaultUser'
 import useContacts from '../../../context/contacts/contact'
 
 export const SearchWindow = () => {
@@ -23,13 +24,15 @@ export const SearchWindow = () => {
         <>
         <div className={styles['search-window']}>
             <div onClick={(e) => e.stopPropagation()} className={styles['search-results']}>
-                Search results for {`"${searchValue}"`}
-                <div>
+                <div className={styles['result-for']}>
+                    Search results for {`"${searchValue}"`}
+                </div>
+                <div className={styles['results']}>
                     <>
                     {isLoading ? <Loader /> :
                     searchResults ? searchResults.map((user, idx) => (
                         <ShowUser key={idx} info={user} />
-                    )) : 'Nothing here!'
+                    )) : <div className={styles['result-for']}>Nothing here!</div>
                 }
                 </>
                 </div>
@@ -52,9 +55,21 @@ const ShowUser = ({info}) => {
     }, [info, updateContactInfo, shiftUpContact, setSelectedContact, setIsSearchFocused])
 
     return (
-        <p onClick={startTethering}>
-            {info.username}
-        </p>
+        <div className={styles['show-user']} onClick={startTethering}>
+            <div className={styles['show-user-info']}>
+                <div className={styles['avatar']}><DefaultUser /></div>
+                {/* <div className={styles['avatar']}>ava</div> */}
+                <div>
+                    <div className={styles['username']}>{info.username}</div>
+                    <div className={styles['bio']}>{info.bio || 'Friends are just a text away'}</div>
+                </div>
+            </div>
+            <div className={styles['msg-btn']}>
+                <button>
+                    Message
+                </button>
+            </div>
+        </div>
     )
 }
 ShowUser.propTypes = {
