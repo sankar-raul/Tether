@@ -10,7 +10,7 @@ export const userRoot = (req, res) => {
 
 export const search = async (req, res) => {
     let { q, part } = req.query
-    const results_per_part = 3
+    const results_per_part = 4
     let offset = 0
     console.log(part)
     if (part) {
