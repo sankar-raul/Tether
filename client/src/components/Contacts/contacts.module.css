@@ -45,16 +45,13 @@
 
 
 /* tab styles */
-.contact.active {
-    background-color: var(--contact-hover-bg);
-}
 
 .contact {
     width: 100%;
     /* overflow: hidden; */
     background-color: var(--contact-label-bg);
-    height: 55px;
-    min-height: 55px;
+    height: 60px;
+    min-height: 60px;
     border-radius: var(--radius-small);
     display: flex;
     flex-wrap: nowrap;
@@ -70,6 +67,9 @@
     }
 }
 
+.contact.active {
+    background-color: var(--contact-active-bg);
+}
 
 .contact > .profile {
     height: 85%;

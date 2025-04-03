@@ -29,7 +29,8 @@
   --danger-bg: #72002645;
 
   --contact-label-bg: #1118;
-  --contact-hover-bg: #3336;
+  --contact-hover-bg: #2226;
+  --contact-active-bg: #3336;
   --msg-hover-bg: #4448;
   --search-container-bg: #181818;
   --shadow: #0009;
@@ -67,7 +68,8 @@
     --danger-bg: #72002645;
   
     --contact-label-bg: #fff3;
-    --contact-hover-bg: #ddd8;
+    --contact-hover-bg: #ddd6;
+    --contact-active-bg: #ddd;
     --msg-hover-bg: #fffa;
     --search-container-bg: #fff2;
     --shadow: #6663;
