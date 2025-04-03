@@ -33,7 +33,7 @@
 }
 
 .message-tag > .message-body {
-    background: var(--secondery-bg);
+    background: var(--chat-msg-bg);
     padding: 6px 55px 12px 8px;
     padding-bottom: 12px;
     padding-right: 55px;
@@ -67,7 +67,7 @@
     cursor: text;
 }
 .message-tag:hover > .message-body {
-    background: #4446;
+    background: var(--msg-hover-bg);
 }
 .content {
     word-wrap: normal;

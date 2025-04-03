@@ -7,7 +7,7 @@
     height: 100%;
     z-index: -1;
     /* background-color: #7003; */
-    backdrop-filter: blur(2px) brightness(50%);
+    /* backdrop-filter: brightness(50%); */
     display: flex;
     justify-content: center;
 }
@@ -19,13 +19,14 @@
     /* max-height: max-content; */
     height: max-content;
     border-radius: 10px;
-    background: #181818;
+    background: var( --search-container-bg);
     margin-left: clamp(10px, 40%, 40px);
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
     max-height: 500px;
     scroll-behavior: smooth;
+    backdrop-filter: blur(200px);
 }
 .result-for {
     padding: 10px;
@@ -45,7 +46,7 @@
     overflow: hidden;
 
     &:hover {
-        background-color: #0006;
+        background-color: var(--contact-hover-bg);
     }
 }
 .msg-btn {
@@ -91,7 +92,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: .8rem;
-    color: #fffa;
+    color: var(--secondery-color);
 }
 .show-user-info > .avatar {
     /* border: 1px solid lime; */

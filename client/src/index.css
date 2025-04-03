@@ -16,21 +16,67 @@
   -moz-osx-font-smoothing: grayscale;
 
   --primary-bg: #000;
-  --secondery-bg: #6666661a;
-  --chat-msg-bg: #5555551a;
+  --primary-color: #fff;
+  --secondery-bg: #66666628;
+  --chat-msg-bg: var(--secondery-bg);
   --secondery-icon: #bbbbbb;
   --send-btn-shade: #77C1E3;
   --brand-color: #1B91E5;
   --brand-bg: #002f7a45;
-  --solid-bg: #111111;
+  --solid-bg: #222;
   --secondery-text: #cccccc;
   --danger-color: #E51B5E;
   --danger-bg: #72002645;
+
+  --contact-label-bg: #1118;
+  --contact-hover-bg: #3336;
+  --msg-hover-bg: #4448;
+  --search-container-bg: #181818;
+  --shadow: #0009;
 
   --radius-big: 24px;
   --radius-mid: 14px;
   --radius-small: 7px;
 }
+/* light mode */
+/* @media (prefers-color-scheme: light) {
+  :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: #fff;
+    background: #000;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  
+    --primary-bg: #eeec;
+    --primary-color: #000;
+    --secondery-bg: #eee;
+    --secondery-text: #666;
+  
+    --chat-msg-bg: #fff;
+    --secondery-icon: #bbbbbb;
+    --send-btn-shade: #77C1E3;
+    --brand-color: #1B91E5;
+    --brand-bg: #002f7a45;
+    --solid-bg: #ddd;
+    --danger-color: #E51B5E;
+    --danger-bg: #72002645;
+  
+    --contact-label-bg: #fff3;
+    --contact-hover-bg: #ddd8;
+    --msg-hover-bg: #fffa;
+    --search-container-bg: #fff2;
+    --shadow: #6663;
+    
+    --radius-big: 24px;
+    --radius-mid: 14px;
+    --radius-small: 7px;
+  }
+} */
 html {
   /* cursor: url('/svg/cursor.svg') 10 10, auto; */
 }
@@ -42,7 +88,8 @@ html, body, #root {
   font-family: 'Istok Web', serif;
   letter-spacing: .5px;
   user-select: none;
-  background: #000;
+  background: var(--primary-bg);
+  color: var(--primary-color);
 }
 input, textarea {
   font-family: 'Istok Web', serif;

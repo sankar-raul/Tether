@@ -22,7 +22,6 @@ const SearchProvider = ({children}) => {
     const searchPreview = useCallback(async (searchFor, {signal}) => {
         let data, error
         const endPoint = `/user/search?q=${searchFor}`
-        console.log("here")
         console.log(searchFor.length)
         if (searchFor.length <= 2) return
         if (SearchCache.has(endPoint)) {

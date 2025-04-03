@@ -29,10 +29,10 @@
     height: 90%;
 }
 .chat-input > .input {
-    background: var(--secondery-bg);
+    background: var(--chat-msg-bg);
     height: 100%;
     border-radius: 20px;
-    color: #fff;
+    color: var(--primary-text);
     letter-spacing: .5px;
     font-size: 16px;
     max-width: 100%;
