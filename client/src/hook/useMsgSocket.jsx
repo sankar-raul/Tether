@@ -30,7 +30,7 @@ const incrementUnread = (id, value) => {
 const useMsgSocket = (contactId) => {
     const [ messages, setMessages ] = useState(new Map()) // contact_id -> message_id -> message_object
     const [ seenMap, setSeenMap ] = useState(new Map()) // contact_id -> boolean
-    const { shiftUpContact, updateContactInfo, selectedContact } = useContacts()
+    const { shiftUpContact, updateContactInfo, selectedContact, fetchContactInfo } = useContacts()
     const { Alert } = useAlert()
     const [ isLoading, setIsLoading ] = useState({state: true, for: contactId})
 
@@ -157,6 +157,7 @@ const useMsgSocket = (contactId) => {
             let { sender } = message
             sender = Number(sender)
             if (!messageRef.has(sender)) {
+                fetchContactInfo(sender)
                 getInitialMessages(sender)
             } else {
                 selectedContact != sender && incrementUnread(sender, 1)

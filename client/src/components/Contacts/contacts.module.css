@@ -45,11 +45,14 @@
 
 
 /* tab styles */
+.contact.active {
+    background-color: #3338;
+}
 
 .contact {
     width: 100%;
     /* overflow: hidden; */
-    background-color: var(--solid-bg);
+    background-color: #1118;
     height: 55px;
     min-height: 55px;
     border-radius: var(--radius-small);
@@ -63,13 +66,10 @@
     border: 1px solid transparent;
 
     &:hover {
-        border: 1px solid var(--brand-color);
+        background-color: #3336;
     }
 }
 
-.contact.active {
-    background-color: #222a;
-}
 
 .contact > .profile {
     height: 85%;

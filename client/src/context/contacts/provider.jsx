@@ -103,7 +103,7 @@ const ContactsProvider = ({children}) => {
     }, [userInfo, getContacts, isContactFetched, updateContactInfo])
 
     return (
-        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading}}>
+        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading, fetchContactInfo}}>
             {children}
         </contactsContext.Provider>
     )

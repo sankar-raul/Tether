@@ -24,15 +24,16 @@ export const SearchWindow = () => {
         <>
         <div className={styles['search-window']}>
             <div onClick={(e) => e.stopPropagation()} className={styles['search-results']}>
-                <div className={styles['result-for']}>
+                {searchValue.length > 2 ? <div className={styles['result-for']}>
                     Search results for {`"${searchValue}"`}
-                </div>
+                </div> : '' 
+                }
                 <div className={styles['results']}>
                     <>
                     {isLoading ? <Loader /> :
                     searchResults ? searchResults.map((user, idx) => (
                         <ShowUser key={idx} info={user} />
-                    )) : <div className={styles['result-for']}>Nothing here!</div>
+                    )) : <div className={styles['result-for']}></div>
                 }
                 </>
                 </div>
@@ -43,16 +44,16 @@ export const SearchWindow = () => {
 }
 
 const ShowUser = ({info}) => {
-    const { shiftUpContact, setSelectedContact, updateContactInfo, contactMap, selectedContact } = useContacts()
+    const { setSelectedContact, updateContactInfo, contactMap, selectedContact } = useContacts()
     const { setIsSearchFocused } = useSearch()
 
     const startTethering = useCallback(() => {
         updateContactInfo(info.id, info)
         setSelectedContact(info.id)
         setIsSearchFocused(false)
-        shiftUpContact(info.id, {})
-        console.log('first')
-    }, [info, updateContactInfo, shiftUpContact, setSelectedContact, setIsSearchFocused])
+        // shiftUpContact(info.id, {})
+        // console.log('first')
+    }, [info, updateContactInfo, setSelectedContact, setIsSearchFocused])
 
     return (
         <div className={styles['show-user']} onClick={startTethering}>

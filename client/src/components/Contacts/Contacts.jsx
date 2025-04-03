@@ -78,21 +78,7 @@ const Contact = ({ user }) => {
         }
     }, [setLastMessage, userInfo, lastMessage, updateContactInfo])
 
-    // useEffect(() => {
-    //     setUserInfo(contactMap?.get(user?.id))
-    // }, [user])
-    useEffect(() => {
-        if (lastMessage || lastMessage === false) {
-            userInfo.content && setLastMessage(userInfo.content)
-        } else {
-            lastMsg()
-        }
-    }, [userInfo, lastMsg, lastMessage])
-    useEffect(() => {
-        localUserInfo && userInfo && setIsChatingWithMyself(localUserInfo.id == userInfo.id)
-    }, [localUserInfo, userInfo])
-    useEffect(() => {
-        setUserInfo({...user, id: Number(user.id)})
+    const updateTimeStamp = useCallback(() => {
         const lastMsgDate = new HeroDate(user.last_msg_at)
         const prevDayStart = new HeroDate()
         const prevMidNight = new HeroDate()
@@ -113,6 +99,28 @@ const Contact = ({ user }) => {
         // console.log(user)
         // console.log(prevDayStart.formatedDate(), prevDayStart.formatedTime(), prevMidNight.formatedDate(), prevMidNight.formatedTime())
     }, [user])
+
+    // useEffect(() => {
+    //     setUserInfo(contactMap?.get(user?.id))
+    // }, [user])
+    useEffect(() => {
+        if (lastMessage || lastMessage === false) {
+            userInfo.content && setLastMessage(userInfo.content)
+        } else {
+            lastMsg()
+        }
+    }, [userInfo, lastMsg, lastMessage])
+    useEffect(() => {
+        localUserInfo && userInfo && setIsChatingWithMyself(localUserInfo.id == userInfo.id)
+    }, [localUserInfo, userInfo])
+    useEffect(() => {
+        setUserInfo({...user, id: Number(user.id)})
+        if (!user?.last_msg_at) {
+            setTimeStamp('')
+            return
+        }
+        updateTimeStamp()
+    }, [user, updateTimeStamp])
     
     useEffect(() => {
         // console.log(selectedContact, user.id)
