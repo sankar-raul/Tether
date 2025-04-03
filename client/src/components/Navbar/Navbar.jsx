@@ -6,7 +6,7 @@ const Navbar = () => {
     const { userInfo } = useUserInfo()
 
     useEffect(() => {
-        console.log(userInfo)
+        // console.log(userInfo)
     }, [userInfo])
     return (
         <div className={styles.navbar}>

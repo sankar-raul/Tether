@@ -24,9 +24,44 @@
     display: flex;
     flex-direction: column;
     backdrop-filter: blur(200px);
+    padding-bottom: 6px;
 }
 .result-for {
     padding: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+.no-more-result {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondery-text);
+    font-size: .9rem;
+    font-weight: 500;
+}
+.result-for > div:nth-of-type(1) {
+    color: var(--secondery-text);
+
+    &>span {
+        font-weight: 600;
+    }
+}
+.result-for > div:nth-last-child(1) {
+    aspect-ratio: 1 / 1;
+    width: 24px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+
+    &:hover > .btn-icon {
+        opacity: .8;
+    }
+    &:active > .btn-icon {
+        opacity: 0.4;
+    } 
 }
 .results {
     display: flex;
@@ -36,9 +71,15 @@
     overflow-y: scroll;
     scroll-behavior: smooth;
 
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+        background-color: #aaa2;
+    }
 }
+
 .search-results .show-user {
-    background-color: var(--secondery-color);
     height: 60px;
     min-height: 60px;
     padding: 10px;
@@ -48,7 +89,7 @@
     overflow: hidden;
 
     &:hover {
-        background-color: var(--contact-hover-bg);
+        background-color: var(--search-contact-hover-bg);
     }
 }
 .msg-btn {
@@ -63,7 +104,8 @@
     padding: 6px;
     font-size: .8rem;
     background-color: transparent;
-    border: 1px solid var(--brand-color);
+    background-color: var(--brand-bg);
+    border: 1px solid #1B91E566;
     color: var(--brand-color);
     cursor: pointer;
 }
@@ -71,7 +113,9 @@
     background-color: var(--brand-color);
     color: #fff;
 }
-
+.btn-icon {
+    color: var(--secondery-text);
+}
 .show-user-info {
     flex-grow: 1;
     display: flex;
@@ -83,6 +127,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-grow: 1;
 }
 .username {
     overflow: hidden;
@@ -94,8 +139,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: .8rem;
-    color: var(--secondery-color);
+    color: var(--secondery-text);
 }
 .show-user-info > .avatar {
-    /* border: 1px solid lime; */
+    display: grid;
+    place-items: center;
 }

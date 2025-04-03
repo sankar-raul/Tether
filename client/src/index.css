@@ -18,22 +18,24 @@
   --primary-bg: #000;
   --primary-color: #fff;
   --secondery-bg: #66666628;
+  --secondery-text: #cccccc;
   --chat-msg-bg: var(--secondery-bg);
   --secondery-icon: #bbbbbb;
   --send-btn-shade: #77C1E3;
   --brand-color: #1B91E5;
   --brand-bg: #002f7a45;
   --solid-bg: #222;
-  --secondery-text: #cccccc;
   --danger-color: #E51B5E;
   --danger-bg: #72002645;
 
   --contact-label-bg: #1118;
   --contact-hover-bg: #2226;
+  --search-contact-hover-bg: #3334;
   --contact-active-bg: #3336;
   --msg-hover-bg: #4448;
   --search-container-bg: #181818;
   --shadow: #0009;
+  --skeleton-accent-color: #fff2;
 
   --radius-big: 24px;
   --radius-mid: 14px;
@@ -69,19 +71,22 @@
   
     --contact-label-bg: #fff3;
     --contact-hover-bg: #ddd6;
+    --search-contact-hover-bg: #ccc6;
     --contact-active-bg: #ddd;
     --msg-hover-bg: #fffa;
     --search-container-bg: #fff2;
     --shadow: #6663;
+    --skeleton-accent-color: #0002;
+
     
     --radius-big: 24px;
     --radius-mid: 14px;
     --radius-small: 7px;
   }
 } */
-html {
-  /* cursor: url('/svg/cursor.svg') 10 10, auto; */
-}
+/* html {
+  cursor: url('/svg/cursor.svg') 10 10, auto;
+} */
 ::-webkit-scrollbar {
   width: 0px;
 }

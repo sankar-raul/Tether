@@ -6,9 +6,9 @@ import { setItem, getItem } from '../../utils/localStorage'
 const ResizeableAsideProvider = ({ children }) => {
     
     const [ isResizing, setIsResizing ] = useState(false)
-    const minmax = useMemo(() => ({min: 200, max: 500}), [])
+    const minmax = useMemo(() => ({min: 200, max: window.innerWidth / 2 - 50}), [])
     const resizeableDiv = useRef(null)
-    const [ newWidth, setNewWidth ] = useState(getItem('contact-width') || '350px')
+    const [ newWidth, setNewWidth ] = useState(getItem('contact-width') || 'clamp(200px, 30vw, 350px)')
     const handleMouseUp = useCallback(() => {
         setIsResizing(false)
         // console.log("up")

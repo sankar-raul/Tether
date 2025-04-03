@@ -80,7 +80,7 @@ const useMsgSocket = (contactId) => {
         let local_id
         if (!id || messageRef.has(id)) return
         feedback && setIsLoading(prev => ({...prev, for: id, state: true}))
-        const [response, error] = await apiRequest(`/chat/messages/${id}`)
+        const [[response, error], ] = await Promise.all([apiRequest(`/chat/messages/${id}`), fetchContactInfo(id)])
         feedback && setIsLoading(prev => ({...prev, for: id, state: false}))
         if (!error) {
             console.log(response)
@@ -157,7 +157,6 @@ const useMsgSocket = (contactId) => {
             let { sender } = message
             sender = Number(sender)
             if (!messageRef.has(sender)) {
-                fetchContactInfo(sender)
                 getInitialMessages(sender)
             } else {
                 selectedContact != sender && incrementUnread(sender, 1)

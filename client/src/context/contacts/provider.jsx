@@ -14,7 +14,7 @@ const ContactsProvider = ({children}) => {
     const [ isLoading, setIsLoading ] = useState(true)
 
     const fetchContactInfo = useCallback(async (id) => {
-        if (!userInfo || !id || contactRef.get(userInfo.id)?.username) return
+        if ( !id || contactRef.get(id)?.username) return
         id = Number(id)
         const [response, error] = await apiRequest(`/chat/c/${id}`)
         if (!error) {
@@ -29,7 +29,7 @@ const ContactsProvider = ({children}) => {
         } else {
             console.log("/chat/c/:id Error at /src/context/contacts/provider.jsx". error)
         }
-    }, [userInfo])
+    }, [])
 
     const getContacts = useCallback(async () => {
         setIsContactFetched(true)
