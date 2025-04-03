@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { SearchContext } from "./searchContext"
 import PropTypes from 'prop-types'
 import apiRequest from "../../hook/apiRequest"
 import useAlert from '../alert/Alert'
+import { debounce } from '../../utils/helperFunctions'
 
 const SearchCache = new Map() // endpoint -> data
 
 const SearchProvider = ({children}) => {
     const [ isSearchFocused, setIsSearchFocused ] = useState(false)
     const [ searchValue, setSearchValue ] = useState('')
-    const [ endPoint, setEndPoint ] = useState(null)
+    // const [ endPoint, setEndPoint ] = useState(null)
     const [ searchResults, setSearchResults ] = useState(null)
     const { Alert } = useAlert()
     const [isLoading, setIsLoading] = useState(false)
@@ -18,9 +19,12 @@ const SearchProvider = ({children}) => {
         SearchCache.clear()
     }, [])
 
-    const searchPreview = useCallback(async ({signal}) => {
+    const searchPreview = useCallback(async (searchFor, {signal}) => {
         let data, error
-        if (searchValue.length <= 2) return
+        const endPoint = `/user/search?q=${searchFor}`
+        console.log("here")
+        console.log(searchFor.length)
+        if (searchFor.length <= 2) return
         if (SearchCache.has(endPoint)) {
             data = SearchCache.get(endPoint)
             setSearchResults(data)
@@ -44,29 +48,37 @@ const SearchProvider = ({children}) => {
                 SearchCache.set(endPoint, data?.data)
             }
         }
-    }, [endPoint, Alert, searchValue])
+    }, [Alert])
+
+    const searchDebounce = useRef(debounce(searchPreview, 300))
+
     const search = useCallback((e) => {
         e.preventDefault()
     }, [])
+
     useEffect(() => {
         console.log(searchResults)
     }, [searchResults])
-    useEffect(() => {
-        if (!endPoint) return
+   
+    const initiateSearch = useCallback((searchFor) => {
         const Controller = new AbortController()
-        searchPreview({signal: Controller.signal})
+        searchDebounce.current(searchFor, {signal: Controller.signal})
+        // console.log(searchDebounce.current)
+        // console.log('op')
         return () => {
             Controller.abort()
         }
-    }, [endPoint])
+    }, [])
+
     useEffect(() => {
-        if (searchValue.length > 1)
-            setEndPoint(`/user/search?q=${searchValue}`)
-        else {
+        if (searchValue.length > 1) {
+            const abort = initiateSearch(searchValue)
+            return abort
+        } else {
             setIsLoading(false)
             setSearchResults(null)
         }
-    }, [searchValue])
+    }, [searchValue, initiateSearch])
 
     return (
         <SearchContext.Provider value={{isSearchFocused, setIsSearchFocused, searchValue, setSearchValue, search, clearSearchCache, searchResults, isLoading}}>
