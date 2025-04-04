@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import useSearch from '../../../context/search/searchContext'
 import styles from './search-window.module.css'
 import PropTypes from 'prop-types'
@@ -86,9 +86,9 @@ const LoadMore = () => {
     )
 }
 
-export const ShowUser = ({info, skeleton, animationDelay = 0}) => {
+export const ShowUser = ({info, skeleton, animationDelay = 0, className = '', ...props}) => {
     const { setSelectedContact, updateContactInfo } = useContacts()
-    const { setIsSearchFocused } = useSearch()
+    const { setIsSearchFocused } = useSearch() || {}
 
     const startTethering = useCallback(() => {
         if (skeleton) return
@@ -100,19 +100,19 @@ export const ShowUser = ({info, skeleton, animationDelay = 0}) => {
     }, [info, updateContactInfo, setSelectedContact, setIsSearchFocused, skeleton])
 
     return (
-        <div className={styles['show-user']} onClick={startTethering}>
+        <div className={`${styles['show-user']} ${className}`} onClick={startTethering} {...props}>
             <div className={styles['show-user-info']}>
                 <div className={styles['avatar']}>{ skeleton ? <Skeleton variant='circular' height='40px' width='40px' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : <DefaultUser />}</div>
                 {/* <div className={styles['avatar']}>ava</div> */}
                 <div>
-                    <div className={styles['username']}>{skeleton ? <Skeleton variant='text' width='clamp(20px, 40%, 100px)' height='90%' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : info?.username || 'username'}</div>
-                    <div className={styles['bio']}>{skeleton ? <Skeleton variant='text' width='clamp(35px, 60%, 150px)' height='100%' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : info?.bio || 'Friends are just a text away'}</div>
+                    <div className={styles['username']}>{skeleton ? <Skeleton variant='text' width='clamp(20px, 40%, 100px)' height='85%' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : info?.username || 'username'}</div>
+                    <div className={styles['bio']}>{skeleton ? <Skeleton variant='text' width='clamp(35px, 60%, 170px)' height='100%' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : info?.bio || 'Friends are just a text away'}</div>
                 </div>
             </div>
             <div className={styles['msg-btn']}>
                 {!skeleton ? <button>
                     Message
-                </button> : <Skeleton variant='rectangular' height='80%' sx={{background: 'var(--skeleton-accent-color)', minWidth: '80px', animationDelay: animationDelay}} />}
+                </button> : ''}
             </div>
         </div>
     )
@@ -120,5 +120,6 @@ export const ShowUser = ({info, skeleton, animationDelay = 0}) => {
 ShowUser.propTypes = {
     info: PropTypes.object,
     skeleton: PropTypes.bool,
-    animationDelay: PropTypes.string
+    animationDelay: PropTypes.string,
+    className: PropTypes.string
 }

@@ -40,10 +40,10 @@ const Chats = () => {
     return (
         <>
         {
-            !isLoading ? 
+            !isLoading ?
             [...contactMap.values()]?.map(user => (
                 <Contact key={user?.id} user={user} />
-            )) : <Loader />
+            )) : <Loader type={'skeleton'} count={20} className={styles['contact'] + ' ' + styles['prevent-hover']} />
         }
         </>
     )

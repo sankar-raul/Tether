@@ -14,6 +14,16 @@
     overflow-x: initial;
     scroll-behavior: smooth;
     flex-grow: 1;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-button {
+        height: 0px;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+        background-color: #aaa2;
+    }
 }
 .handle-resize {
     width: 10px;
@@ -66,7 +76,12 @@
         background-color: var(--contact-hover-bg);
     }
 }
-
+.prevent-hover:hover {
+    background-color: var(--contact-label-bg);
+}
+.contacts:has(.contact.prevent-hover) {
+    overflow: hidden;
+}
 .contact.active {
     background-color: var(--contact-active-bg);
 }

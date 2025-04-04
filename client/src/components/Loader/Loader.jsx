@@ -7,7 +7,7 @@ export const Loader = ({dotWidth, color, align, speed, type, count = 2, ...props
     return (
         <> 
         { type == 'skeleton' ? <>
-                {Array(count).fill(0).map((_, idx) => <ShowUser key={idx} skeleton={true} animationDelay={'0s'}/>)}
+                {Array(count).fill(0).map((_, idx) => <ShowUser key={idx} skeleton={true} animationDelay={'0s'} {...props} />)}
                 </>
              : (
             <div className={styles['loading-animation']} style={{'--dot-width': dotWidth || '8px', '--dot-color': color || 'var(--brand-color)', '--align': align || 'center', '--speed': speed || '.8s'}} {...props}>
