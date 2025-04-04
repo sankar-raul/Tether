@@ -63,7 +63,7 @@ const ResizeableAsideProvider = ({ children }) => {
 
     useEffect(() => {
         const callback = e => {
-            console.log(e.target.innerWidth)
+            // console.log(e.target.innerWidth)
             minmax.max = e.target.innerWidth / 2 - 50
             // setNewWidth(`clamp(${minmax.min}, 20vw, ${minmax.max}px)`)
         }

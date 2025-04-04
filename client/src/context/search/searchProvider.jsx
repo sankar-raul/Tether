@@ -78,7 +78,7 @@ const SearchProvider = ({children}) => {
     }, [])
 
     useEffect(() => {
-        console.log(searchResults)
+        // console.log(searchResults)
     }, [searchResults])
    
     const initiateSearch = useCallback((searchFor) => {
@@ -92,7 +92,7 @@ const SearchProvider = ({children}) => {
     }, [])
 
     const loadMore = useCallback(async (uri) => {
-        console.log("okoojojo")
+        // console.log("okoojojo")
         if (!uri) return
         const data = await searchPreview('', {uri})
         // console.log(data, "sankar is my name")

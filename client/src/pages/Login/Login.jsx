@@ -19,20 +19,20 @@ const Login = () => {
     const navigate = useNavigate()
 
     const login = useCallback(async (formData) => {
-        console.log(formData)
+        // console.log(formData)
         const [ data, error ] = await apiRequest('/auth/login', {
             method: "POST",
             body: formData
         })
         if (data) {
-            console.log(data)
+            // console.log(data)
             if (data.success) {
                 setIsLoggedIn(true)
                 navigate('/chat')
                 Alert({message: "Wellcome Back " + data?.data?.username + '!', type: 'info'});
             }
         } else {
-            console.log(error)
+            // console.log(error)
             if (error.msg == "incorrect password!") {
                 setError('password', {message: "incorrect password"})
             } else if (error.msg == "user not found!") {

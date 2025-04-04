@@ -68,7 +68,7 @@ const Contact = ({ user }) => {
         if (lastMessage || !userInfo?.id) return
         const [ res, error ] = await apiRequest(`/chat/lastMessage/${userInfo?.id}`)
         if (!error) {
-            console.log(res.data)
+            // console.log(res.data)
             if (res?.data) {
                 setLastMessage(res.data.content || false)
                 updateContactInfo(Number(userInfo.id), {unread: res.data.unread})
@@ -138,7 +138,6 @@ const Contact = ({ user }) => {
                     <div className={styles['username']}>{userInfo?.username ? `${userInfo.username}${isChatingWithMyself ? ' (You)' : ''}` : <Skeleton variant='text' width={'clamp(10px, 90%, 120px)'} height={'100%'} sx={{backgroundColor: "#6663"}} />}</div>
                     <div className={styles['last-msg']}>
                         { lastMessage || (lastMessage === false && userInfo.bio) || <Skeleton variant='text' width={'clamp(6px, 60%, 65px)'} height={'100%'} sx={{backgroundColor: "#6663"}} /> || <Loader dotWidth={'4px'} align={'left'} color={'#888'} speed={'.4s'}/>}
-                        {console.log(lastMessage)}
                     </div>
                 </div>
                 <div className={styles['user-status']}>

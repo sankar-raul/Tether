@@ -52,7 +52,7 @@ const useMsgSocket = (contactId) => {
     }
 
     const seeMsg = useCallback((contact_id) => { // ok
-        console.log(contactId, "oppppp")
+        // console.log(contactId, "oppppp")
         if (!contact_id) return
         contact_id = Number(contact_id)
         if (!messageRef.has(contact_id)) return
@@ -95,7 +95,7 @@ const useMsgSocket = (contactId) => {
     }, [updateContactInfo])
 
     const loadMoreMsg = useCallback(async ({id}) => {
-        console.log("i am here")
+        // console.log("i am here")
         let uri = nextMsgChunkEndpoint.get(id)
         if (!uri) return
         try {
@@ -119,7 +119,7 @@ const useMsgSocket = (contactId) => {
         const [[response, error], ] = await Promise.all([apiRequest(`/chat/messages/${id}`), fetchContactInfo(id)])
         feedback && setIsLoading(prev => ({...prev, for: id, state: false}))
         if (!error) {
-            console.log(response)
+            // console.log(response)
             // console.log(response)
             messageRef.set(id, constructMessages({response, id}))
             setMessages(new Map(messageRef))
@@ -152,21 +152,19 @@ const useMsgSocket = (contactId) => {
                 setMessages(new Map(messageRef))
                 shiftUpContact(contactId, msg)
                 // *^^^^^^^^^^^^^^^^^^^^^^^^^^^^*
-                // console.log(msg)
                 const message = await socket.emitWithAck('message:send', {content, reciver: contactId, sent_at})
-                // console.log(message)
                 if (message == 'error') {
                     console.log("message send error!")
                     Alert({message: "Something went wrong!", type: 'error'})
                 } else {
                     // console.log(message)
+                    const msgMap = messageRef.get(contactId)
                     msgIdToLocalIdRef.set(message.id, local_id)
-                    messageMap.set(local_id, message)
-                    messageRef.set(contactId, messageMap)
+                    msgMap.set(local_id, {...msg, tick: message.tick, recived_at: message.recived_at})
+                    messageRef.set(contactId, msgMap)
                     setMessages(new Map(messageRef))
                     NotifyTone.sent()
             }
-            // console.log(messages)
             } catch (error) {
                 console.log("Error sending message", error)
                 Alert({message: "Something went wrong!", type: 'error'})
@@ -190,7 +188,7 @@ const useMsgSocket = (contactId) => {
                 seeMsg(sender) // see msg if selected contact == sender
             }
             const local_id = getUniqeMessageId(message.sender, message.reciver)
-            console.log(sender)
+            // console.log(sender)
             msgIdToLocalIdRef.set(message.id, local_id)
             const messageMap = messageRef.get(sender) || new Map()
             messageMap.set(local_id, {...message, local_id})
@@ -230,7 +228,7 @@ const useMsgSocket = (contactId) => {
             const messageMap = messageRef.get(reciver)
             messageMap.forEach((msg, key) => {
                 if (!msg.seen_at && msg.reciver == reciver) {
-                    console.log(seen_at)
+                    // console.log(seen_at)
                     messageMap.set(key, {...msg, seen_at})
                 }
             })

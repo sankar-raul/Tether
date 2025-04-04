@@ -12,7 +12,7 @@ export const ProtectedRoute = ({children}) => {
         if (!isNaN(isloggedIn) && !isloggedIn) {
             navigate('/login', { replace: true })
         }
-        console.log(isloggedIn)
+        // console.log(isloggedIn)
     }, [isloggedIn, navigate])
     useEffect(() => {
         if (isloggedIn && socket.disconnected) {

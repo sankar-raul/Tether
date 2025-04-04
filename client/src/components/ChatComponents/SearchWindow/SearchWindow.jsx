@@ -26,7 +26,7 @@ export const SearchWindow = () => {
     }, [setIsSearchFocused, clearSearchCache])
 
     useEffect(() => {
-        console.log(searchResults)
+        // console.log(searchResults)
     }, [searchResults])
     return (
         <>
@@ -74,7 +74,7 @@ const LoadMore = () => {
     const [ ref, isVisible ] = useIntersectionObserver({threshold: 0.3})
 
     useEffect(() => {
-        console.log(isVisible)
+        // console.log(isVisible)
         isVisible && loadMore(searchResponse.next)
     
     }, [isVisible, loadMore])

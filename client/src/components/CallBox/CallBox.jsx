@@ -9,7 +9,7 @@ const CallBox = () => {
     const [ axis, setAxis ] = useState({left: 'auto', top: '10%', bottom: 'auto', right: '10%'}) // default state or picked from localStorage
     const handleLRResize = useCallback((e) => {
         setAxis(prev => ({...prev, top: '60%'}))
-        console.log('draging')
+        // console.log('draging')
     }, [])
     return (
         <section className={styles['call-box']} style={{...axis}}>
