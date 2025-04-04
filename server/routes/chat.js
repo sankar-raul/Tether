@@ -19,15 +19,15 @@ chatRouter.get('/messages/:contact_id', async (req, res) => {
     }
     if (!contact_id) return res.status(400).json({success: false, msg: "bad request!"})
     contact_id = Number(contact_id)
+    let messages
     try {
         if (id == contact_id) {
-            const msgs = await pool.execute(`select * from messages where sender = ? and reciver = ? order by sent_at limit ${results_per_part} offset ${offset}`, [id, contact_id])
-            return res.status(200).json(msgs[0])
+            messages = await pool.execute(`select * from messages where sender = ? and reciver = ? order by sent_at limit ${results_per_part} offset ${offset}`, [id, contact_id])
+        } else {
+            messages = await pool.execute(`(((select * from messages where sender = ? and reciver = ? order by sent_at desc) union (select * from messages where sender = ? and reciver = ? order by sent_at desc)) order by sent_at desc limit ${results_per_part + 1} offset ${offset}) order by sent_at`, [contact_id, id, id, contact_id])
         }
-        const messages = await pool.execute(`(((select * from messages where sender = ? and reciver = ? order by sent_at desc) union (select * from messages where sender = ? and reciver = ? order by sent_at desc)) order by sent_at desc limit ${results_per_part + 1} offset ${offset}) order by sent_at`, [contact_id, id, id, contact_id])
         // const [ msg_sent, msg_recived ] = await Promise.all([pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id]), pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])])
         // const messages = sortMessages(msg_sent[0], msg_recived[0])
-        console.log(contact_id, "opp")
         const totalResults = messages[0]?.length || 0
         if (totalResults == results_per_part + 1) {
             messages[0]?.shift()
