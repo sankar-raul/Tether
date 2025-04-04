@@ -72,14 +72,14 @@ export const SearchWindow = () => {
 const LoadMore = () => {
     const { searchResponse, loadMore } = useSearch()
     const [ ref, isVisible ] = useIntersectionObserver({threshold: 0.3})
-    // const [ doLoad, setDoLoad ] = useState(true)
+
     useEffect(() => {
         console.log(isVisible)
         isVisible && loadMore(searchResponse.next)
     
-    }, [isVisible, loadMore, searchResponse])
+    }, [isVisible, loadMore])
     return (
-        <div ref={ref}>
+        <div ref={!isVisible ? ref : null}>
             <ShowUser skeleton={true} />
             <ShowUser skeleton={true} animationDelay={'0s'} />
         </div> 
