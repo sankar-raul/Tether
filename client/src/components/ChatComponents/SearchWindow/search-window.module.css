@@ -76,6 +76,13 @@
     }
     &:hover::-webkit-scrollbar-thumb {
         background-color: #aaa2;
+        cursor: pointer;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: #aaa3;
+    }
+    &::-webkit-scrollbar-thumb:active {
+        background-color: #aaa4;
     }
 }
 

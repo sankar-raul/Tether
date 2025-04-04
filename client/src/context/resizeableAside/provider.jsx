@@ -6,9 +6,9 @@ import { setItem, getItem } from '../../utils/localStorage'
 const ResizeableAsideProvider = ({ children }) => {
     
     const [ isResizing, setIsResizing ] = useState(false)
-    const minmax = useMemo(() => ({min: 200, max: window.innerWidth / 2 - 50}), [])
+    const minmax = useMemo(() => ({min: 300, max: window.innerWidth / 2 - 50}), [])
     const resizeableDiv = useRef(null)
-    const [ newWidth, setNewWidth ] = useState(getItem('contact-width') || 'clamp(200px, 30vw, 350px)')
+    const [ newWidth, setNewWidth ] = useState(getItem('contact-width') || `clamp(${minmax.min}px, 20vw, minmax(450px, ${minmax.max}px))`)
     const handleMouseUp = useCallback(() => {
         setIsResizing(false)
         // console.log("up")
@@ -35,7 +35,7 @@ const ResizeableAsideProvider = ({ children }) => {
     }, [minmax])
 
     const handleDrag = useCallback((e) => {
-        document.body.addEventListener('mousemove', handleDrag)
+        // document.body.addEventListener('mousemove', handleDrag)
         if (!isResizing) return
             calculateNewWidth(e.clientX)
     }, [ isResizing, calculateNewWidth ])
@@ -61,6 +61,15 @@ const ResizeableAsideProvider = ({ children }) => {
         }
     }, [handleDrag])
 
+    useEffect(() => {
+        const callback = e => {
+            console.log(e.target.innerWidth)
+            minmax.max = e.target.innerWidth / 2 - 50
+            // setNewWidth(`clamp(${minmax.min}, 20vw, ${minmax.max}px)`)
+        }
+        window.addEventListener('resize', callback)
+        return () => window.removeEventListener('resize', callback)
+    }, [])
 
     return (
         <resizeableContext.Provider value={{handleMouseDown, resizeableDiv}}>
