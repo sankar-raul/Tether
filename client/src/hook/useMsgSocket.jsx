@@ -8,6 +8,7 @@ import useAlert from "../context/alert/Alert"
 const messageRef = new Map() // contact_id -> local_id -> message_object
 const unreadMsgRef = new Map() // contact_id -> int
 const msgIdToLocalIdRef = new Map() // msg_id -> local_id
+const nextMsgChunkEndpoint = new Map() // contact_id -> endpoint
 
 const getUniqeMessageId = (...args) => {
     const uniqueId = `${String(args)}+${Date.now()}+${Math.random()}`
@@ -33,6 +34,7 @@ const useMsgSocket = (contactId) => {
     const { shiftUpContact, updateContactInfo, selectedContact, fetchContactInfo } = useContacts()
     const { Alert } = useAlert()
     const [ isLoading, setIsLoading ] = useState({state: true, for: contactId})
+    const [ nextMsgChunk, setNextMsgChunk ] = useState(new Map())
 
     const deleteMsg = (reciver, msg_id) => {
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
@@ -73,33 +75,56 @@ const useMsgSocket = (contactId) => {
     }, [updateContactInfo, Alert, contactId])
 
     // get past conversations
+    const constructMessages = useCallback(({response, id}) => {
+        let local_id
+        const messageMap = new Map()
+        response?.data?.forEach(msg => {
+            if (msg.sender == id && !msg.seen_at) {
+                incrementUnread(id, 1)
+            }
+            local_id = getUniqeMessageId(id)
+            messageMap.set(local_id, msg)
+            msgIdToLocalIdRef.set(msg.id, local_id)
+        })
+        
+        nextMsgChunkEndpoint.set(id, response.next) // for track load more msg
+        setNextMsgChunk(new Map(nextMsgChunkEndpoint))
+        // console.log(messageMap, "op")
+        updateContactInfo(id, {unread: unreadMsgRef.get(id)})
+        return messageMap
+    }, [updateContactInfo])
+
+    const loadMoreMsg = useCallback(async ({id}) => {
+        console.log("i am here")
+        let uri = nextMsgChunkEndpoint.get(id)
+        if (!uri) return
+        try {
+        const [response, error] = await apiRequest(uri)
+        if (error) throw new Error(error)
+        messageRef.set(id, new Map([...constructMessages({response, id}), ...messageRef.get(id)]))
+        setMessages(new Map(messageRef))
+        } catch (error) {
+            console.log("Error in useMsgSocket.jsx loadMore function 🐞", error)
+        }
+
+    }, [constructMessages])
+
     const getInitialMessages = useCallback(async (id, config = {}) => { // ok
         id = Number(id)
         const { feedback } = config
         // console.log(id, "opp")
-        let local_id
         if (!id || messageRef.has(id)) return
+  
         feedback && setIsLoading(prev => ({...prev, for: id, state: true}))
         const [[response, error], ] = await Promise.all([apiRequest(`/chat/messages/${id}`), fetchContactInfo(id)])
         feedback && setIsLoading(prev => ({...prev, for: id, state: false}))
         if (!error) {
             console.log(response)
-            const messageMap = new Map()
-            response.forEach(msg => {
-                if (msg.sender == id && !msg.seen_at) {
-                    incrementUnread(id, 1)
-                }
-                local_id = getUniqeMessageId(id)
-                messageMap.set(local_id, msg)
-                msgIdToLocalIdRef.set(msg.id, local_id)
-            })
-            // console.log(messageMap, "op")
-            updateContactInfo(id, {unread: unreadMsgRef.get(id)})
             // console.log(response)
-            messageRef.set(id, messageMap)
+            messageRef.set(id, constructMessages({response, id}))
             setMessages(new Map(messageRef))
         }
-    }, [updateContactInfo])
+    }, [updateContactInfo, constructMessages])
 
     useEffect(() => {
         // console.log(contactId)
@@ -278,6 +303,6 @@ const useMsgSocket = (contactId) => {
             socket.off('message:deleted:all', msgDeletedAll)
         }
     }, [contactId])
-    return {messages, seenMap, sendMsg, seeMsg, deleteMsg, isLoading}
+    return {messages, seenMap, sendMsg, seeMsg, deleteMsg, isLoading, loadMoreMsg, nextMsgChunk}
 }
 export default useMsgSocket

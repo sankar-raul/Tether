@@ -9,18 +9,35 @@ chatRouter.get('/all', getAllMessage)
 
 chatRouter.get('/messages/:contact_id', async (req, res) => {
     const { id } = req.user
-    const { contact_id } = req.params
+    let { part } = req.query
+    let { contact_id } = req.params
+    const results_per_part = 20
+    let offset = 0
+    if (part) {
+        part = Number(part)
+        offset = (part - 1) * results_per_part
+    }
     if (!contact_id) return res.status(400).json({success: false, msg: "bad request!"})
+    contact_id = Number(contact_id)
     try {
         if (id == contact_id) {
-            const msgs = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
+            const msgs = await pool.execute(`select * from messages where sender = ? and reciver = ? order by sent_at limit ${results_per_part} offset ${offset}`, [id, contact_id])
             return res.status(200).json(msgs[0])
         }
-        const msg_sent = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id])
-        const msg_recived = await pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])
-        const messages = sortMessages(msg_sent[0], msg_recived[0])
+        const messages = await pool.execute(`(((select * from messages where sender = ? and reciver = ? order by sent_at desc) union (select * from messages where sender = ? and reciver = ? order by sent_at desc)) order by sent_at desc limit ${results_per_part + 1} offset ${offset}) order by sent_at`, [contact_id, id, id, contact_id])
+        // const [ msg_sent, msg_recived ] = await Promise.all([pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [id, contact_id]), pool.execute("select * from messages where sender = ? and reciver = ? order by sent_at", [contact_id, id])])
+        // const messages = sortMessages(msg_sent[0], msg_recived[0])
         console.log(contact_id, "opp")
-        return res.status(200).json(messages)
+        const totalResults = messages[0]?.length || 0
+        if (totalResults == results_per_part + 1) {
+            messages[0]?.shift()
+        }
+        return res.status(200).json({
+            data: messages[0],
+            contact_id: contact_id,
+            part: part || 1,
+            next: totalResults == results_per_part + 1 ? `/chat/messages/${contact_id}?part=${part ? part + 1 : 2}` : null
+        })
     } catch (error) {
         console.log("error")
         return res.status(500).json({success: false, msg: "internal server error!"})

@@ -12,7 +12,7 @@ export const search = async (req, res) => {
     let { q, part } = req.query
     const results_per_part = 3
     let offset = 0
-    console.log(part)
+    // console.log(part)
     if (part) {
         part = Number(part)
         offset = (part - 1) * results_per_part
@@ -22,7 +22,7 @@ export const search = async (req, res) => {
         return res.status(400).json({success: false, msg: "bad request!"})
     }
     try {
-        const searchRes = await pool.execute(`select id, username, profile_pic_url, bio from users where username like ? limit ${results_per_part + 1} offset ${offset}`, [`%${q}%`])
+        const searchRes = await pool.execute(`select id, username, profile_pic_url, bio from users where username like ? order by username limit ${results_per_part + 1} offset ${offset}`, [`%${q}%`])
         const result = searchRes[0]
         const totalResults = result?.length
         if (totalResults == results_per_part + 1) {

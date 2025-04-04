@@ -16,15 +16,16 @@ import ChatInput from '../ChatInput/ChatInput'
 import useChat from '../../context/chatSocket/chatSocket'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
+import useIntersectionObserver from '../../hook/useIntersectionBbserver'
 
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
     const [ chatingWith, setChatingWith ] = useState(getContactInfo(selectedContact) || {})
-    const { messages, seeMsg, isLoading } = useChat()
+    const { messages, seeMsg, isLoading, nextMsgChunk } = useChat()
     const [ chats, setChats ] = useState([])
     const scrollRef = useRef(null)
-
+    const [ nextChunk, setNextChunk ] = useState(null)
     
     useEffect(() => {
         const chat = []
@@ -48,6 +49,10 @@ const ChatBox = () => {
     }, [selectedContact, getContactInfo])
 
     useEffect(() => {
+        setNextChunk(nextMsgChunk.get(selectedContact))
+    }, [selectedContact, nextMsgChunk])
+
+    useEffect(() => {
         if (!scrollRef.current) return
         scrollRef.current.scrollIntoView()
     }, [scrollRef, selectedContact])
@@ -61,8 +66,18 @@ const ChatBox = () => {
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
                 {
                     isLoading.for != chatingWith.id || isLoading.state == false ? 
-                    chats.slice().reverse().map(msg =>
-                        <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
+                    ( 
+                    <>
+                        {
+                            chats.slice().reverse().map(msg =>
+                                <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
+                            )
+                        }
+                         {
+                            nextChunk ? <LoadMoreMsgLoader contact_id={Number(selectedContact)}/> : ''
+                        }
+                       
+                    </>
                     ) : <Loader />
                 }
                 </main>
@@ -74,6 +89,24 @@ const ChatBox = () => {
         </>
     )
 }
+
+const LoadMoreMsgLoader = ({contact_id}) => {
+    const [ ref, isVisible ] = useIntersectionObserver({threshold: .1})
+    const { loadMoreMsg } = useChat()
+    useEffect(() => {
+        isVisible && loadMoreMsg({id: contact_id})
+    }, [isVisible, loadMoreMsg, contact_id])
+
+    return (
+        <div ref={ref}>
+            <Loader />
+        </div>
+    )
+}
+LoadMoreMsgLoader.propTypes = {
+    contact_id: PropTypes.number.isRequired
+}
+
 const MessageTag = ({msg, chatingWith}) => {
     const [ tickImg, setTickImg ] = useState(singleTickIcon)
     const [ msgTime, setMsgTime ] = useState('')
