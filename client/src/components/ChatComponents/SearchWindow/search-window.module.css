@@ -32,6 +32,7 @@
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
+    overflow: hidden;
 }
 .no-more-result {
     padding: 10px;
@@ -44,6 +45,17 @@
 }
 .result-for > div:nth-of-type(1) {
     color: var(--secondery-text);
+    overflow: hidden;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    white-space: wrap;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    word-wrap: normal;
+    overflow-wrap: break-word;
 
     &>span {
         font-weight: 600;

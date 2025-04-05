@@ -37,6 +37,7 @@ const useMsgSocket = (contactId) => {
     const [ nextMsgChunk, setNextMsgChunk ] = useState(new Map())
 
     const deleteMsg = (reciver, msg_id) => {
+        console.log(reciver, msg_id)
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
         try {
             socket.emit("message:delete", {msg_id})
@@ -160,7 +161,7 @@ const useMsgSocket = (contactId) => {
                     // console.log(message)
                     const msgMap = messageRef.get(contactId)
                     msgIdToLocalIdRef.set(message.id, local_id)
-                    msgMap.set(local_id, {...msg, tick: message.tick, recived_at: message.recived_at})
+                    msgMap.set(local_id, {...msg, tick: message.tick, recived_at: message.recived_at, id: message.id})
                     messageRef.set(contactId, msgMap)
                     setMessages(new Map(messageRef))
                     NotifyTone.sent()

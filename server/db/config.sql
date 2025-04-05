@@ -1,5 +1,5 @@
 show databases;
-create database tether;
+create database if not exists tether;
 use tether;
 SET SQL_SAFE_UPDATES = 0;
 
@@ -26,6 +26,31 @@ create table if not exists messages (
     foreign key (sender) references users(id),
     foreign key (reciver) references users(id)
 );
+
+create table if not exists contacts (
+    owner_id bigint not null,
+    contact_id bigint not null,
+    nickname varchar(30),
+    created_at datetime default current_timestamp,
+    foreign key (owner_id) references users(id),
+    foreign key (contact_id) references users(id),
+    primary key (owner_id, contact_id)
+);
+drop table contacts;
+select * from contacts;
+
+create table if not exists recent_interactions (
+	owner_id bigint not null,
+    contact_id bigint not null,
+    last_interaction_time datetime default current_timestamp,
+    type varchar(10) check (type in ('added', 'chat', 'call', 'video_call')),
+    last_message text,
+    foreign key (owner_id) references users(id),
+    foreign key (contact_id) references users(id),
+    primary key (owner_id, contact_id)
+);
+
+
 -- drop table users;
 -- delete from users where id <> 90;
 select * from users;

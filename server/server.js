@@ -62,7 +62,7 @@ io.use((socket, next) => {
         return next(new Error("unauthorized!"))
     }
     const user = getUser(token)
-    console.log(token)
+    // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     socket.user = user
     registerUser(socket.id, user.id)
@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
 
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
-        console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
+        // console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
         if (!ackFunc) return
         if (!reciver || !content) {
             // return io.to(socket.id).emit('message:send:error', "error")
@@ -93,14 +93,14 @@ io.on('connection', (socket) => {
             }
         } else {
             const msg = await Message.pushMessage({ sender, reciver, content, sent_at })
-            console.log(msg, 'op', msg.sent_at, new Date(msg.sent_at).toLocaleString())
+            // console.log(msg, 'op', msg.sent_at, new Date(msg.sent_at).toLocaleString())
             return ackFunc(msg)
         }
     })
 
     socket.on("message:see", async ({sender}) => {
         if (!sender) return
-        console.log(sender)
+        // console.log(sender)
         const { id:reciver } = socket.user
         const senderId = getIdFromUser(sender)
         await Message.seen({
@@ -114,7 +114,7 @@ io.on('connection', (socket) => {
 
     socket.on('message:delete', async ({msg_id, all = false}) => {
         if (!msg_id && !all) {
-            console.log(req, "oo no message id is here!")
+            // console.log(req, "oo no message id is here!")
             return
         }
         const { id:sender } = socket.user
@@ -155,7 +155,7 @@ io.on('connection', (socket) => {
     })
     socket.on('disconnect', () => {
         disconnectUser(socket.id)
-        console.log(socket.user.username, "disconnected")
+        // console.log(socket.user.username, "disconnected")
       })
 })
 

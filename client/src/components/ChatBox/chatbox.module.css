@@ -65,7 +65,7 @@
     /* height: ; */
     font-size: .9rem;
     flex-direction: column;
-    cursor: pointer;
+    cursor: var(--cursor);
     padding-left: 16px;
     /* overflow: hidden; */
     position: relative;

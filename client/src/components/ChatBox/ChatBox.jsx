@@ -16,7 +16,7 @@ import ChatInput from '../ChatInput/ChatInput'
 import useChat from '../../context/chatSocket/chatSocket'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
-import useIntersectionObserver from '../../hook/useIntersectionBbserver'
+import useIntersectionObserver from '../../hook/useIntersectionObserver'
 
 
 const ChatBox = () => {
@@ -162,10 +162,10 @@ const MsgContextMenu = ({msg_id, chatingWith, content, rightClick}) => {
 
     const menuRef = useRef(null)
     const handleDisplay = useCallback((isShow, e) => {
-        console.log(isShow)
+        // console.log(isShow)
         setMenuDisplay(isShow ? 'block' : 'none')
         if (isShow) {
-            console.log(e.clientX, e.clientY)
+            // console.log(e.clientX, e.clientY)
             setMousePositions({x: e.clientX, y: e.clientY})
         }
     }, [])
@@ -182,7 +182,7 @@ const MsgContextMenu = ({msg_id, chatingWith, content, rightClick}) => {
     useEffect(() => {
         if (menuDisplay == 'block') {
             const { offsetWidth:menuWidth, offsetHeight:menuHeight } = menuRef.current
-            console.log(menuRef)
+            // console.log(menuRef)
             setMenuPositions({top: mousePositions.y, left: mousePositions.x - menuWidth})
         }
     }, [menuDisplay, mousePositions])

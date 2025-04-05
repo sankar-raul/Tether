@@ -26,17 +26,17 @@ export const sortContactsListByDateDesc = (msg1, msg2)  => {
     }
     // console.log(data)
     const ndata = Object.fromEntries(data)
-    data.forEach((item, key) => {
-        console.log(new Date(item).toLocaleString(), key)
-    })
+    // data.forEach((item, key) => {
+    //     console.log(new Date(item).toLocaleString(), key)
+    // })
     const sortedContacts = Object.entries(ndata).sort((a, b) => {
-        console.log(a, b)
-        console.log(new Date(b[1]) - new Date(a[1]))
+        // console.log(a, b)
+        // console.log(new Date(b[1]) - new Date(a[1]))
         return new Date(b[1]) - new Date(a[1])
     })
     // console.log(sortedContacts)
     const contactList = sortedContacts.map(item => {
-        console.log(new Date(item[1]).toLocaleString(), item[0])
+        // console.log(new Date(item[1]).toLocaleString(), item[0])
         return {
             id: Number(item[0]),
             last_msg_at: item[1]
