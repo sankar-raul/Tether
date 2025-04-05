@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import apiRequest from "../../hook/apiRequest"
 import useAlert from '../alert/Alert'
 import { debounce } from '../../utils/helperFunctions'
+import useContacts from "../contacts/contact"
 
 const SearchCache = new Map() // endpoint -> data & next
 
@@ -16,6 +17,7 @@ const SearchProvider = ({children}) => {
     const [ cache, setCache ] = useState(new Map())
     const { Alert } = useAlert()
     const [isLoading, setIsLoading] = useState(false)
+    const { isOpenSearch, setIsOpenSearch } = useContacts()
 
     const clearSearchCache = useCallback(() => {
         SearchCache.clear()
@@ -77,6 +79,13 @@ const SearchProvider = ({children}) => {
         e.preventDefault()
     }, [])
 
+    useEffect(() => {
+        isOpenSearch && setIsSearchFocused(isOpenSearch)
+    }, [isOpenSearch])
+
+    useEffect(() => {
+        !isSearchFocused && setIsOpenSearch(false)
+    }, [isSearchFocused, setIsOpenSearch])
     useEffect(() => {
         // console.log(searchResults)
     }, [searchResults])

@@ -12,6 +12,7 @@ const ContactsProvider = ({children}) => {
     const [ contactMap, setContactMap ] = useState(new Map())
     const [ isContactFetched, setIsContactFetched ] = useState(false)
     const [ isLoading, setIsLoading ] = useState(true)
+    const [ isOpenSearch, setIsOpenSearch ] = useState(false)
 
     const fetchContactInfo = useCallback(async (id) => {
         if ( !id || contactRef.get(id)?.username) return
@@ -103,7 +104,7 @@ const ContactsProvider = ({children}) => {
     }, [userInfo, getContacts, isContactFetched, updateContactInfo])
 
     return (
-        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading, fetchContactInfo}}>
+        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading, fetchContactInfo, setIsOpenSearch, isOpenSearch}}>
             {children}
         </contactsContext.Provider>
     )

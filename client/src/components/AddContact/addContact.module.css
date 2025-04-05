@@ -1,0 +1,38 @@
+.add-new-contact-container {
+    /* border: 1px solid red; */
+    margin: 10px;
+    border-radius: 8px;
+    padding: 8px;
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    gap: 2px;
+}
+.add-new-contact-container > div:nth-of-type(1) {
+    color: var(--secondery-text);
+    font-size: .9rem;
+}
+.add-new-contact-container > div:nth-of-type(2) {
+    /* border: 1px solid lime; */
+    height: 50px;
+    padding: 6px 0px;
+    & > button {
+        all: unset;
+        text-align: center;
+        border: 1px solid var(--brand-color);
+        color: var(--brand-color);
+        cursor: var(--cursor);
+        background-color: var(--brand-bg);
+        height: 100%;
+        width: 100%;
+        transition-duration: .1s;
+
+        &:hover {
+            background-color: var(--brand-color);
+            color: var(--primary-color);
+            border-color: transparent;
+        }
+        &:active {
+            opacity: .6;
+        }
+    }
+}

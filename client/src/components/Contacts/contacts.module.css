@@ -32,6 +32,12 @@
         background-color: #fff4;
     }
 }
+.no-contacts {
+    color: var(--secondery-text);
+    text-align: center;
+    padding: 10px;
+    padding-bottom: 0px;
+}
 .handle-resize {
     width: 10px;
     border-radius: var(--radius-mid);

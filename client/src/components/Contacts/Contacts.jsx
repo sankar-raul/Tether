@@ -10,6 +10,7 @@ import useUserInfo from '../../context/userInfo/userInfo'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
 import { Skeleton } from '@mui/material'
+import AddContact from '../AddContact/AddContact'
 
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -36,14 +37,24 @@ const Calls = () => {
 }
 const Chats = () => {
     const { contactMap, isLoading } = useContacts()
+    const [ isVoidList, setIsVoidList ] = useState(false)
 
+    useEffect(() => {
+        setIsVoidList(!!contactMap.size)
+    }, [contactMap])
     return (
         <>
         {
-            !isLoading ?
-            [...contactMap.values()]?.map(user => (
+            !isLoading ? (
+            <>
+            {isVoidList ? [...contactMap.values()]?.map(user => (
                 <Contact key={user?.id} user={user} />
-            )) : <Loader type={'skeleton'} count={20} className={styles['contact'] + ' ' + styles['prevent-hover']} />
+            )) : (
+                <div className={styles['no-contacts']}>No Contacts</div>
+            )}
+            <AddContact />
+            </>
+        ): <Loader type={'skeleton'} count={20} className={styles['contact'] + ' ' + styles['prevent-hover']} />
         }
         </>
     )
