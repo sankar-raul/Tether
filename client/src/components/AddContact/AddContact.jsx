@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react'
 import styles from './addContact.module.css'
 import useContacts from '../../context/contacts/contact'
 
-const AddContact = () => {
+const AddContact = ({...props}) => {
     const { setIsOpenSearch } = useContacts()
 
     const handleAddContact = useCallback(() => {
@@ -10,7 +10,7 @@ const AddContact = () => {
     }, [setIsOpenSearch])
 
     return (
-        <div className={styles['add-new-contact-container']}>
+        <div className={styles['add-new-contact-container']} {...props}>
             <div>
                 <p>Add new contact</p>
             </div>

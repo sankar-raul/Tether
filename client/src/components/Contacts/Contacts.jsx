@@ -52,7 +52,7 @@ const Chats = () => {
             )) : (
                 <div className={styles['no-contacts']}>No Contacts</div>
             )}
-            <AddContact />
+            <AddContact style={{marginBottom: '30px', marginTop: '10px'}} />
             </>
         ): <Loader type={'skeleton'} count={20} className={styles['contact'] + ' ' + styles['prevent-hover']} />
         }
