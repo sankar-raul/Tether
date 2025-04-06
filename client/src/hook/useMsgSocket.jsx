@@ -4,6 +4,7 @@ import apiRequest from "./apiRequest"
 import useContacts from "../context/contacts/contact"
 import NotifyTone from "../utils/notificationSound"
 import useAlert from "../context/alert/Alert"
+import useUserInfo from '../context/userInfo/userInfo'
 
 const messageRef = new Map() // contact_id -> local_id -> message_object
 const unreadMsgRef = new Map() // contact_id -> int
@@ -138,7 +139,7 @@ const useMsgSocket = (contactId) => {
         if (content) {
             try {
                 const local_id = getUniqeMessageId(contactId)
-                const messageMap = messageRef.get(contactId) || new Map()
+                const messageMap = new Map(messageRef.get(contactId))
                 // *****************************
                 // message sent pending status update 
                 const sent_at = new Date().toISOString();
@@ -146,7 +147,12 @@ const useMsgSocket = (contactId) => {
                     content,
                     sent_at,
                     reciver: contactId,
-                    tick: 0
+                    tick: 0,
+                    edited_at: null,
+                    sender: null,
+                    id: null,
+                    recived_at: null,
+                    seen_at: null
                 }
                 messageMap.set(local_id, msg)
                 messageRef.set(contactId, messageMap)
@@ -159,12 +165,22 @@ const useMsgSocket = (contactId) => {
                     Alert({message: "Something went wrong!", type: 'error'})
                 } else {
                     // console.log(message)
-                    const msgMap = messageRef.get(contactId)
+                    // setTimeout(() => {
+                    const msgMap = new Map(messageRef.get(contactId))
                     msgIdToLocalIdRef.set(message.id, local_id)
-                    msgMap.set(local_id, {...message, tick: message.tick, recived_at: message.recived_at, id: message.id})
+                    console.log(message)
+                    // Object.assign(msg, message)
+                    console.log(msg, message)
+                    msg.tick = message.tick
+                    msg.recived_at = message.recived_at
+                    msg.seen_at = message.seen_at
+                    msg.id = message.id
+                    msg.sender = message.sender
+                    msgMap.set(local_id, msg)
                     messageRef.set(contactId, msgMap)
                     setMessages(new Map(messageRef))
                     NotifyTone.sent()
+                // }, 2000)
             }
             } catch (error) {
                 console.log("Error sending message", error)

@@ -47,7 +47,7 @@ const Chats = () => {
         {
             !isLoading ? (
             <>
-            {!isVoidList ? [...contactMap.values()]?.map((user, idx) => (
+            {!isVoidList ? [...contactMap.values()]?.map((user) => (
                 <Contact key={user?.id} user={user} />
                 // console.log(user)
             )) : (

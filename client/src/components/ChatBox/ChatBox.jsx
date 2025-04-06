@@ -36,7 +36,7 @@ const ChatBox = () => {
         // console.log(messages)
         setChats(chat)
         // console.log(messages)
-        // console.log(chat)
+        console.log(chat)
     }, [messages, selectedContact, chatingWith])
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const ChatBox = () => {
                     ( 
                     <>
                         {
-                            chats.slice().reverse().map(msg =>
+                            chats.slice().reverse().map((msg) =>
                                 <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
                             )
                         }
