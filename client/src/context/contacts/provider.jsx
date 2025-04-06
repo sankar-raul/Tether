@@ -42,8 +42,8 @@ const ContactsProvider = ({children}) => {
             // console.log(response?.data)
             if (response) {
                 response.data.forEach(contact => {
-                    contactRef.set(Number(contact.id), contact)
-                    fetchContactInfo(contact.id)
+                    contactRef.set(Number(contact.contact_id), { id: contact.contact_id, content: contact.last_message, type: contact.type, latest_msg: contact.last_interaction_time, unread: contact.unread })
+                    fetchContactInfo(contact.contact_id)
                 })
                 setContactMap(new Map(contactRef))
             }
@@ -68,7 +68,7 @@ const ContactsProvider = ({children}) => {
         id = Number(id)
         if (contactRef.has(id)) {
             const newOrder = new Map()
-            newOrder.set(id, {...contactRef.get(id), ...data, id, last_msg_at: data.sent_at || ''})
+            newOrder.set(id, {...contactRef.get(id), ...data, id, latest_msg: data.sent_at || ''})
             contactRef.delete(id)
             contactRef.forEach((value, key) => {
                 newOrder.set(key, value)

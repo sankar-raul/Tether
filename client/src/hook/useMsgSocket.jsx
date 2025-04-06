@@ -161,7 +161,7 @@ const useMsgSocket = (contactId) => {
                     // console.log(message)
                     const msgMap = messageRef.get(contactId)
                     msgIdToLocalIdRef.set(message.id, local_id)
-                    msgMap.set(local_id, {...msg, tick: message.tick, recived_at: message.recived_at, id: message.id})
+                    msgMap.set(local_id, {...message, tick: message.tick, recived_at: message.recived_at, id: message.id})
                     messageRef.set(contactId, msgMap)
                     setMessages(new Map(messageRef))
                     NotifyTone.sent()

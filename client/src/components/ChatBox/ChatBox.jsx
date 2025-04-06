@@ -17,6 +17,7 @@ import useChat from '../../context/chatSocket/chatSocket'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
 import useIntersectionObserver from '../../hook/useIntersectionObserver'
+import useUserInfo from '../../context/userInfo/userInfo'
 
 
 const ChatBox = () => {
@@ -111,13 +112,18 @@ const MessageTag = ({msg, chatingWith}) => {
     const [ tickImg, setTickImg ] = useState(singleTickIcon)
     const [ msgTime, setMsgTime ] = useState('')
     const [ rightClick, setRightClick ] = useState()
+    // const { useInfo: { my_id } } = useUserInfo()
     const getFormatedTime = useCallback((dateString) => {
         const date = new HeroDate(dateString)
         return date.formatedTime()
     }, [])
 
     useEffect(() => {
+        if (!msg.seen_at) {
+            // console.log(msg)
+        }
         if (msg.seen_at) {
+            // console.log(msg)
             setTickImg(blueTickIcon)
         } else if (msg.recived_at) {
             setTickImg(doubleTickIcon)
@@ -131,6 +137,7 @@ const MessageTag = ({msg, chatingWith}) => {
             setMsgTime(getFormatedTime(msg.sent_at))
         }
     }, [msg, getFormatedTime])
+
     return (
         <div className={`${styles['message-tag']} ${msg.reciver != chatingWith.id ? styles['not-me'] : styles['me']}`} key={msg.id}>
             <div className={styles['message-body']} onContextMenu={setRightClick}>

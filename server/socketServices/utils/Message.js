@@ -11,8 +11,8 @@ export default class Msg {
             throw new Error('invalid function call')
         }
         try {
-            console.log(sent_at)
-            console.log(new Date(sent_at).toLocaleString())
+            // console.log(sent_at)
+            // console.log(new Date(sent_at).toLocaleString())
             sent_at = new Date(sent_at).toLocaleString("en-CA", { 
                 year: "numeric", 
                 month: "2-digit", 
@@ -22,8 +22,9 @@ export default class Msg {
                 second: "2-digit", 
                 hour12: false 
             }).replace(",", "");
-            console.log(new Date(sent_at).toLocaleString())
+            // console.log(new Date(sent_at).toLocaleString())
             let data
+            pool.execute("call newInteraction(?, ?, ?, ?, ?)", [sender, reciver, sent_at, 'chat', content])
             if (sender == reciver) {
                 data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at, seen_at, sent_at) value (?, ?, ?, 3, now(), now(), ?)", [sender, reciver, content, sent_at])
             } else {

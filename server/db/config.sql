@@ -26,7 +26,7 @@ create table if not exists messages (
     foreign key (sender) references users(id),
     foreign key (reciver) references users(id)
 );
-
+-- truncate table messages;
 create table if not exists contacts (
     owner_id bigint not null,
     contact_id bigint not null,

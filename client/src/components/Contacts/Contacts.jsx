@@ -40,15 +40,16 @@ const Chats = () => {
     const [ isVoidList, setIsVoidList ] = useState(false)
 
     useEffect(() => {
-        setIsVoidList(!!contactMap.size)
+        setIsVoidList(!contactMap.size)
     }, [contactMap])
     return (
         <>
         {
             !isLoading ? (
             <>
-            {isVoidList ? [...contactMap.values()]?.map(user => (
+            {!isVoidList ? [...contactMap.values()]?.map((user, idx) => (
                 <Contact key={user?.id} user={user} />
+                // console.log(user)
             )) : (
                 <div className={styles['no-contacts']}>No Contacts</div>
             )}
@@ -75,22 +76,22 @@ const Contact = ({ user }) => {
         })
     }, [user, setSelectedContact])
     
-    const lastMsg = useCallback(async () => {
-        if (lastMessage || !userInfo?.id) return
-        const [ res, error ] = await apiRequest(`/chat/lastMessage/${userInfo?.id}`)
-        if (!error) {
-            // console.log(res.data)
-            if (res?.data) {
-                setLastMessage(res.data.content || false)
-                updateContactInfo(Number(userInfo.id), {unread: res.data.unread})
-            } else {
-                setLastMessage(userInfo?.bio || 'bio')
-            }
-        }
-    }, [setLastMessage, userInfo, lastMessage, updateContactInfo])
+    // const lastMsg = useCallback(async () => {
+    //     if (lastMessage || !userInfo?.id) return
+    //     const [ res, error ] = await apiRequest(`/chat/lastMessage/${userInfo?.id}`)
+    //     if (!error) {
+    //         // console.log(res.data)
+    //         if (res?.data) {
+    //             setLastMessage(res.data.content || false)
+    //             updateContactInfo(Number(userInfo.id), {unread: res.data.unread})
+    //         } else {
+    //             setLastMessage(userInfo?.bio || 'bio')
+    //         }
+    //     }
+    // }, [setLastMessage, userInfo, lastMessage, updateContactInfo])
 
     const updateTimeStamp = useCallback(() => {
-        const lastMsgDate = new HeroDate(user.last_msg_at)
+        const lastMsgDate = new HeroDate(user.latest_msg)
         const prevDayStart = new HeroDate()
         const prevMidNight = new HeroDate()
         prevMidNight.setHours(0,0,0,0)
@@ -115,18 +116,18 @@ const Contact = ({ user }) => {
     //     setUserInfo(contactMap?.get(user?.id))
     // }, [user])
     useEffect(() => {
-        if (lastMessage || lastMessage === false) {
-            userInfo.content && setLastMessage(userInfo.content)
-        } else {
-            lastMsg()
-        }
-    }, [userInfo, lastMsg, lastMessage])
+        if (userInfo.content)
+            setLastMessage(userInfo.content)
+        else
+            setLastMessage(userInfo.bio || 'bio')
+        // console.log(userInfo, lastMessage)
+    }, [userInfo])
     useEffect(() => {
         localUserInfo && userInfo && setIsChatingWithMyself(localUserInfo.id == userInfo.id)
     }, [localUserInfo, userInfo])
     useEffect(() => {
         setUserInfo({...user, id: Number(user.id)})
-        if (!user?.last_msg_at) {
+        if (!user?.latest_msg) {
             setTimeStamp('')
             return
         }
