@@ -11,19 +11,21 @@ import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
 import { Skeleton } from '@mui/material'
 import AddContact from '../AddContact/AddContact'
+import { useMediaQuery } from 'react-responsive'
 
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
     const { currentTab } = useTabs()
+    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
 
     return (
-        <div className={styles['contacts-wraper']}>
-            <div ref={resizeableDiv}  className={styles['contacts']}>
+        <div className={styles['contacts-wraper'] + ' ' + styles['mobile']}>
+            <div ref={resizeableDiv} className={styles['contacts']}>
                 {
                     currentTab == 'chat' ? <Chats /> : <Calls />
                 }
             </div>
-            <div onMouseDown={handleMouseDown} className={styles['handle-resize']}></div>
+            {!isMobile ? <div onMouseDown={handleMouseDown} className={styles['handle-resize']}></div> : ''}
         </div>
     )
 }

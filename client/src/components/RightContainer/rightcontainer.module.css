@@ -3,4 +3,20 @@
     display: grid;
     /* border: 1px solid red; */
     margin-right: 10px;
+    /* grid-area: right-container; */
+    overflow: hidden;
+    /* max-height: 300px; */
+}
+.right-container.mobile {
+    position: fixed;
+    top: 0;
+    background-color: #000d;
+    backdrop-filter: blur(12px);
+    width: 100%;
+    height: 100dvh;
+    z-index: 11;
+    /* pointer-events: none; */
+}
+.right-container.mobile.show {
+    display: none;
 }

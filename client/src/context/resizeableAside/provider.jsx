@@ -2,9 +2,10 @@ import PropTypes from 'prop-types'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { resizeableContext } from './resizeableAside'
 import { setItem, getItem } from '../../utils/localStorage'
+import { useMediaQuery } from 'react-responsive'
 
 const ResizeableAsideProvider = ({ children }) => {
-    
+    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const [ isResizing, setIsResizing ] = useState(false)
     const minmax = useMemo(() => ({min: 300, max: window.innerWidth / 2 - 50}), [])
     const resizeableDiv = useRef(null)
@@ -33,6 +34,10 @@ const ResizeableAsideProvider = ({ children }) => {
             }
         })
     }, [minmax])
+
+    useEffect(() => {
+        !isMobile && setNewWidth(`clamp(${minmax.min}px, 20vw, minmax(450px, ${minmax.max}px))`)
+    }, [isMobile, minmax])
 
     const handleDrag = useCallback((e) => {
         // document.body.addEventListener('mousemove', handleDrag)

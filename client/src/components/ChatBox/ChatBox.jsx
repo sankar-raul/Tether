@@ -19,7 +19,9 @@ import { Loader } from '../Loader/Loader'
 import useIntersectionObserver from '../../hook/useIntersectionObserver'
 import useUserInfo from '../../context/userInfo/userInfo'
 import DefaultChatView from './DefaultView/DefaultView'
-
+import { useMediaQuery } from 'react-responsive'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
@@ -28,6 +30,7 @@ const ChatBox = () => {
     const [ chats, setChats ] = useState([])
     const scrollRef = useRef(null)
     const [ nextChunk, setNextChunk ] = useState(null)
+    const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
     
     useEffect(() => {
         const chat = []
@@ -56,11 +59,15 @@ const ChatBox = () => {
 
     useEffect(() => {
         if (!scrollRef.current) return
-        scrollRef.current.scrollIntoView()
-    }, [scrollRef, selectedContact])
+        if (!isMobile)
+            scrollRef.current.scrollIntoView()
+        else
+            scrollRef.current.scrollIntoView()
+        
+    }, [scrollRef, selectedContact, isMobile])
     return (
         <>
-            <section className={styles['chat-container']}>
+            <section className={styles[`chat-container`]}>
             {selectedContact != null && selectedContact != 0 ?
             <>
             <div className={styles['chat-box']}>
@@ -227,10 +234,17 @@ MsgContextMenu.propTypes = {
     rightClick: PropTypes.object
 }
 const ChatContactHeader = ({ user }) => {
+    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
+    const { setSelectedContact } = useContacts()
     
+    const closeChat = useCallback(() => {
+        isMobile && setSelectedContact(0)
+    }, [setSelectedContact, isMobile])
+
     return (
         <nav className={chatNavStyle['chat-nav']}>
             <div className={chatNavStyle['user-info']}>
+                {isMobile ? <div onClick={closeChat} className={chatNavStyle['back-btn']}><FontAwesomeIcon icon={faArrowLeft} fontSize={22}/></div> : '' }
                 <div className={chatNavStyle['user-dp']}>
                 {
                  user.profile_pic_url ? <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src={user.profile_pic_url} alt={user.username} /> : <DefaultUser />

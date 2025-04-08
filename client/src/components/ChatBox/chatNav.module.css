@@ -10,6 +10,17 @@
     box-shadow: 0px 1px 15px 0px var(--shadow);
     z-index: 1;
 }
+.chat-nav .back-btn {
+    width: 39px;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    margin-inline: -8px;
+    &:active {
+        background-color: var(--secondery-bg);
+    }
+}
 .user-info {
     /* width: 100px; */
     /* border: 1px solid red; */

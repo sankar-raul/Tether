@@ -3,6 +3,9 @@
     flex-wrap: nowrap;
     gap: 1px;
 }
+.contacts-wraper.mobile {
+    width: 100%;
+}
 .contacts {
     flex-grow: 1;
     background: var(--secondery-bg);
