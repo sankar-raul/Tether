@@ -1,0 +1,20 @@
+.container {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    background-color: var(--secondery-bg);
+    padding: 10px;
+}
+.container > div {
+    height: 50px;
+    width: 90%;
+    max-width: clamp(360px, 100%, 600px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    color: var(--secondery-text);
+    letter-spacing: 2px;
+    text-align: center;
+}

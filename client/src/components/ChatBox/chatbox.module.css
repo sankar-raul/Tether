@@ -1,8 +1,11 @@
+.chat-container {
+    overflow-y: hidden;
+}
 .chat-box {
     background-color: #0ff1;
     display: grid;
+    height: 100%;
     grid-template-rows: 60px 1fr max-content;
-
     background-color: var(--secondery-bg);
     overflow-y: hidden;
 }

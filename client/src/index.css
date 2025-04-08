@@ -92,13 +92,16 @@
 ::-webkit-scrollbar {
   width: 0px;
 }
-html, body, #root {
+html {
   height: 100%;
   font-family: 'Istok Web', serif;
-  letter-spacing: .5px;
+  letter-spacing: 1px;
   user-select: none;
   background: var(--primary-bg);
   color: var(--primary-color);
+}
+body, #root {
+  height: 100%;
 }
 input, textarea {
   font-family: 'Istok Web', serif;

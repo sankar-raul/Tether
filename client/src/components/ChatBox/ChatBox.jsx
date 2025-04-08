@@ -18,6 +18,7 @@ import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
 import useIntersectionObserver from '../../hook/useIntersectionObserver'
 import useUserInfo from '../../context/userInfo/userInfo'
+import DefaultChatView from './DefaultView/DefaultView'
 
 
 const ChatBox = () => {
@@ -59,9 +60,10 @@ const ChatBox = () => {
     }, [scrollRef, selectedContact])
     return (
         <>
-            <section className={styles['chat-box']}>
+            <section className={styles['chat-container']}>
             {selectedContact != null && selectedContact != 0 ?
             <>
+            <div className={styles['chat-box']}>
                 <ChatContactHeader user={chatingWith} />
                 <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
@@ -83,8 +85,9 @@ const ChatBox = () => {
                 }
                 </main>
                 <ChatInput scrollRef={scrollRef}/>
+            </div>
             </>
-            : <section>Please select a contact</section>
+            : <DefaultChatView />
             }
             </section>
         </>
