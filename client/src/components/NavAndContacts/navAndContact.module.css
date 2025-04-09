@@ -1,6 +1,7 @@
 .left-side {
     display: flex;
     flex-wrap: nowrap;
+    overflow: hidden;
     /* grid-area: left-container; */
 }
 .left-side.mobile {

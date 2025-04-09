@@ -33,7 +33,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     const { email, password } = req.body // destructure email, password from request body
-    console.log(req.body)
+    // console.log(req.body)
     if (!email || !password)
         return res.status(400).json({success: false, msg: "email & password required!"})
     try {

@@ -1,9 +1,14 @@
 import axios from "axios"
 import PropTypes from 'prop-types'
 
+let backend_uri = import.meta.env.VITE_API_URI
+let ENV = import.meta.env.VITE_API_ENV
+
+if (ENV == 'dev') {
+    backend_uri = backend_uri.replace('localhost', location.hostname)
+}
 const apiRequest = async (endpoint, details = {}) => {
     let method = details?.method
-    const backend_uri = import.meta.env.VITE_API_URI
     // console.log({...details})
     try {
         const response = await axios(`${backend_uri}${endpoint}`, {

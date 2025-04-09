@@ -19,10 +19,18 @@ const PORT = process.env.PORT || 8080
 const app = express()
 const server = http.createServer(app)
 const DEV_MODE = process.env.DEV_MODE == 'true'
+
 app.use(cors({
-    origin: DEV_MODE ? ["http://localhost:5173", "http://localhost:5174", "http://localhost:4173"] : "https://tether-xi.vercel.app",
+    origin: (origin, callback) => {
+        if (DEV_MODE) {
+            callback(null, origin)
+        } else {
+            callback(null, "https://tether-xi.vercel.app")
+        }
+    },
     credentials: true
-}))
+}));
+
 
 app.use(helmet())
 app.use(express.json())

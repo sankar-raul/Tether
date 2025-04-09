@@ -2,10 +2,12 @@ import { getUser } from "../service/auth.js"
 
 export const softAuthCheck = (req, res, next) => {
     const token = req.cookies.secret
+    // console.log(token)
     if (!token) {
         return next()
     }
     const user = getUser(token)
+    // console.log(user)
     if (!user) return next()
     req.user = user
     next()
