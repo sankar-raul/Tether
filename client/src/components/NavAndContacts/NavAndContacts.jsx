@@ -7,7 +7,7 @@ const NavAndContact = () => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     
     return (
-    <aside className={styles['left-side'] + ' ' + styles['mobile']}>
+    <aside className={`${styles['left-side']} ${isMobile ? styles['mobile'] : ''}`}>
         <Tabs />
         <Contacts />
     </aside>

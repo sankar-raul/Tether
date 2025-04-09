@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive'
 const ResizeableAsideProvider = ({ children }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const [ isResizing, setIsResizing ] = useState(false)
-    const minmax = useMemo(() => ({min: 300, max: window.innerWidth / 2 - 50}), [])
+    const minmax = useMemo(() => ({min: 150, max: window.innerWidth / 2 - 50}), [])
     const resizeableDiv = useRef(null)
     const [ newWidth, setNewWidth ] = useState(getItem('contact-width') || `clamp(${minmax.min}px, 20vw, minmax(450px, ${minmax.max}px))`)
     const handleMouseUp = useCallback(() => {
@@ -36,8 +36,8 @@ const ResizeableAsideProvider = ({ children }) => {
     }, [minmax])
 
     useEffect(() => {
-        !isMobile && setNewWidth(`clamp(${minmax.min}px, 20vw, minmax(450px, ${minmax.max}px))`)
-    }, [isMobile, minmax])
+        isMobile && setNewWidth(`100%`)
+    }, [isMobile])
 
     const handleDrag = useCallback((e) => {
         // document.body.addEventListener('mousemove', handleDrag)
@@ -67,6 +67,7 @@ const ResizeableAsideProvider = ({ children }) => {
     }, [handleDrag])
 
     useEffect(() => {
+        if (isMobile) return
         const callback = e => {
             // console.log(e.target.innerWidth)
             minmax.max = e.target.innerWidth / 2 - 50
@@ -74,7 +75,7 @@ const ResizeableAsideProvider = ({ children }) => {
         }
         window.addEventListener('resize', callback)
         return () => window.removeEventListener('resize', callback)
-    }, [])
+    }, [minmax, isMobile])
 
     return (
         <resizeableContext.Provider value={{handleMouseDown, resizeableDiv}}>

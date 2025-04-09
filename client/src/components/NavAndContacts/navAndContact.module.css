@@ -3,3 +3,7 @@
     flex-wrap: nowrap;
     /* grid-area: left-container; */
 }
+.left-side.mobile {
+    /* background-color: red; */
+    min-width: 0px;
+}

@@ -3,9 +3,6 @@
     flex-wrap: nowrap;
     gap: 1px;
 }
-.contacts-wraper.mobile {
-    width: 100%;
-}
 .contacts {
     flex-grow: 1;
     background: var(--secondery-bg);
@@ -34,6 +31,16 @@
     &::-webkit-scrollbar-thumb:active {
         background-color: #fff4;
     }
+}
+.contacts-wraper.mobile > .contacts {
+    width: 100%;
+    min-width: 20px;
+
+}
+.contacts-wraper.mobile {
+    /* background-color: red; */
+    width: 100%;
+    min-width: 20px;
 }
 .no-contacts {
     color: var(--secondery-text);
