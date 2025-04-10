@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import useContacts from '../../context/contacts/contact'
 import useTabs from '../../context/Tabs/tabs'
 import { HeroDate } from '../../utils/date'
-import apiRequest from '../../hook/apiRequest'
 import useUserInfo from '../../context/userInfo/userInfo'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
@@ -19,7 +18,7 @@ const Contacts = () => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
 
     return (
-        <div className={styles['contacts-wraper'] + ' ' + styles['mobile']}>
+        <div className={styles['contacts-wraper']}>
             <div ref={resizeableDiv} className={styles['contacts']}>
                 {
                     currentTab == 'chat' ? <Chats /> : <Calls />

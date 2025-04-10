@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive'
 const ResizeableAsideProvider = ({ children }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const [ isResizing, setIsResizing ] = useState(false)
-    const minmax = useMemo(() => ({min: 150, max: window.innerWidth / 2 - 50}), [])
+    const minmax = useMemo(() => ({min: 300, max: window.innerWidth / 2 - 50}), [])
     const resizeableDiv = useRef(null)
     const [ newWidth, setNewWidth ] = useState(getItem('contact-width') || `clamp(${minmax.min}px, 20vw, minmax(450px, ${minmax.max}px))`)
     const handleMouseUp = useCallback(() => {

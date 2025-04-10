@@ -10,8 +10,11 @@ import SettingsPassive from '../../assets/svg/chat/settings.svg'
 import AboutPassive from '../../assets/svg/chat/about.svg'
 import { useCallback, useEffect, useState } from 'react'
 import useTabs from '../../context/Tabs/tabs'
+import { useMediaQuery } from 'react-responsive'
+
 const Tabs = () => {
     const { setCurrentTab } = useTabs()
+    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
 
     const handleTabs = useCallback((tab = "chat") => {
         setCurrentTab(tab)
@@ -27,6 +30,7 @@ const Tabs = () => {
                 </div>
                 <div>
                     <Tab icon={{active: PaintPassive, passive: PaintPassive}} />
+                    {isMobile ? <Tab type='call' onClick={() => handleTabs("call")} icon={{active: callActive, passive: CallPassive}} /> : ''}
                 </div>
                 <div>
                     <Tab icon={{active: AboutPassive, passive: AboutPassive}} />

@@ -14,6 +14,7 @@
     overflow-x: initial;
     scroll-behavior: smooth;
     flex-grow: 1;
+    min-width: 300px;
 
     &::-webkit-scrollbar {
         width: 4px;
@@ -32,16 +33,7 @@
         background-color: #fff4;
     }
 }
-.contacts-wraper.mobile > .contacts {
-    width: 100%;
-    min-width: 20px;
 
-}
-.contacts-wraper.mobile {
-    /* background-color: red; */
-    width: 100%;
-    min-width: 20px;
-}
 .no-contacts {
     color: var(--secondery-text);
     text-align: center;
@@ -179,4 +171,18 @@
     place-self: center;
     margin-top: 50%;
     transform: translateY(-50%);
+}
+
+@media (max-width: 700px) {
+    .contacts-wraper {
+        /* background-color: red; */
+        width: 100%;
+        min-width: 100px;
+        height: 100%;
+        overflow: hidden;
+    }
+    .contacts {
+        width: 100%;
+        min-width: 60px;
+    }
 }
