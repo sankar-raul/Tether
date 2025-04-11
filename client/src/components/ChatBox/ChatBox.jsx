@@ -20,7 +20,7 @@ import useIntersectionObserver from '../../hook/useIntersectionObserver'
 import DefaultChatView from './DefaultView/DefaultView'
 import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
@@ -208,7 +208,8 @@ const MsgContextMenu = ({msg_id, chatingWith, content, rightClick}) => {
         <>
             <div className={styles['msg-context-menu']}>
                 <div onClick={(e) => handleDisplay(true, e)} className={styles['context-icon-wraper']}>
-                    <img className={styles['context-menu-icon']} src={dotsIcon} alt="context menu" />
+                    {/* <img className={styles['context-menu-icon']} src={dotsIcon} alt="context menu" /> */}
+                    <FontAwesomeIcon className={styles['context-menu-icon']} icon={faEllipsisVertical} />
                 </div>
             </div>
             <div onContextMenu={(e) => e.preventDefault()} onClick={() => handleDisplay(false)} style={{display: menuDisplay}} className={styles['main-context-menu']}>

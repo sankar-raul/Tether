@@ -150,13 +150,17 @@
     aspect-ratio: 1 / 1;
     display: none;
 }
+.message-tag.not-me > .msg-context-menu {
+    transform: rotate(180deg);
+}
 .message-tag:hover > .msg-context-menu {
     display: flex;
 }
 .context-icon-wraper {
     /* border: 1px solid #f00; */
     height: 100%;
-    background: var(--brand-color);
+    background: var(--brand-bg);
+    border: 1px solid var(--brand-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -170,6 +174,7 @@
     /* background-color: #fff; */
     height: 50%;
     transform: rotate(-45deg);
+    color: var(--brand-color);
 }
 .main-context-menu {
     position: fixed;
