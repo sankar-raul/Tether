@@ -40,7 +40,7 @@ const ChatInput = ({scrollRef}) => {
               <img src={attachIcon} alt="media" />
             </div>
             <div className={styles["chat-input"]}>
-              <input className={styles['input']} ref={inputRef} autoFocus onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} />
+              <input className={styles['input']} ref={inputRef} autoFocus onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} autoComplete='off' />
             </div>
             <div className={styles['message-send-btn']}>
               <button type='submit'>

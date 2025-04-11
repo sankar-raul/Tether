@@ -39,7 +39,7 @@ const ChatBox = () => {
         // console.log(messages)
         setChats(chat)
         // console.log(messages)
-        console.log(chat)
+        // console.log(chat)
     }, [messages, selectedContact, chatingWith])
 
     useEffect(() => {
