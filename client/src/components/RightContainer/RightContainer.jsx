@@ -1,4 +1,3 @@
-import { useMediaQuery } from "react-responsive"
 import ChatProvider from "../../context/chatSocket/provider"
 import MessageProvider from "../../context/messages/provider"
 import useTabs from "../../context/Tabs/tabs"
@@ -8,7 +7,6 @@ import styles from "./rightcontainer.module.css"
 import useContacts from "../../context/contacts/contact"
 const RightContainer = () => {
     const { currentTab } = useTabs()
-    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const { selectedContact } = useContacts()
 
     // console.log(selectedContact)
@@ -16,7 +14,7 @@ const RightContainer = () => {
     return (
         <MessageProvider>
             <ChatProvider>
-                <div className={`${styles[`right-container`]} ${styles[isMobile ? 'mobile' : '']} ${!selectedContact ? styles['show']: ''}`}>
+                <div className={`${styles[`right-container`]} ${!selectedContact ? styles['hide']: ''}`}>
                     { currentTab == 'chat' ? <ChatBox /> : <CallBox /> }
                 </div>
             </ChatProvider>

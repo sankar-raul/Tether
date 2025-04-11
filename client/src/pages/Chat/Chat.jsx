@@ -5,21 +5,18 @@ import ResizeableAsideProvider from '../../context/resizeableAside/provider'
 import TabsProvider from '../../context/Tabs/provider'
 import RightContainer from '../../components/RightContainer/RightContainer'
 import SocketProvider from '../../context/socket/provider'
-import { useMediaQuery } from 'react-responsive'
+
 const Chat = () => {
-    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     
     return (
         <SocketProvider>
         <TabsProvider>
-            {/* <ContactsProvider> */}
                 <section className={styles['chat-view']}>
                     <ResizeableAsideProvider>
                         <NavAndContact />
                     </ResizeableAsideProvider>
                     <RightContainer />
                 </section>
-            {/* </ContactsProvider> */}
         </TabsProvider>
         </SocketProvider>
     )

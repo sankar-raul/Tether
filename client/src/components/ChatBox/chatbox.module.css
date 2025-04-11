@@ -36,7 +36,7 @@
     }
     &:hover::-webkit-scrollbar-thumb {
         background-color: #fff2;
-        cursor: pointer;
+        cursor: var(--cursor);
     }
     &::-webkit-scrollbar-thumb:hover {
         background-color: #fff3;
@@ -163,7 +163,7 @@
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     border-radius: 50% 0% 50% 50%;
-    cursor: pointer;
+    cursor: var(--cursor);
     transform: rotate(45deg);
 }
 .context-icon-wraper > .context-menu-icon {
@@ -205,7 +205,7 @@
 .menu > div {
     padding: 10px 10px;
     width: 100%;
-    cursor: pointer;
+    cursor: var(--cursor);
     /* border: 1px solid red; */
     &:hover {
         background-color: #4446;
@@ -213,4 +213,14 @@
 }
 .menu > div > p {
     font-size: .8rem;
+}
+
+@media (max-width: 700px) {
+    .message-text {
+        user-select: none;
+        cursor: none;
+    }
+    .message-tag:hover > .msg-context-menu {
+        display: none;
+    }
 }

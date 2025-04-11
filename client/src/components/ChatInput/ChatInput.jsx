@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './chatInput.module.css'
 import PropTypes from 'prop-types'
 import useChat from '../../context/chatSocket/chatSocket'
@@ -14,18 +14,25 @@ const ChatInput = ({scrollRef}) => {
     const handleInput = (e) => {
         setText(e.target.value)
     }
-    const send = (e) => {
+
+    const focusInput = useCallback(() => {
+      inputRef && inputRef.current.focus()
+    }, [])
+    
+    const send = useCallback((e) => {
         e.preventDefault()
+        focusInput()
         const messageContent = text.trim()
         if (messageContent.length > 0) {
           scrollRef?.current.scrollIntoView()
             setText('')
             sendMsg(messageContent)
         }
-    }
+    }, [sendMsg, scrollRef, text, focusInput])
+
     useEffect(() => {
-      inputRef && inputRef.current.focus()
-    }, [selectedContact])
+      selectedContact && focusInput()
+    }, [selectedContact, focusInput])
     return (
         <div className={styles['msg-send-bar']}>
           <form onSubmit={send} className={styles['msg-send-bar-wraper']}>

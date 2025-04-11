@@ -17,7 +17,6 @@ import useChat from '../../context/chatSocket/chatSocket'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
 import useIntersectionObserver from '../../hook/useIntersectionObserver'
-import useUserInfo from '../../context/userInfo/userInfo'
 import DefaultChatView from './DefaultView/DefaultView'
 import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -30,7 +29,7 @@ const ChatBox = () => {
     const [ chats, setChats ] = useState([])
     const scrollRef = useRef(null)
     const [ nextChunk, setNextChunk ] = useState(null)
-    const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
+    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     
     useEffect(() => {
         const chat = []
@@ -104,6 +103,7 @@ const ChatBox = () => {
 const LoadMoreMsgLoader = ({contact_id}) => {
     const [ ref, isVisible ] = useIntersectionObserver({threshold: .1})
     const { loadMoreMsg } = useChat()
+
     useEffect(() => {
         isVisible && loadMoreMsg({id: contact_id})
     }, [isVisible, loadMoreMsg, contact_id])
