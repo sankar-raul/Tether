@@ -243,7 +243,7 @@ const ChatContactHeader = ({ user }) => {
     }, [setSelectedContact, isMobile])
 
     return (
-        <nav className={`${chatNavStyle['chat-nav']} ${isMobile ? chatNavStyle['mobile'] : ''}`}>
+        <nav className={chatNavStyle['chat-nav']}>
             <div className={chatNavStyle['user-info']}>
                 {isMobile ? <div onClick={closeChat} className={chatNavStyle['back-btn']}><FontAwesomeIcon icon={faArrowLeft} fontSize={22}/></div> : '' }
                 <div className={chatNavStyle['user-dp']}>

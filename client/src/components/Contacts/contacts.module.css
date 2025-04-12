@@ -84,7 +84,7 @@
     align-items: center;
     gap: 7px;
     padding: 7px;
-    cursor: var(--cursor);
+    cursor: var(--cursor, none);
     border: 1px solid transparent;
 
     &:hover {

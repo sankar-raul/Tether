@@ -10,10 +10,7 @@
     box-shadow: 0px 1px 15px 0px var(--shadow);
     z-index: 1;
 }
-.chat-nav.mobile {
-    position: sticky;
-    top: 0;
-}
+
 .chat-nav .back-btn {
     width: 39px;
     height: 39px;
@@ -96,4 +93,16 @@
 }
 .nav-btn > img {
     height: 100%;
+}
+@media (max-width: 700px) {
+    .chat-nav {
+        position: sticky;
+        top: 0;
+    }
+    .user-info {
+        flex-grow: 1;
+    }
+    .user-wraper {
+        max-width: 100%;
+    }
 }

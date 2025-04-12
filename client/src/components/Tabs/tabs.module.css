@@ -14,7 +14,7 @@
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: space-between;
-    padding: 10px;
+    padding: 6px 10px;
 }
 .tabs > div {
     display: flex;
@@ -32,6 +32,8 @@
 }
 .tabs .tab > img {
     width: 20px;
+    -webkit-user-drag: none;
+    user-select: none;
 }
 .tabs .tab.active  {
     background-color: var(--brand-bg);
@@ -46,6 +48,14 @@
     .tabs {
         flex-direction: row;
         justify-content: space-around;
+        border-radius: 0;
+        background-color: var(--solid-bg-2);
+    }
+    .tabs .tab > img {
+        width: 25px;
+    }
+    .tabs .tab.active  {
+        background-color: transparent;
     }
     .tabs > div {
         flex-direction: row;

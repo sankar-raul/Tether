@@ -10,7 +10,7 @@ const Header = () => {
 
     return (
         <div className={styles.header}>
-            <h1 className={styles['app-name']}>Tether</h1>
+            <div className={styles['app-name']}><h1>Tether</h1></div>
             <SearchProvider>
                 <Search />
             </SearchProvider>

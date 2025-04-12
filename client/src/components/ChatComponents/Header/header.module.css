@@ -8,6 +8,8 @@
     font-family: 'Vampiro One', serif;
     padding: 0px 5px;
     letter-spacing: 0px;
+    display: flex;
+    align-items: center;
 }
 .user {
     height: 60%;
@@ -69,4 +71,19 @@
 }
 .search-button > img {
     height: 80%;
+}
+@media (max-width: 700px) {
+    .header {
+        background-color: var(--solid-bg-2);
+    }
+    .search-wraper {
+        flex-grow: 1;
+        justify-content: flex-end;
+    }
+    .search-input-wraper {
+        display: none;
+    }
+    .search-box {
+        grid-template-columns: 44px;
+    }
 }
