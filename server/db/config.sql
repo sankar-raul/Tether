@@ -10,7 +10,7 @@ create table if not exists users (
     password varchar(100) not null,
 	isLoggedIn boolean default 0,
     profile_pic_url varchar(255),
-    bio varchar(255) default "Friends are just a text away!"
+    bio varchar(255)
 );
 
 create table if not exists messages (
@@ -64,7 +64,6 @@ create table if not exists refresh_tokens (
 -- delete from users where id <> 90;
 select * from users;
 select * from messages order by sent_at desc;
-update messages set content = "hii sir" where id = 53;
 
 select sender, MAX(sent_at) as latest_msg from messages where reciver = 2 group by sender order by latest_msg;
 select reciver, MAX(sent_at) as latest_msg from messages where sender = 2 group by reciver order by latest_msg;
