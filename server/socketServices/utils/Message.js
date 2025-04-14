@@ -10,6 +10,7 @@ export default class Msg {
         if (!sender || !reciver || !content || !tick || !sent_at) {
             throw new Error('invalid function call')
         }
+        const connection = await pool.getConnection()
         try {
             // console.log(sent_at)
             // console.log(new Date(sent_at).toLocaleString())
@@ -24,31 +25,42 @@ export default class Msg {
             }).replace(",", "");
             // console.log(new Date(sent_at).toLocaleString())
             let data
-            pool.execute("call newInteraction(?, ?, ?, ?, ?)", [sender, reciver, sent_at, 'chat', content])
+            await connection.execute("call newInteraction(?, ?, ?, ?, ?)", [sender, reciver, sent_at, 'chat', content])
             if (sender == reciver) {
-                data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at, seen_at, sent_at) value (?, ?, ?, 3, now(), now(), ?)", [sender, reciver, content, sent_at])
+                data = await connection.execute("insert into messages (sender, reciver, content, tick, recived_at, seen_at, sent_at) value (?, ?, ?, 3, now(), now(), ?)", [sender, reciver, content, sent_at])
             } else {
                 if (tick == 2)
-                    data = await pool.execute("insert into messages (sender, reciver, content, tick, recived_at, sent_at) value (?, ?, ?, 2, now(), ?)", [sender, reciver, content, sent_at])
+                    data = await connection.execute("insert into messages (sender, reciver, content, tick, recived_at, sent_at) value (?, ?, ?, 2, now(), ?)", [sender, reciver, content, sent_at])
                 else
-                    data = await pool.execute("insert into messages (sender, reciver, content, tick, sent_at) value (?, ?, ?, 1, ?)", [sender, reciver, content, sent_at])
+                    data = await connection.execute("insert into messages (sender, reciver, content, tick, sent_at) value (?, ?, ?, 1, ?)", [sender, reciver, content, sent_at])
             }
-            const msg = await pool.execute("select * from messages where id = ?", [ data[0].insertId ])
+            const msg = await connection.execute("select * from messages where id = ?", [ data[0].insertId ])
+            await connection.commit()
             return msg[0][0]
         } catch (error) {
             console.log("Error: here", error)
+            await connection.rollback()
             throw new Error(error)
+        } finally {
+            connection.release()
         }
     }
+
     async #getNotDeliveredMsg(reciver) {
+        const connection = await pool.getConnection()
         try {
-            let [msgs, fields] = await pool.execute("select * from messages where reciver = ? and tick = 1", [reciver])
-            await pool.execute("update messages set tick = 2, recived_at = now() where reciver = ? and tick = 1", [reciver])
+            let [msgs, fields] = await connection.execute("select * from messages where reciver = ? and tick = 1", [reciver])
+            await connection.execute("update messages set tick = 2, recived_at = now() where reciver = ? and tick = 1", [reciver])
+            await connection.commit()
             return msgs != '' ? msgs : null
         } catch (error) {
-            console.log("Error getAll:", error)
+            await connection.rollback()
+            throw new Error(error)
+        } finally {
+            connection.release()
         }
     }
+
     // inform to sender that his / her messages delivered
     async #delevered(msg_id, sender, reciver) {
         // console.log(msg_id, sender, "oppp")
@@ -60,6 +72,7 @@ export default class Msg {
             }
         }
     }
+
     async sendUndelivered(socketId, userID) {
         const undeliverdMessages = await this.#getNotDeliveredMsg(userID)
         // console.log(undeliverdMessages)

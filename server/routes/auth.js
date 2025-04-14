@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { deleteUser, login, logout, register, update } from "../controllers/auth.js"
+import { deleteUser, login, logout, refreshToken, register, update } from "../controllers/auth.js"
 import { restrictedRoute } from "../middleware/auth.js"
 
 const auth = Router()
@@ -15,8 +15,11 @@ auth.put('/update/:what', restrictedRoute, update)
 
 
 auth.put('/forgot', (req, res) => {
-    res.end("ok")
+    res.end("ok") // need to work on it
 })
+
+// used for token refreshing
+auth.post('/refresh_token', refreshToken)
 
 auth.get('/logout', logout)
 // api endpoint to delete user -> DELETE /auth/delete

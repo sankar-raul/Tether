@@ -24,9 +24,9 @@ const apiRequest = async (endpoint, details = {}) => {
         // console.log(e)
         switch (e.code) {
             case "ERR_NETWORK":
-                return [null, {success: false, msg: "net error"}]
+                return [null, {success: false, msg: "net error" }]
             case "ERR_CANCELED":
-                return [null, {success: false, msg: e.message}]
+                return [null, {success: false, msg: e.message }]
         }
         // console.log(e)
         return [null, e.response?.data]

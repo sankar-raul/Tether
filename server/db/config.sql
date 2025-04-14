@@ -36,8 +36,8 @@ create table if not exists contacts (
     foreign key (contact_id) references users(id),
     primary key (owner_id, contact_id)
 );
-drop table contacts;
-select * from contacts;
+-- drop table contacts;
+-- select * from contacts;
 
 create table if not exists recent_interactions (
 	owner_id bigint not null,
@@ -50,7 +50,16 @@ create table if not exists recent_interactions (
     primary key (owner_id, contact_id)
 );
 
-
+-- secure auth refresh tokens 'hey hackers try to hack its power full auth shield 😎'
+create table if not exists refresh_tokens (
+	token char(64) unique primary key,
+    user_id bigint not null,
+    created_at datetime default now(),
+    expires_at datetime not null, -- default 7 day expiry
+    foreign key (user_id) references users (id)
+);
+-- drop table refresh_tokens;
+-- alter table refresh_tokens modify column expires_at int not null;
 -- drop table users;
 -- delete from users where id <> 90;
 select * from users;

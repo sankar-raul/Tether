@@ -81,7 +81,8 @@ chatRouter.get('/contacts', async (req, res) => {
     // console.log(contacts)
     return res.status(200).json({success: true, msg: "data fetch success!", type: "map", data: contacts[0]?.[0]})
     } catch (error) {
-        console.log("error ", error)
+        console.log("Error 🐞", error, 'error in contacts')
+        console.log(req.user)
         return res.status(500).json({success: false, msg: "internal server error!"})
     }
 })

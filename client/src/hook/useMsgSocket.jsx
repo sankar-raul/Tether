@@ -4,7 +4,6 @@ import apiRequest from "./apiRequest"
 import useContacts from "../context/contacts/contact"
 import NotifyTone from "../utils/notificationSound"
 import useAlert from "../context/alert/Alert"
-import useUserInfo from '../context/userInfo/userInfo'
 
 const messageRef = new Map() // contact_id -> local_id -> message_object
 const unreadMsgRef = new Map() // contact_id -> int
@@ -38,7 +37,7 @@ const useMsgSocket = (contactId) => {
     const [ nextMsgChunk, setNextMsgChunk ] = useState(new Map())
 
     const deleteMsg = (reciver, msg_id) => {
-        console.log(reciver, msg_id)
+        // console.log(reciver, msg_id)
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
         try {
             socket.emit("message:delete", {msg_id})
@@ -168,9 +167,9 @@ const useMsgSocket = (contactId) => {
                     // setTimeout(() => {
                     const msgMap = new Map(messageRef.get(contactId))
                     msgIdToLocalIdRef.set(message.id, local_id)
-                    console.log(message)
+                    // console.log(message)
                     // Object.assign(msg, message)
-                    console.log(msg, message)
+                    // console.log(msg, message)
                     msg.tick = message.tick
                     msg.recived_at = message.recived_at
                     msg.seen_at = message.seen_at

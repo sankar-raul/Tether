@@ -13,6 +13,7 @@ import cors from 'cors'
 import { config } from 'dotenv'
 import user from './routes/user.js'
 import chatRouter from './routes/chat.js'
+import { AccessToken } from './service/authToken.js'
 config()
 
 const PORT = process.env.PORT || 8080
@@ -65,11 +66,11 @@ export const io = new Server(server, {
 
 
 io.use((socket, next) => {
-    const token = cookie.parse(socket.request.headers.cookie || '')?.secret
+    const token = cookie.parse(socket.request.headers.cookie || '')?.access_token
     if (!token) {
         return next(new Error("unauthorized!"))
     }
-    const user = getUser(token)
+    const user = AccessToken.get(token)
     // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     socket.user = user
@@ -80,7 +81,7 @@ io.use((socket, next) => {
 
 io.on('connection', (socket) => {
     // console.log(socket.user)
-    console.log(socket.user.username, "connected")
+    console.log(socket.user.id, "connected")
 
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
