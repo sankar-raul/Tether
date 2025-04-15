@@ -164,3 +164,22 @@
     display: grid;
     place-items: center;
 }
+
+@media (max-width: 700px) {
+    .search-window {
+        /* background-color: #000; */
+        background-image: linear-gradient(180deg, transparent 70%, rgba(3, 36, 63, 0.238));
+        /* background: transparent; */
+    }
+    .search-results {
+        max-width: none;
+        width: 100%;
+        background: #0001;
+        margin: 0;
+        height: minmax(300, max-content);
+        backdrop-filter: blur(34px);
+    }
+    .results {
+        max-height: 50vh;
+    }
+}

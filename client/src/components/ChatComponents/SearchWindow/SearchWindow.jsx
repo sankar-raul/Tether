@@ -9,10 +9,12 @@ import useIntersectionObserver from '../../../hook/useIntersectionObserver'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { Skeleton } from '@mui/material'
+import { useMediaQuery } from 'react-responsive'
 
 export const SearchWindow = () => {
     const { setIsSearchFocused, searchValue, clearSearchCache, searchResults, isLoading, searchResponse } = useSearch()
-    
+    const isMobile = useMediaQuery({ query: '(max-width: 700px)'})
+    // alert('ldfldfdo')
     // useEffect(() => {
     //     // console.log(isVisible)
     // }, [isVisible])
