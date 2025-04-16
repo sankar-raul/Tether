@@ -174,10 +174,11 @@
     .search-results {
         max-width: none;
         width: 100%;
-        background: #0001;
+        background: #00000001;
         margin: 0;
         height: minmax(300, max-content);
-        backdrop-filter: blur(34px);
+        background-image: linear-gradient(90deg, transparent 30%, rgba(3, 36, 63, 0.18));
+        backdrop-filter: blur(24px);
     }
     .results {
         max-height: 50vh;
