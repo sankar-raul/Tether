@@ -7,24 +7,45 @@ import useTokenWorker from '../../backgroundWorker/hooks/useTokenWorker'
 const UserInfoProvider = ({ children }) => {
     const [ userInfo, setUserInfo ] = useState(null)
     const [ isloggedIn, setIsLoggedIn ] = useState()
-    const [ token ] = useTokenWorker()
+    const [ accessToken, setAccessToken ] = useState(null)
+    const [ access_token, handleCanRefresh, { isValid, msg } ] = useTokenWorker()
     
     const getUserInfo = useCallback(async () => {
+        if (isValid === null) return
+        if (!isValid) {
+            setIsLoggedIn(false)
+            handleCanRefresh()
+            return
+        }
         const [ userData, error ] = await apiRequest('/user')
         if (userData) {
+            handleCanRefresh(true)
             setUserInfo(userData.user)
             setIsLoggedIn(true)
         } else {
             setIsLoggedIn(false)
             console.log(error)
         }
-    }, [])
+    }, [isValid, handleCanRefresh])
+    useEffect(() => {
+        !isValid && setIsLoggedIn(false)
+    }, [isValid])
+    useEffect(() => {
+        msg == 'no auth' && handleCanRefresh(false)
+    }, [msg, handleCanRefresh])
+    useEffect(() => {
+        access_token ?? setAccessToken(access_token)
+    }, [access_token])
+
     useEffect(() => {
         userInfo || getUserInfo()
 
     }, [isloggedIn, getUserInfo, userInfo])
+    useEffect(() => {
+        console.log(isloggedIn)
+    }, [isloggedIn])
     return (
-        <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn}}>
+        <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn, accessToken}}>
             {children}
         </userInfoContext.Provider>
     )

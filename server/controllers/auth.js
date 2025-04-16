@@ -123,12 +123,12 @@ export const refreshToken = async (req, res) => {
     // 💪💪💪💪💪💪😎
     try {
         const { refresh_token: old_refresh_token } = req.cookies
-        if (!old_refresh_token) return res.status(200).json({ success: false, msg: 'no auth' })
+        if (!old_refresh_token) return res.status(401).json({ success: false, msg: 'no auth' })
         const tokens = await RefreshToken.refresh(old_refresh_token)
         if (tokens == 'invalid token') {
             res.clearCookie('access_token', { path: '/' })
             res.clearCookie('refresh_token', { path: '/' })
-            return res.status(200).json({ success: false, msg: 'no auth' }) // access denied!
+            return res.status(401).json({ success: false, msg: 'no auth' }) // access denied!
         }
         if (tokens) {
             const [ refresh_token, access_token ] = tokens
@@ -146,7 +146,7 @@ export const refreshToken = async (req, res) => {
             })
             return res.status(200).json({success: true, msg: 'refreshed', access_token: access_token}) // success
         }
-        return res.sendStatus(200)
+        return res.end('📍')
     } catch (error) {
         console.log(error, "Error in refreshToken() endpoint")
         return res.status(500).json({success: false, msg: 'internal server error'}) // internal server error

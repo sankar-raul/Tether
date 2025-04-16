@@ -21,15 +21,17 @@ const apiRequest = async (endpoint, details = {}) => {
         // console.log(response, 'oppp')
         return [data, null]
     } catch (e) {
-        // console.log(e)
+        // console.log(e.response)
         switch (e.code) {
             case "ERR_NETWORK":
                 return [null, {success: false, msg: "net error" }]
             case "ERR_CANCELED":
                 return [null, {success: false, msg: e.message }]
+            default:
+                return [ null, e.response?.data ]
         }
         // console.log(e)
-        return [null, e.response?.data]
+        // return [null, e.response?.data]
     }
 }
 apiRequest.propTypes = {
