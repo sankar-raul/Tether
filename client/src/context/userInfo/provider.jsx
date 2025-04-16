@@ -11,11 +11,13 @@ const UserInfoProvider = ({ children }) => {
     const [ access_token, handleCanRefresh, { isValid, msg } ] = useTokenWorker()
     
     const getUserInfo = useCallback(async () => {
-        if (isValid === null) return
-        if (!isValid) {
-            setIsLoggedIn(false)
-            handleCanRefresh()
-            return
+        if (!isloggedIn) {
+            if (isValid === null) return
+            if (!isValid) {
+                setIsLoggedIn(false)
+                handleCanRefresh()
+                return
+            }
         }
         const [ userData, error ] = await apiRequest('/user')
         if (userData) {
@@ -24,11 +26,11 @@ const UserInfoProvider = ({ children }) => {
             setIsLoggedIn(true)
         } else {
             setIsLoggedIn(false)
-            console.log(error)
+            // console.log(error)
         }
-    }, [isValid, handleCanRefresh])
+    }, [isValid, handleCanRefresh, isloggedIn])
     useEffect(() => {
-        !isValid && setIsLoggedIn(false)
+        isValid !== null && !isValid && setIsLoggedIn(false)
     }, [isValid])
     useEffect(() => {
         msg == 'no auth' && handleCanRefresh(false)
@@ -41,9 +43,9 @@ const UserInfoProvider = ({ children }) => {
         userInfo || getUserInfo()
 
     }, [isloggedIn, getUserInfo, userInfo])
-    useEffect(() => {
-        console.log(isloggedIn)
-    }, [isloggedIn])
+    // useEffect(() => {
+    //     console.log(isloggedIn)
+    // }, [isloggedIn])
     return (
         <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn, accessToken}}>
             {children}

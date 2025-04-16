@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { refresh } from "../workers/refresh_access_token"
 
-const REFRESH_INTERVAL = 13 * 60 * 1000
+const REFRESH_INTERVAL = 6666
 
 const useTokenWorker = () => {
     const [ access_token, setAccessToken ] = useState(null)
