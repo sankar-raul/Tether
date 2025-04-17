@@ -164,7 +164,7 @@ io.on('connection', (socket) => {
     })
     socket.on('disconnect', () => {
         disconnectUser(socket.id)
-        // console.log(socket.user.username, "disconnected")
+        console.log(socket.user.id, "disconnected")
       })
 })
 
