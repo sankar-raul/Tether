@@ -30,7 +30,7 @@ export const register = async (req, res) => {
         secure: true,
         maxAge: ACCESS_TOKEN_EXPIRES_MS
     })
-    return res.status(201).json({success: true, msg: "success", data: {id: insertId}})
+    return res.status(201).json({success: true, msg: "success"})
 } catch (error) {
     console.log("Error:", error)
     return res.status(500).json({success: false, msg: "internal server error!"})

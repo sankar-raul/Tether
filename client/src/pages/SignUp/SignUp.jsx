@@ -20,6 +20,7 @@ const SignUp = () => {
             body: formData
         })
         if (data) {
+            // console.log(data)
             if (data.success) {
                 setIsLoggedIn(true)
                 navigate('/chat?new_user=true')
@@ -85,7 +86,7 @@ const SignUp = () => {
                         </div>
                         
                        <div className={styles.submitBtn}>
-                            <button disabled={isSubmitting} style={{'--display-loader': isSubmitting ? 'block' : 'none'}} type="submit">{isSubmitting ? '' : 'Login'}</button>
+                            <button disabled={isSubmitting} style={{'--display-loader': isSubmitting ? 'block' : 'none'}} type="submit">{isSubmitting ? '' : 'Sign up'}</button>
                         </div>
                        <div className={styles.submitBtn + " " + styles.help}>
                             <p>Allready have an account. <Link to='/login'>Login here</Link></p>
