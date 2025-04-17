@@ -58,13 +58,16 @@ create table if not exists refresh_tokens (
     expires_at datetime not null, -- default 7 day expiry
     foreign key (user_id) references users (id)
 );
--- drop table refresh_tokens;
--- alter table refresh_tokens modify column expires_at int not null;
--- drop table users;
--- delete from users where id <> 90;
-select * from users;
-select * from messages order by sent_at desc;
 
+-- alter table refresh_tokens modify column expires_at int not null;
+
+select * from users;
+-- delete from refresh_tokens where user_id = 19;
+-- delete from users where id = 19;
+-- truncate table refresh_tokens; -- run for all logout
+-- delete
+select * from messages order by sent_at desc;
+delete from users where id = 19;
 select sender, MAX(sent_at) as latest_msg from messages where reciver = 2 group by sender order by latest_msg;
 select reciver, MAX(sent_at) as latest_msg from messages where sender = 2 group by reciver order by latest_msg;
 select * from messages where sender = 1 and reciver = 2 order by sent_at desc limit 20;
