@@ -1,6 +1,7 @@
 .contacts-wraper {
     display: flex;
     flex-wrap: nowrap;
+    position: relative;
     gap: 1px;
 }
 .contacts {

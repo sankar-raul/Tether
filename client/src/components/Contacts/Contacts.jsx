@@ -9,7 +9,7 @@ import useUserInfo from '../../context/userInfo/userInfo'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
 import { Skeleton } from '@mui/material'
-import AddContact from '../AddContact/AddContact'
+import { AddContact, AddContactsBtn } from './AddContact/AddContact'
 import { useMediaQuery } from 'react-responsive'
 
 const Contacts = () => {
@@ -25,6 +25,7 @@ const Contacts = () => {
                 }
             </div>
             {!isMobile ? <div onMouseDown={handleMouseDown} className={styles['handle-resize']}></div> : ''}
+            <AddContactsBtn />
         </div>
     )
 }
