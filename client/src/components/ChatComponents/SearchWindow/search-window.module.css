@@ -10,6 +10,8 @@
     /* backdrop-filter: brightness(50%); */
     display: flex;
     justify-content: center;
+    backdrop-filter: blur(8px);
+
 }
 .search-results {
     /* max-height: clamp(200px, 40vh, 350px); */
@@ -168,17 +170,17 @@
 @media (max-width: 700px) {
     .search-window {
         /* background-color: #000; */
-        background-image: linear-gradient(180deg, transparent 70%, rgba(3, 36, 63, 0.238));
+        background-image: linear-gradient(180deg, transparent 70%, rgba(7, 41, 69, 0.756));
         /* background: transparent; */
     }
     .search-results {
         max-width: none;
         width: 100%;
-        background: #00000001;
+        background: #0008;
         margin: 0;
         height: minmax(300, max-content);
         background-image: linear-gradient(90deg, transparent 30%, rgba(3, 36, 63, 0.18));
-        backdrop-filter: blur(24px);
+        backdrop-filter: blur(20px);
     }
     .results {
         max-height: 50vh;

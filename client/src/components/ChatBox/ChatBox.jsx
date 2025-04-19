@@ -20,7 +20,7 @@ import useIntersectionObserver from '../../hook/useIntersectionObserver'
 import DefaultChatView from './DefaultView/DefaultView'
 import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faChevronLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
@@ -245,7 +245,7 @@ const ChatContactHeader = ({ user }) => {
     return (
         <nav className={chatNavStyle['chat-nav']}>
             <div className={chatNavStyle['user-info']}>
-                {isMobile ? <div onClick={closeChat} className={chatNavStyle['back-btn']}><FontAwesomeIcon icon={faArrowLeft} fontSize={22}/></div> : '' }
+                {isMobile ? <div onClick={closeChat} className={chatNavStyle['back-btn']}><FontAwesomeIcon icon={faChevronLeft} fontSize={22}/></div> : '' }
                 <div className={chatNavStyle['user-dp']}>
                 {
                  user.profile_pic_url ? <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src={user.profile_pic_url} alt={user.username} /> : <DefaultUser />

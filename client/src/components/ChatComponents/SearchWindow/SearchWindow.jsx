@@ -61,7 +61,7 @@ export const SearchWindow = () => {
                     }
                     </div>
                     </>
-                ) : <div className={styles['result-for']}></div>
+                ) : <div className={styles['result-for'] + ' ' + styles['no-more-result']}>Nothing here</div>
                 }
                 </>
                 </div>

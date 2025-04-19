@@ -4,6 +4,23 @@
     position: relative;
     padding: 5px;
 }
+.chevronLeft {
+    font-size: 1.6rem;
+    align-self: center;
+    padding-left: .6rem;
+    display: none;
+    animation: slide-in .2s ease-in 1;
+
+    &:active {
+        opacity: .8;
+    }
+}
+@keyframes slide-in {
+    from {
+        transform: scale(.8) translate(-30%);
+        font-size: 1rem;
+    }
+}
 .app-name {
     font-family: 'Vampiro One', serif;
     padding: 0px 5px;
@@ -92,6 +109,9 @@
             grid-template-columns: 1fr 44px;
             width: 100%;
             padding: 10px;
+        }
+        .chevronLeft {
+            display: block;
         }
     }
     .search-input {

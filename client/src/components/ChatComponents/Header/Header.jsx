@@ -6,12 +6,15 @@ import useSearch from '../../../context/search/searchContext'
 import { useCallback, useEffect, useRef } from 'react'
 import { DefaultUser } from '../../DefaultUser/DefaultUser'
 import { useMediaQuery } from 'react-responsive'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 
 const Header = () => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)'})
 
     return (
         <div className={styles.header}>
+            { isMobile ? <FontAwesomeIcon icon={faChevronLeft} className={styles['chevronLeft']} /> : '' }
             <div className={styles['app-name']}><h1>Tether</h1></div>
             <SearchProvider>
                 <Search />
