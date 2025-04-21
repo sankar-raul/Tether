@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useContacts from '../../context/contacts/contact'
 import styles from './chatbox.module.css'
-import chatNavStyle from './chatNav.module.css'
 import PropTypes from 'prop-types'
-import videoIcon from '../../assets/svg/chat/video.svg'
-import callIcon from '../../assets/svg/chat/call-fff.svg'
-// import messageSearchIcon from '../../assets/svg/chat/message-search.svg'
-import dotsIcon from '../../assets/svg/chat/dots.svg'
 import singleTickIcon from '../../assets/svg/chat/single-tick.svg'
 import doubleTickIcon from '../../assets/svg/chat/double-tick.svg'
 import blueTickIcon from '../../assets/svg/chat/blue-tick.svg'
@@ -14,13 +9,13 @@ import pendingTickIcon from '../../assets/svg/chat/pending.svg'
 import { HeroDate } from '../../utils/date'
 import ChatInput from '../ChatInput/ChatInput'
 import useChat from '../../context/chatSocket/chatSocket'
-import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { Loader } from '../Loader/Loader'
 import useIntersectionObserver from '../../hook/useIntersectionObserver'
 import DefaultChatView from './DefaultView/DefaultView'
 import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faChevronLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import ChatContactHeader from './ChatContactHeader/chatContactHeader'
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
@@ -234,48 +229,5 @@ MsgContextMenu.propTypes = {
     content: PropTypes.string,
     rightClick: PropTypes.object
 }
-const ChatContactHeader = ({ user }) => {
-    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
-    const { setSelectedContact } = useContacts()
-    
-    const closeChat = useCallback(() => {
-        isMobile && setSelectedContact(0)
-    }, [setSelectedContact, isMobile])
 
-    return (
-        <nav className={chatNavStyle['chat-nav']}>
-            <div className={chatNavStyle['user-info']}>
-                {isMobile ? <div onClick={closeChat} className={chatNavStyle['back-btn']}><FontAwesomeIcon icon={faChevronLeft} fontSize={22}/></div> : '' }
-                <div className={chatNavStyle['user-dp']}>
-                {
-                 user.profile_pic_url ? <img className={chatNavStyle['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src={user.profile_pic_url} alt={user.username} /> : <DefaultUser />
-                }
-                </div>
-                <div className={chatNavStyle['user-wraper']}>
-                    <div className={chatNavStyle['username']}>{user.username || ''}</div>
-                    <div className={chatNavStyle["user-status"]}>online</div>
-                </div>
-            </div>
-            <div className={chatNavStyle['nav-buttons']}>
-                <NavBtn src={videoIcon} />
-                <NavBtn src={callIcon} />
-                <NavBtn src={dotsIcon} />
-            </div>
-        </nav>
-    )
-}
-ChatContactHeader.propTypes = {
-    user: PropTypes.object
-}
-const NavBtn = ({src}) => {
-
-    return (
-        <div className={chatNavStyle['nav-btn']}>
-            <img src={src} alt="" />
-        </div>
-    )
-}
-NavBtn.propTypes = {
-    src: PropTypes.string.isRequired
-}
 export default ChatBox
