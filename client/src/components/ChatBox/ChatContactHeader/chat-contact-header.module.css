@@ -4,7 +4,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-    position: relative;
+    /* position: relative; */
     overflow: hidden;
     align-items: center;
     box-shadow: 0px 1px 15px 0px var(--shadow);
@@ -94,11 +94,45 @@
 .nav-btn > img {
     height: 100%;
 }
-@media (max-width: 700px) {
-    .chat-nav {
-        position: sticky;
-        top: 0;
+
+/* menu style starts here */
+.menu {
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-height: 45dvh;
+    min-height: 40px;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    width: clamp(200px, 50%, 250px);
+    background-color: var(--secondery-bg);
+    border-radius: 12px;
+    backdrop-filter: blur(14px) brightness(80%);
+    font-size: .8rem;
+    font-weight: 350;
+    margin: 10px;
+}
+.menu > button {
+    all: unset;
+    padding: 10px;
+    text-align: left;
+    cursor: var(--cursor);
+    transition: .1s ease-out;
+    &:hover:not(.block) {
+        background-color: #ffffff0d;
     }
+    &.block {
+        color: var(--danger-color);
+        font-weight: 600;
+        
+    }
+    &.block:hover {
+        background-color: var(--danger-bg);
+    }
+}
+
+@media (max-width: 700px) {
     .user-info {
         flex-grow: 1;
     }

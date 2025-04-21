@@ -5,20 +5,12 @@ import dotsIcon from '../../../assets/svg/chat/dots.svg'
 import { DefaultUser } from '../../DefaultUser/DefaultUser'
 import { useMediaQuery } from 'react-responsive'
 import useContacts from '../../../context/contacts/contact'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styles from './chat-contact-header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 
-const Menu = () => {
-
-    return (
-        <div>
-            Menu
-        </div>
-    )
-}
 
 const ChatContactHeader = ({ user }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
@@ -29,10 +21,20 @@ const ChatContactHeader = ({ user }) => {
         isMobile && setSelectedContact(0)
     }, [setSelectedContact, isMobile])
 
-    const handleMoreMenu = useCallback(() => {
+    const handleMoreMenu = useCallback((e) => {
+        e.stopPropagation()
         setIsShowMenu(prev => !prev)
     }, [])
 
+    useEffect(() => {
+        const closeMenu = () => {
+            setIsShowMenu(false)
+        }
+        if (isShowMenu) {
+            document.addEventListener('click', closeMenu)
+            return () => document.removeEventListener('click', closeMenu)
+        }
+    }, [isShowMenu])
     return (
         <nav className={styles['chat-nav']}>
             <div className={styles['user-info']}>
@@ -48,7 +50,7 @@ const ChatContactHeader = ({ user }) => {
                 </div>
             </div>
             <div className={styles['nav-buttons']}>
-                <NavBtn src={videoIcon} />
+                <NavBtn src={videoIcon}/>
                 <NavBtn src={callIcon} />
                 <NavBtn src={dotsIcon} onClick={handleMoreMenu}/>
             </div>
@@ -60,6 +62,17 @@ ChatContactHeader.propTypes = {
     user: PropTypes.object
 }
 
+const Menu = ({...props}) => {
+
+    return (
+        <div className={styles['menu']} {...props}>
+            <button>View Profile</button>
+            <button>Clear Chat</button>
+            <button>Add Contact</button>
+            <button className={styles['block']}>Block</button>
+        </div>
+    )
+}
 
 const NavBtn = ({src, ...props}) => {
 
