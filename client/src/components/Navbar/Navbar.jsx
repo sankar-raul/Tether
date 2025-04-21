@@ -11,7 +11,7 @@ const Navbar = () => {
     return (
         <div className={styles.navbar}>
             <img src={appLogo} className={styles.appLogo} alt="TETHER" />
-            {userInfo ? "Hello " + userInfo.username : ''}
+            {userInfo ? "Hello " + userInfo.id : ''}
         </div>
     )
 }

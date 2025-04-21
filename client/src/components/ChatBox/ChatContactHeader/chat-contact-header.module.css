@@ -83,7 +83,7 @@
     justify-content: center;
     /* border: 1px solid red; */
     height: 70%;
-    cursor: pointer;
+    cursor: var(--cursor);
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     padding: 5px;
