@@ -157,7 +157,7 @@ const MessageTag = ({msg, chatingWith}) => {
                     : ''}
                 </div>
             </div>
-            <MsgContextMenu msg_id={msg?.id} chatingWith={chatingWith?.id} content={msg.content} rightClick={rightClick}/>
+            <MsgContextMenu msg_id={msg?.id} chatingWith={chatingWith?.id} content={msg.content} rightClick={rightClick} />
         </div>
     )
 }

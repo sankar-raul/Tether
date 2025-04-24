@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 import styles from './chat-contact-header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { useConfirm } from '../../../hook/Confirm/useConfirm'
 
 
 const ChatContactHeader = ({ user }) => {
@@ -54,7 +55,7 @@ const ChatContactHeader = ({ user }) => {
                 <NavBtn src={callIcon} />
                 <NavBtn src={dotsIcon} onClick={handleMoreMenu}/>
             </div>
-            {isShowMenu ? <Menu /> : ''}
+            {isShowMenu ? <Menu setIsShowMenu={setIsShowMenu} /> : ''}
         </nav>
     )
 }
@@ -62,22 +63,37 @@ ChatContactHeader.propTypes = {
     user: PropTypes.object
 }
 
-const Menu = ({...props}) => {
+const Menu = ({setIsShowMenu, ...props}) => {
+    const { Confirm, isConfirmed, setIsShow } = useConfirm()
 
+    const handleClick = useCallback((e) => {
+        e.stopPropagation()
+        setIsShow(true)
+    }, [setIsShow])
+
+    useEffect(() => {
+        console.log(isConfirmed)
+    }, [isConfirmed])
     return (
-        <div className={styles['menu']} {...props}>
+        <>
+        <div className={styles['menu']} {...props} onClick={handleClick}>
             <button>View Profile</button>
             <button>Clear Chat</button>
             <button>Add Contact</button>
             <button className={styles['block']}>Block</button>
         </div>
+        <Confirm />
+        </>
     )
+}
+Menu.propTypes = {
+    setIsShowMenu: PropTypes.func.isRequired
 }
 
 const NavBtn = ({src, ...props}) => {
 
     return (
-        <div className={styles['nav-btn']} {...props}>
+        <div {...props} className={styles['nav-btn']}>
             <img src={src} alt="" />
         </div>
     )

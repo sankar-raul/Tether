@@ -1,0 +1,49 @@
+.container {
+    position: fixed;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background-color: #0001;
+    backdrop-filter: blur(2px);
+}
+.confirm-bar {
+    background-color: var(--solid-bg);
+    width: clamp(300px, 50%, 600px);
+    aspect-ratio: 2 / 1;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.confirm-bar > .title-msg {
+    color: var(--primary-color);
+    flex-grow: 1;
+    padding-top: 5%;
+    padding-left: 5%;
+    /* border: 1px solid red; */
+}
+.confirm-bar > .actions {
+    /* border: 1px solid #fff; */
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: .8rem;
+}
+.actions > button {
+    all: unset;
+    padding: 10px;
+    border-radius: 24px;
+    font-size: x-small;
+
+}
+.actions > button:nth-of-type(1) {
+    
+}
+.actions > button:nth-of-type(2) {
+    color: var(--danger-color);
+    background-color: var(--danger-bg);
+}

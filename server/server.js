@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('message:delete', async ({msg_id, all = false}) => {
+    socket.on('message:delete', async ({msg_id, all = false}, ackFunc) => {
         if (!msg_id && !all) {
             // console.log(req, "oo no message id is here!")
             return
@@ -132,10 +132,14 @@ io.on('connection', (socket) => {
             if (reciver) {
                 const reciver_socket_id = getIdFromUser(reciver)
                 if (reciver_socket_id) {
-                    if (all)
+                    if (all) {
                         io.to(reciver_socket_id).emit('message:deleted:all', { sender })
-                    else
+                        ackFunc ?? ackFunc('success')
+                        return
+                    } else
                         io.to(reciver_socket_id).emit('message:deleted', { msg_id, sender })
+                        ackFunc ?? ackFunc('success')
+                        return
                 }
             }
         } catch (e) {

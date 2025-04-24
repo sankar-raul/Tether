@@ -40,7 +40,8 @@ const useMsgSocket = (contactId) => {
         // console.log(reciver, msg_id)
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
         try {
-            socket.emit("message:delete", {msg_id})
+            const response = socket.emitWithAck("message:delete", {msg_id})
+            // do some work with the response here
             const messageMap = messageRef.get(reciver)
             const local_id = msgIdToLocalIdRef.get(msg_id)
             messageMap.delete(local_id)
@@ -73,7 +74,7 @@ const useMsgSocket = (contactId) => {
             console.log("Error while seeing messages", error)
             Alert({message: "Error while seeing messages", type: "error"})
         }
-    }, [updateContactInfo, Alert, contactId])
+    }, [updateContactInfo, Alert])
 
     // get past conversations
     const constructMessages = useCallback(({response, id}) => {
