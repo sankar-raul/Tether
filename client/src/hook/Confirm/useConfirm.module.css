@@ -11,18 +11,18 @@
 }
 .confirm-bar {
     background-color: var(--solid-bg);
-    width: clamp(300px, 50%, 600px);
+    width: clamp(300px, 50%, 400px);
     aspect-ratio: 2 / 1;
     border-radius: 10px;
-    padding: 12px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 .confirm-bar > .title-msg {
-    color: var(--primary-color);
+    color: var(--secondery-text);
     flex-grow: 1;
-    padding-top: 5%;
+    padding-top: 4%;
     padding-left: 5%;
     /* border: 1px solid red; */
 }
@@ -35,15 +35,25 @@
 }
 .actions > button {
     all: unset;
-    padding: 10px;
+    padding: 10px 16px;
     border-radius: 24px;
-    font-size: x-small;
-
+    font-size: .75rem;
+    cursor: var(--cursor);
 }
 .actions > button:nth-of-type(1) {
-    
+    border: 1PX solid transparent;
+    &:hover {
+        /* border: 1px solid var(--brand-color); */
+        color: var(--brand-color);
+    }
 }
 .actions > button:nth-of-type(2) {
     color: var(--danger-color);
     background-color: var(--danger-bg);
+    border: 1px solid transparent;
+
+    &:hover {
+        border: 1px solid var(--danger-color);
+        background-color: transparent;
+    }
 }

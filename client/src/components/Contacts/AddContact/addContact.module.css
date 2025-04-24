@@ -45,6 +45,36 @@
     padding: 0;
     margin: auto 1.5rem 1.5rem auto;
 }
+@property --rad1 {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 50%;
+}
+@property --rad2 {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 35%;
+}
+@property --rad3 {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 50%;
+}
+@property --rad4 {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 60%;
+}
+@property --rad5 {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 50%;
+}
+@property --rad6 {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 50%;
+}
 .plus-icon {
     aspect-ratio: 1 / 1;
     width: 3rem;
@@ -52,11 +82,22 @@
     background-color: var(--brand-color);
     cursor: var(--cursor);
     box-shadow: inset 2px 4px 5px 0px #fff5, inset -2px -4px 5px 0px #0005, 0px 0px 5px 0px #0004;
-    border-radius: 120% 25% 110% 35% / 70% 120% 50% 60%;
+    border-radius: var(--rad1) var(--rad5) var(--rad1) var(--rad2) / var(--rad6) var(--rad1) var(--rad3) var(--rad4);
     filter: contrast(150%) brightness(95%) sepia(15%) saturate(123%);
-
+    animation: animate-button 1s ease-in-out infinite;
+    z-index: 0;
     &:active {
         opacity: .9;
+    }
+}
+@keyframes animate-button {
+    50% {
+        --rad1: 45%;
+        --rad2: 63%;
+        --rad3: 48%;
+        --rad4: 65%;
+        --rad5: 70%;
+        --rad6: 40%
     }
 }
 .plus-icon:nth-of-type(1) {

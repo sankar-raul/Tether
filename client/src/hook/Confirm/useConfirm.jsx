@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import styles from './useConfirm.module.css'
 
 export const useConfirm = () => {
-    const [ isConfirmed, setIsConfirmed ] = useState()
+    const [ isConfirmed, setIsConfirmed ] = useState(null)
     const [ isShow, setIsShow ] = useState()
 
     const handleHide = useCallback(() => {
@@ -17,8 +17,8 @@ export const useConfirm = () => {
         e.stopPropagation()
     }, [])
     const Confirm =  useCallback(() => isShow ? 
-        <div className={styles['container']} onClick={stopPropagation}>
-            <div className={styles['confirm-bar']}>
+        <div className={styles['container']}>
+            <div className={styles['confirm-bar']} onClick={stopPropagation}>
                 <div className={styles['title-msg']}>
                     <p>Delete all messages</p>
                 </div>

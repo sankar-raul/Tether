@@ -5,7 +5,7 @@ import dotsIcon from '../../../assets/svg/chat/dots.svg'
 import { DefaultUser } from '../../DefaultUser/DefaultUser'
 import { useMediaQuery } from 'react-responsive'
 import useContacts from '../../../context/contacts/contact'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import styles from './chat-contact-header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -65,22 +65,46 @@ ChatContactHeader.propTypes = {
 
 const Menu = ({setIsShowMenu, ...props}) => {
     const { Confirm, isConfirmed, setIsShow } = useConfirm()
+    const [ interactedElement, setInteractedElement ] = useState(null)
+
+    const handleCancel = useCallback(() => {
+        setIsShowMenu(false)
+    }, [setIsShowMenu])
+
+    const handleAddContact = useCallback(() => {
+        setIsShowMenu(false)
+    }, [setIsShowMenu])
+
+    const handleViewProfile = useCallback(() => {
+        setIsShowMenu(false)
+    }, [setIsShowMenu])
+
+    const validActionsRef = useRef(new Map([['viewProfile', handleViewProfile],['clearChat', null], ['addContact', handleAddContact], ['block', null], ['cancel', handleCancel]]))
 
     const handleClick = useCallback((e) => {
+        const action = e.target.dataset?.action
         e.stopPropagation()
-        setIsShow(true)
+        if (validActionsRef.current?.has(action)) {
+            setInteractedElement(action)
+            if (action == 'clearChat' || action == 'block') {
+                setIsShow(true)
+            } else {
+                validActionsRef.current.get(action)?.()
+            }
+        }
     }, [setIsShow])
 
     useEffect(() => {
-        console.log(isConfirmed)
-    }, [isConfirmed])
+        isConfirmed != null ?  setIsShowMenu(false) : ''
+    }, [isConfirmed, setIsShowMenu])
     return (
         <>
         <div className={styles['menu']} {...props} onClick={handleClick}>
-            <button>View Profile</button>
-            <button>Clear Chat</button>
-            <button>Add Contact</button>
-            <button className={styles['block']}>Block</button>
+            <button data-action='viewProfile'>View Profile</button>
+            <button data-action='clearChat'>Clear Chat</button>
+            <button data-action='addContact'>Add Contact</button>
+            <button data-action='cancel'>Cancel</button>
+            <button data-action='block' className={styles['block']}>Block</button>
         </div>
         <Confirm />
         </>
