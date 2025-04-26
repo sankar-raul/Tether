@@ -16,7 +16,6 @@ const RightContainer = () => {
         <MessageProvider>
             <ChatProvider>
                 <div className={`${styles[`right-container`]} ${!selectedContact ? styles['hide']: ''}`}>
-                    Nothing
                     { currentTab == 'chat' ? <ChatBox /> : <CallBox /> }
                 </div>
             </ChatProvider>
