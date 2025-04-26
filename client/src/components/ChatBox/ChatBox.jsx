@@ -25,12 +25,7 @@ const ChatBox = () => {
     const scrollRef = useRef(null)
     const [ nextChunk, setNextChunk ] = useState(null)
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
-    const [ isInputFucus, setInputFocus ] = useState({value: true})
-
-    const autoFocusInput = useCallback(() => {
-        setInputFocus({value: true})
-    }, [])
-
+    
     useEffect(() => {
         const chat = []
         messages.get(Number(selectedContact))?.forEach((item, key) => {
@@ -69,7 +64,7 @@ const ChatBox = () => {
             <section className={styles[`chat-container`]}>
             {selectedContact != null && selectedContact != 0 ?
             <>
-            <div className={styles['chat-box']} onClick={autoFocusInput}>
+            <div className={styles['chat-box']}>
                 <ChatContactHeader user={chatingWith} />
                 <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
@@ -79,7 +74,7 @@ const ChatBox = () => {
                     <>
                         {
                             chats.slice().reverse().map((msg) =>
-                                <MessageTag autoFocusInput={autoFocusInput} key={msg.key} msg={msg} chatingWith={chatingWith} />
+                                <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
                             )
                         }
                          {
@@ -90,7 +85,7 @@ const ChatBox = () => {
                     ) : <Loader />
                 }
                 </main>
-                <ChatInput forceFocus={isInputFucus} scrollRef={scrollRef}/>
+                <ChatInput scrollRef={scrollRef}/>
             </div>
             </>
             : <DefaultChatView />
@@ -118,7 +113,7 @@ LoadMoreMsgLoader.propTypes = {
     contact_id: PropTypes.number.isRequired
 }
 
-const MessageTag = ({autoFocusInput, msg, chatingWith}) => {
+const MessageTag = ({msg, chatingWith}) => {
     const [ tickImg, setTickImg ] = useState(singleTickIcon)
     const [ msgTime, setMsgTime ] = useState('')
     const [ rightClick, setRightClick ] = useState()
@@ -150,7 +145,7 @@ const MessageTag = ({autoFocusInput, msg, chatingWith}) => {
 
     return (
         <div className={`${styles['message-tag']} ${msg.reciver != chatingWith.id ? styles['not-me'] : styles['me']}`} key={msg.id}>
-            <div className={styles['message-body']} onContextMenu={(e) => {setRightClick(e); autoFocusInput()}}>
+            <div className={styles['message-body']} onContextMenu={setRightClick}>
                 <div className={styles['content']} name={msg.id}>
                     <span className={styles['message-text']}>{msg.content}</span>
                 </div>
@@ -168,8 +163,7 @@ const MessageTag = ({autoFocusInput, msg, chatingWith}) => {
 }
 MessageTag.propTypes = {
     msg: PropTypes.object.isRequired,
-    chatingWith: PropTypes.object.isRequired,
-    autoFocusInput: PropTypes.func
+    chatingWith: PropTypes.object.isRequired
 }
 
 const MsgContextMenu = ({msg_id, chatingWith, content, rightClick}) => {
