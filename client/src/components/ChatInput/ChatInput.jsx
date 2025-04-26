@@ -6,7 +6,7 @@ import sentIcon from '../../assets/svg/chat/send.svg'
 import attachIcon from '../../assets/svg/chat/attach.svg'
 import useContacts from '../../context/contacts/contact'
 
-const ChatInput = ({scrollRef}) => {
+const ChatInput = ({scrollRef, forceFocus}) => {
     const { sendMsg } = useChat()
     const inputRef = useRef(null)
     const { selectedContact } = useContacts()
@@ -31,6 +31,10 @@ const ChatInput = ({scrollRef}) => {
     }, [sendMsg, scrollRef, text, focusInput])
 
     useEffect(() => {
+      forceFocus?.value && focusInput()
+    }, [forceFocus, focusInput])
+
+    useEffect(() => {
       selectedContact && focusInput()
     }, [selectedContact, focusInput])
     return (
@@ -52,6 +56,7 @@ const ChatInput = ({scrollRef}) => {
     )
 }
 ChatInput.propTypes = {
-  scrollRef: PropTypes.object
+  scrollRef: PropTypes.object,
+  forceFocus: PropTypes.object
 }
 export default ChatInput
