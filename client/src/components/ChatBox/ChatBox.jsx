@@ -30,6 +30,7 @@ const ChatBox = () => {
         const chat = []
         messages.get(Number(selectedContact))?.forEach((item, key) => {
             chat.push({...item, key})
+            // console.log(item, key)
         })
         // console.log(messages)
         setChats(chat)
