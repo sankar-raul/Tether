@@ -1,5 +1,7 @@
 .tabs-wraper {
     width: 80px;
+    max-width: 80px;
+    min-width: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,6 +45,7 @@
     .tabs-wraper {
         width: 100%;
         padding: 0;
+        max-width: none;
 
     }
     .tabs {

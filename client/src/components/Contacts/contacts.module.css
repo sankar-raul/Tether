@@ -2,7 +2,9 @@
     display: flex;
     flex-wrap: nowrap;
     position: relative;
+    overflow: hidden;
     gap: 1px;
+    max-width: 100%;
 }
 .contacts {
     flex-grow: 1;
@@ -12,10 +14,12 @@
     flex-direction: column;
     gap: 0px;
     overflow-y: auto;
-    overflow-x: initial;
+    overflow-x: hidden;
     scroll-behavior: smooth;
     flex-grow: 1;
+    width: 300px;
     min-width: 300px;
+    max-width: calc(50vw - 50px);
 
     &::-webkit-scrollbar {
         width: 4px;
@@ -139,6 +143,8 @@
     color: var(--secondery-text);
     white-space: nowrap;
     text-overflow: ellipsis;
+    word-break: break-all;
+    word-wrap: break-word;
     overflow: hidden;
 }
 .user-status {
@@ -185,5 +191,6 @@
     .contacts {
         width: 100%;
         min-width: 70px;
+        max-width: none;
     }
 }

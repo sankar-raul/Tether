@@ -121,7 +121,7 @@ const Contact = ({ user }) => {
         if (userInfo.content)
             setLastMessage(userInfo.content)
         else
-            setLastMessage(userInfo.bio || 'bio')
+            setLastMessage(userInfo.bio || 'Friends are just a text away!')
         // console.log(userInfo, lastMessage)
     }, [userInfo])
     useEffect(() => {

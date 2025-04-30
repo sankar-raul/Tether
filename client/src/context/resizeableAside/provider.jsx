@@ -9,7 +9,7 @@ const ResizeableAsideProvider = ({ children }) => {
     const [ isResizing, setIsResizing ] = useState(false)
     const minmax = useMemo(() => ({min: 300, max: window.innerWidth / 2 - 50}), [])
     const resizeableDiv = useRef(null)
-    const [ newWidth, setNewWidth ] = useState(getItem('contact-width') || `clamp(${minmax.min}px, 20vw, minmax(450px, ${minmax.max}px))`)
+    const [ newWidth, setNewWidth ] = useState(isMobile ? '100%' : getItem('contact-width') || '300px')
     const handleMouseUp = useCallback(() => {
         setIsResizing(false)
         // console.log("up")
@@ -48,7 +48,7 @@ const ResizeableAsideProvider = ({ children }) => {
     useEffect(() => {
         if (newWidth) {
             resizeableDiv.current.style.width = newWidth
-            setItem('contact-width', newWidth)
+            newWidth != '100%' && setItem('contact-width', newWidth)
         }
     }, [newWidth])
 
