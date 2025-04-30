@@ -11,17 +11,19 @@ import styles from './chat-contact-header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { useConfirm } from '../../../hook/Confirm/useConfirm'
+import useUserInfo from '../../../context/userInfo/userInfo'
 
 
 const ChatContactHeader = ({ user }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const { setSelectedContact } = useContacts()
     const [ isShowMenu, setIsShowMenu ] = useState(false)
+    const { userInfo:myInfo } = useUserInfo()
 
     const closeChat = useCallback(() => {
         isMobile && setSelectedContact(0)
     }, [setSelectedContact, isMobile])
-
+    
     const handleMoreMenu = useCallback((e) => {
         e.stopPropagation()
         setIsShowMenu(prev => !prev)
@@ -46,7 +48,7 @@ const ChatContactHeader = ({ user }) => {
                 }
                 </div>
                 <div className={styles['user-wraper']}>
-                    <div className={styles['username']}>{user.username || ''}</div>
+                    <div className={styles['username']}>{user.username || ''} {user?.id == myInfo?.id ? ' (You)' : ''}</div>
                     <div className={styles["user-status"]}>online</div>
                 </div>
             </div>
