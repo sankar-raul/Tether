@@ -64,9 +64,14 @@
     caret-color: #fff;
     letter-spacing: 1px;
     color: var(--primary-color);
+    outline: 2px solid var(--solid-bg-2);
 
+    &:hover {
+        outline: 2px solid var(--solid-bg);
+    }
     &:focus {
         outline: 2px solid var(--brand-color);
+        
     }
     &::spelling-error {
         text-decoration: none;
@@ -80,12 +85,23 @@
     display: grid;
     place-items: center;
     transition-duration: .3s;
+    height: 70%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    cursor: var(--cursor);
+    border: 2px solid  transparent;
+
+    &:active {
+        border: 2px solid var(--solid-bg);
+    }
+
 }
 .search-button:hover > img {
     opacity: .9;
 }
 .search-button > img {
-    height: 80%;
+    height: 60%;
+    border-radius: 50%;
 }
 @media (max-width: 700px) {
     .search-box {
