@@ -1,7 +1,7 @@
 show databases;
 create database if not exists tether;
 use tether;
-SET SQL_SAFE_UPDATES = 0;
+SET SQL_SAFE_UPDATES = 1;
 
 create table if not exists users (
 	id bigint auto_increment primary key,
@@ -58,6 +58,17 @@ create table if not exists refresh_tokens (
     expires_at datetime not null, -- default 7 day expiry
     foreign key (user_id) references users (id)
 );
+
+-- push notification subscription
+create table if not exists notification_subscription (
+	id int auto_increment primary key,
+    user_id bigint not null,
+    endpoint text unique,
+    p256dh text,
+    auth text,
+    foreign key (user_id) references users (id)
+);
+
 
 -- alter table refresh_tokens modify column expires_at int not null;
 

@@ -14,6 +14,7 @@ import { config } from 'dotenv'
 import user from './routes/user.js'
 import chatRouter from './routes/chat.js'
 import { AccessToken } from './service/authToken.js'
+import NotificationRoute from './routes/pushNotification.route.js'
 config()
 
 const PORT = process.env.PORT || 8080
@@ -46,6 +47,9 @@ app.use('/user', user)
 
 // chat data 
 app.use('/chat', restrictedRoute, chatRouter)
+
+// psuh notification
+app.use('/pushNotification', NotificationRoute)
 
 // root
 app.use('/', root)
