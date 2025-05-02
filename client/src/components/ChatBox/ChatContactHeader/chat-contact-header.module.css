@@ -85,6 +85,24 @@
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     padding: 10px;
+
+    &.disabled {
+        pointer-events: none;
+        opacity: .7;
+        position: relative;
+
+        &::after {
+            content: '🛇';
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            line-height: 12px;
+            font-size: .7rem;
+            aspect-ratio: 1 / 1;
+            transform: translate(-30%, 30%);
+            color: var(--danger-color);
+        }
+    }
 }
 .nav-btn:hover {
     opacity: .8;

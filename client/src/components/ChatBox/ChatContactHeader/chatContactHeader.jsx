@@ -18,6 +18,7 @@ const ChatContactHeader = ({ user }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const { setSelectedContact } = useContacts()
     const [ isShowMenu, setIsShowMenu ] = useState(false)
+    const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
     const { userInfo:myInfo } = useUserInfo()
 
     const closeChat = useCallback(() => {
@@ -25,7 +26,7 @@ const ChatContactHeader = ({ user }) => {
     }, [setSelectedContact, isMobile])
     
     const handleMoreMenu = useCallback((e) => {
-        e.stopPropagation()
+        e?.stopPropagation()
         setIsShowMenu(prev => !prev)
     }, [])
 
@@ -38,6 +39,10 @@ const ChatContactHeader = ({ user }) => {
             return () => document.removeEventListener('click', closeMenu)
         }
     }, [isShowMenu])
+    useEffect(() => {
+        setIsChatingWithMyself(user?.id == myInfo?.id)
+    }, [user, myInfo])
+
     return (
         <nav className={styles['chat-nav']}>
             <div className={styles['user-info']}>
@@ -53,9 +58,9 @@ const ChatContactHeader = ({ user }) => {
                 </div>
             </div>
             <div className={styles['nav-buttons']}>
-                <NavBtn src={videoIcon}/>
-                <NavBtn src={callIcon} />
-                <NavBtn src={dotsIcon} onClick={handleMoreMenu}/>
+                <NavBtn src={videoIcon} disabled={isChatingWithMyself}/>
+                <NavBtn src={callIcon} disabled={isChatingWithMyself} />
+                <NavBtn src={dotsIcon} onClick={handleMoreMenu} />
             </div>
             {isShowMenu ? <Menu setIsShowMenu={setIsShowMenu} /> : ''}
         </nav>
@@ -116,15 +121,24 @@ Menu.propTypes = {
     setIsShowMenu: PropTypes.func.isRequired
 }
 
-const NavBtn = ({src, ...props}) => {
+const NavBtn = ({src, disabled, onClick, ...props}) => {
+
+    const handleClick = useCallback((e) => {
+        if (disabled) {
+            return
+        }
+        typeof onClick == 'function' && onClick(e)
+    }, [disabled, onClick])
 
     return (
-        <div {...props} className={styles['nav-btn']}>
+        <div {...props} onClick={handleClick} className={`${styles['nav-btn']} ${disabled ? styles['disabled'] : ''}`}>
             <img src={src} alt="" />
         </div>
     )
 }
 NavBtn.propTypes = {
-    src: PropTypes.string.isRequired
+    src: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
+    onClick: PropTypes.func
 }
 export default memo(ChatContactHeader)
