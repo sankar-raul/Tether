@@ -63,12 +63,13 @@ create table if not exists refresh_tokens (
 create table if not exists notification_subscription (
 	id int auto_increment primary key,
     user_id bigint not null,
-    endpoint text unique,
+    endpoint text,
     p256dh text,
     auth text,
+    UNIQUE KEY unique_endpoint (endpoint(512)),
     foreign key (user_id) references users (id)
 );
-
+select * from notification_subscription;
 
 -- alter table refresh_tokens modify column expires_at int not null;
 
