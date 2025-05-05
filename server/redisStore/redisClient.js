@@ -1,6 +1,12 @@
 import { createClient } from 'redis'
+import { config } from 'dotenv'
+config()
 
-export const pub = createClient('')
+const REDIS_SERVER = process.env.REDIS_SERVER
+const is_dev_mode = process.env.DEV_MODE == 'true'
+console.log(is_dev_mode, REDIS_SERVER)
+
+export const pub = createClient(!is_dev_mode ? {url: REDIS_SERVER} : '')
 export const sub = pub.duplicate()
 export const redis = pub.duplicate()
 const IS_DEV_MODE = process.env.DEV_MODE == 'true'
@@ -9,6 +15,7 @@ const IS_DEV_MODE = process.env.DEV_MODE == 'true'
     try {
         await Promise.all([pub.connect(), sub.connect(), redis.connect()])
         IS_DEV_MODE && await redis.flushAll()
+        console.log("connected to redis")
     } catch (error) {
         console.log(error)
     }
