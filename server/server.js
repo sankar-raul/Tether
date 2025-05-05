@@ -4,7 +4,8 @@ import { Server } from 'socket.io'
 import auth from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cookie from 'cookie'
-import { disconnectUser, getIdFromUser, getUserFromId, registerUser, Message } from './socketServices/chat.js'
+import { Message } from './socketServices/chat.js'
+import { connectUser, disconnectUser, userIdToSocketId, socketIdToUserId } from './redisStore/redisClient.js'
 import root from './routes/root.js'
 import { restrictedRoute, softAuthCheck } from './middleware/auth.js'
 import { getUser } from './service/auth.js'
@@ -69,7 +70,7 @@ export const io = new Server(server, {
 })
 
 
-io.use((socket, next) => {
+io.use(async (socket, next) => {
     const token = cookie.parse(socket.request.headers.cookie || '')?.access_token
     if (!token) {
         return next(new Error("unauthorized!"))
@@ -78,12 +79,12 @@ io.use((socket, next) => {
     // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     socket.user = user
-    registerUser(socket.id, user.id)
+    await connectUser({user_id: user.id, socket_id: socket.id})
     Message.sendUndelivered(socket.id, user.id)
     next()
 })
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     // console.log(socket.user)
     console.log(socket.user.id, "connected")
 
@@ -95,34 +96,59 @@ io.on('connection', (socket) => {
             // return io.to(socket.id).emit('message:send:error', "error")
             return ackFunc("error")
         }
-        const reciversSocketId = getIdFromUser(reciver)
-        if (reciversSocketId) {
-            const msg = await Message.pushMessage({ sender, reciver, content, tick: 2, sent_at })
-            if (reciversSocketId == socket.id) {
-                return ackFunc(msg)
+        const reciversSocketIds = await userIdToSocketId(reciver)
+        // console.log(reciversSocketIds)
+        let msg
+        if (reciversSocketIds.length > 0) {
+            msg = await Message.pushMessage({ sender, reciver, content, tick: 2, sent_at })
+            if (sender == reciver) {
+                ackFunc(msg)
+                reciversSocketIds.forEach(s_id => {
+                    if (s_id != socket.id) io.to(s_id).emit("message:sync" , msg)
+                })
+                return
             } else {
-                io.to(reciversSocketId).emit("message:recive" , msg)
-                return ackFunc(msg)
+                reciversSocketIds.forEach(s_id => {
+                    io.to(s_id).emit("message:recive", msg)
+                })
+                ackFunc(msg)
             }
         } else {
-            const msg = await Message.pushMessage({ sender, reciver, content, sent_at })
+            msg = await Message.pushMessage({ sender, reciver, content, sent_at })
             // console.log(msg, 'op', msg.sent_at, new Date(msg.sent_at).toLocaleString())
-            return ackFunc(msg)
+            ackFunc(msg)
+        }
+        const sendersSocketIds = await userIdToSocketId(sender)
+        sendersSocketIds.forEach(s_id => {
+        if (s_id != socket.id) {
+            io.to(s_id).emit("message:sync", msg)
         }
     })
+})
 
     socket.on("message:see", async ({sender}) => {
         if (!sender) return
         // console.log(sender)
         const { id:reciver } = socket.user
-        const senderId = getIdFromUser(sender)
-        await Message.seen({
-        sender,
-        reciver
-        })
-        if (senderId) {
-            return io.to(senderId).emit("message:seen", {reciver, seen_at: Date.now()})
+        const senderIds = await userIdToSocketId(sender)
+
+        if (senderIds.length > 0) {
+            senderIds.forEach(s_id => {
+                io.to(s_id).emit("message:seen", {reciver, seen_at: Date.now()})
+            })
         }
+        const sendersSocketIds = await userIdToSocketId(reciver)
+        sendersSocketIds.forEach(s_id => {
+        if (s_id != socket.id) {
+            io.to(s_id).emit("message:seen", {reciver: sender, seen_at: Date.now(), sync: true})
+        }
+        })
+        // console.log(sender, reciver)
+        await Message.seen({
+            sender,
+            reciver
+        })
+        return
     })
 
     socket.on('message:delete', async ({msg_id, all = false}, ackFunc) => {
@@ -134,18 +160,30 @@ io.on('connection', (socket) => {
         try {
             const reciver = await Message.delete({ sender, msg_id, all })
             if (reciver) {
-                const reciver_socket_id = getIdFromUser(reciver)
-                if (reciver_socket_id) {
+                const reciver_socket_ids = await userIdToSocketId(reciver)
+                if (reciver_socket_ids.length > 0) {
                     if (all) {
-                        io.to(reciver_socket_id).emit('message:deleted:all', { sender })
+                        reciver_socket_ids.forEach(s_id => {
+                            io.to(s_id).emit('message:deleted:all', { sender })
+                        })
                         ackFunc ?? ackFunc('success')
-                        return
-                    } else
-                        io.to(reciver_socket_id).emit('message:deleted', { msg_id, sender })
+                    } else {
+                        reciver_socket_ids.forEach(s_id => {
+                            io.to(s_id).emit('message:deleted', { msg_id, sender })
+                        })
                         ackFunc ?? ackFunc('success')
-                        return
+                    }
+                } else {
+                    ackFunc('success')
                 }
             }
+
+            const sendersSocketIds = await userIdToSocketId(sender)
+            sendersSocketIds.forEach(s_id => {
+                if (s_id != socket.id) {
+                    io.to(s_id).emit(`message:deleted${all ? ':all' : ''}`, {sender: reciver, msg_id, sync: true})
+                }
+            })
         } catch (e) {
             console.log(e)
         }
@@ -160,18 +198,20 @@ io.on('connection', (socket) => {
             const res = await Message.edit({ msg_id, newContent, sender })
             if (res) {
                 // console.log(res)
-                const reciver = getIdFromUser(res.reciver)
-                if (reciver) {
+                const recivers = await userIdToSocketId(res.reciver)
+                if (recivers.length > 0) {
                     // console.log(reciver)
-                    io.to(reciver).emit('message:edited', { msg_id, newContent, edited_at: res.edited_at, sender })
+                    recivers.forEach(s_id => {
+                        io.to(s_id).emit('message:edited', { msg_id, newContent, edited_at: res.edited_at, sender })
+                    })
                 }
             }
         } catch (e) {
             console.log(e)
         }
     })
-    socket.on('disconnect', () => {
-        disconnectUser(socket.id)
+    socket.on('disconnect', async () => {
+        await disconnectUser(socket.id)
         console.log(socket.user.id, "disconnected")
       })
 })

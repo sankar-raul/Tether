@@ -11,6 +11,7 @@ import { Loader } from '../Loader/Loader'
 import { Skeleton } from '@mui/material'
 import { AddContact, AddContactsBtn } from './AddContact/AddContact'
 import { useMediaQuery } from 'react-responsive'
+import { PushNotification } from './PushNotification/PushNoti'
 
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -37,6 +38,7 @@ const Calls = () => {
         <h1>Calls</h1>
     )
 }
+
 const Chats = () => {
     const { contactMap, isLoading } = useContacts()
     const [ isVoidList, setIsVoidList ] = useState(false)
@@ -46,8 +48,9 @@ const Chats = () => {
     }, [contactMap])
     return (
         <>
+        <PushNotification />
         {
-            !isLoading ? (
+        !isLoading ? (
             <>
             {!isVoidList ? [...contactMap.values()]?.map((user) => (
                 <Contact key={user?.id} user={user} />

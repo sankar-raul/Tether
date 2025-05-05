@@ -190,6 +190,26 @@ const useMsgSocket = (contactId) => {
     }, [contactId, shiftUpContact, Alert])
 
     useEffect(() => {
+        // sync messages across all this users clients
+        const syncMsg = (message) => {
+            let { reciver } = message
+            reciver = Number(reciver)
+            if (!messageRef.has(reciver)) {
+                getInitialMessages(reciver)
+            }
+            const local_id = getUniqeMessageId(message.sender, message.reciver)
+            
+            msgIdToLocalIdRef.set(message.id, local_id)
+            const messageMap = messageRef.get(reciver) || new Map()
+            messageMap.set(local_id, {...message, local_id})
+            messageRef.set(reciver, messageMap)
+            setMessages(new Map(messageRef))
+            shiftUpContact(reciver, message)
+            NotifyTone.sent()
+            // Alert({message: message.content, type: 'info'})
+
+        }
+
         // push new message to message Map
         const msgRecived = (message) => { // op
             // console.log(message)
@@ -206,6 +226,7 @@ const useMsgSocket = (contactId) => {
             }
             const local_id = getUniqeMessageId(message.sender, message.reciver)
             // console.log(sender)
+            // console.log(message)
             msgIdToLocalIdRef.set(message.id, local_id)
             const messageMap = messageRef.get(sender) || new Map()
             messageMap.set(local_id, {...message, local_id})
@@ -221,7 +242,7 @@ const useMsgSocket = (contactId) => {
         }
 
         // delete a single message by msg_id
-        const msgDeleted = ({msg_id, sender}) => { // op
+        const msgDeleted = ({msg_id, sender, sync}) => { // op
             sender = Number(sender)
             const local_id = msgIdToLocalIdRef.get(Number(msg_id))
             if (!messageRef.has(sender) || !messageRef.get(sender).has(local_id)) {
@@ -238,13 +259,20 @@ const useMsgSocket = (contactId) => {
             msgIdToLocalIdRef.delete(Number(msg_id))
         }
 
-        const seenAll = async (seen_at, reciver) => { // op
+        const seenAll = async (seen_at, reciver, sync) => { // op
             reciver = Number(reciver)
+            // console.log(reciver)
+            // console.log(messageRef.has(reciver), messageRef.get(reciver))
             if (!messageRef.has(reciver)) return
             setSeenMap(prev => prev.set(reciver, true))
             const messageMap = messageRef.get(reciver)
+            if (sync) {
+                incrementUnread(reciver, 0)
+                updateContactInfo(reciver, {unread: unreadMsgRef.get(reciver)})
+
+            }
             messageMap.forEach((msg, key) => {
-                if (!msg.seen_at && msg.reciver == reciver) {
+                if (!msg.seen_at && (sync ? msg.sender : msg.reciver) == reciver) {
                     // console.log(seen_at)
                     messageMap.set(key, {...msg, seen_at})
                 }
@@ -255,8 +283,8 @@ const useMsgSocket = (contactId) => {
         }
 
         // seen all messages for a specific contact
-        const msgSeen = ({reciver, seen_at}) => { // op
-            seenAll(seen_at, reciver)
+        const msgSeen = ({reciver, seen_at, sync}) => { // op
+            seenAll(seen_at, reciver, sync)
         }
 
         // edit message content by msg_id for a specific contact
@@ -302,6 +330,7 @@ const useMsgSocket = (contactId) => {
         // listen for messages
         socket.on('waited:messages', waitedMessages)
         socket.on('message:recive', msgRecived)
+        socket.on('message:sync', syncMsg)
         socket.on('message:deleted', msgDeleted)
         socket.on('message:seen', msgSeen)
         socket.on('message:edited', msgEdited)
@@ -311,6 +340,7 @@ const useMsgSocket = (contactId) => {
             // removing message events
             socket.off('waited:messages', waitedMessages)
             socket.off('message:recive', msgRecived)
+            socket.off('message:sync', syncMsg)
             socket.off('message:deleted', msgDeleted)
             socket.off('message:seen', msgSeen)
             socket.off('message:edited', msgEdited)

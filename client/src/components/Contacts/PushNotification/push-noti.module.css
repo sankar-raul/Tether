@@ -1,0 +1,6 @@
+.notification {
+    height: 60px;
+    min-height: 60px;
+    background: var(--brand-bg);
+    border-radius: 8px;
+}
