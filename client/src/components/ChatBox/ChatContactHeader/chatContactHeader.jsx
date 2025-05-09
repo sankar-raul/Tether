@@ -51,6 +51,7 @@ const ChatContactHeader = ({ user }) => {
                 {
                  user.profile_pic_url ? <img className={styles['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src={user.profile_pic_url} alt={user.username} /> : <DefaultUser />
                 }
+                {user.status == 'online' ? <div className={styles['user-online-tag']}></div> : ''}
                 </div>
                 <div className={styles['user-wraper']}>
                     <div className={styles['username']}>{user.username || ''} {user?.id == myInfo?.id ? ' (You)' : ''}</div>

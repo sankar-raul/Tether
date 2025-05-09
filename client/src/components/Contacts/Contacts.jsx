@@ -149,6 +149,7 @@ const Contact = ({ user }) => {
                 {
                     userInfo?.profile_pic_url ? <img src={userInfo.profile_pic_url} alt="user" /> : <DefaultUser />
                 }
+                {userInfo?.status == 'online' ? <div className={styles['user-online-tag']}></div> : ''}
             </div>
             <div className={styles['user-info']}>
                 <div className={styles['user-meta-data']}>
