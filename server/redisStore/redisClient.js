@@ -43,10 +43,9 @@ export const disconnectUser = async (socket_id) => {
             redis.sCard(`user_id:${user_id}`),
             redis.sRem(`user_id:${user_id}`, socket_id),
             redis.del(`socket_id:${socket_id}`),
-            setUserStatus(user_id, 'offline')
         ])
         if (remaining == 0) {
-            await redis.del(`user_id:${user_id}`)
+            await Promise.all([redis.del(`user_id:${user_id}`), setUserStatus(user_id, 'offline')])
         }
     }
 }
