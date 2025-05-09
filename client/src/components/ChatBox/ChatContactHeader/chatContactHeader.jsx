@@ -54,7 +54,7 @@ const ChatContactHeader = ({ user }) => {
                 </div>
                 <div className={styles['user-wraper']}>
                     <div className={styles['username']}>{user.username || ''} {user?.id == myInfo?.id ? ' (You)' : ''}</div>
-                    <div className={styles["user-status"]}>online</div>
+                    <div className={styles["user-status"]}>{ user?.status || "offline"}</div>
                 </div>
             </div>
             <div className={styles['nav-buttons']}>

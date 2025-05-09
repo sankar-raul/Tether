@@ -3,6 +3,7 @@ import { contactsContext } from "./contact"
 import PropTypes from 'prop-types'
 import useUserInfo from "../userInfo/userInfo"
 import apiRequest from '../../hook/apiRequest'
+import socket from "../../utils/chatSocket"
 
 let contactRef = new Map()
 
@@ -42,7 +43,7 @@ const ContactsProvider = ({children}) => {
             // console.log(response?.data)
             if (response) {
                 response.data.forEach(contact => {
-                    contactRef.set(Number(contact.contact_id), { id: contact.contact_id, content: contact.last_message, type: contact.type, latest_msg: contact.last_interaction_time, unread: contact.unread })
+                    contactRef.set(Number(contact.contact_id), { id: contact.contact_id, content: contact.last_message, type: contact.type, latest_msg: contact.last_interaction_time, unread: contact.unread, status: contact.status })
                     fetchContactInfo(contact.contact_id)
                 })
                 setContactMap(new Map(contactRef))
@@ -51,13 +52,14 @@ const ContactsProvider = ({children}) => {
         }
     }, [fetchContactInfo])
 
-    const updateContactInfo = useCallback((id, data = {}) => {
+    const updateContactInfo = useCallback((id, data = {}, {newEntry = true}={}) => {
         id = Number(id)
-        // console.log(id, data)
+        console.log(id, data, newEntry)
         if (contactRef.has(id)) {
             contactRef.set(id, {...contactRef.get(id), ...data, id})
         } else {
-            contactRef.set(id, {...data, id})
+            newEntry && contactRef.set(id, {...data, id})
+            // console.log(contactRef)
         }
         setContactMap(new Map(contactRef))
     }, [])
@@ -93,15 +95,24 @@ const ContactsProvider = ({children}) => {
         return contactMap.get(id)
     }, [contactMap])
 
-    useEffect(() => {
-        // console.log(contactMap)
-    }, [contactMap])
 
     useEffect(() => {
         if (userInfo) {
             !isContactFetched && getContacts()
         }
     }, [userInfo, getContacts, isContactFetched, updateContactInfo])
+
+    useEffect(() => {
+        const contactOnlineStatusChange = ({user_id, status, ...args}) => {
+            updateContactInfo(user_id, { status }, {
+                newEntry: false
+            })
+            console.log(user_id, status, 'op')
+        }
+        socket.on('friend_online_status', contactOnlineStatusChange)
+
+        return () => socket.off('friend_online_status')
+    }, [updateContactInfo])
 
     return (
         <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading, fetchContactInfo, setIsOpenSearch, isOpenSearch}}>

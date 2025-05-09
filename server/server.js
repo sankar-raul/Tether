@@ -5,7 +5,7 @@ import auth from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cookie from 'cookie'
 import { Message } from './socketServices/chat.js'
-import { connectUser, disconnectUser, userIdToSocketId, socketIdToUserId } from './redisStore/redisClient.js'
+import { connectUser, disconnectUser, userIdToSocketId } from './redisStore/redisClient.js'
 import root from './routes/root.js'
 import { restrictedRoute, softAuthCheck } from './middleware/auth.js'
 import { getUser } from './service/auth.js'
@@ -210,6 +210,7 @@ io.on('connection', async (socket) => {
             console.log(e)
         }
     })
+
     socket.on('disconnect', async () => {
         await disconnectUser(socket.id)
         console.log(socket.user.id, "disconnected")

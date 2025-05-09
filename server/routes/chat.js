@@ -2,6 +2,7 @@ import express from 'express'
 import { getAllMessage } from '../controllers/chat.js'
 import pool from '../db/pool.js'
 import { sortContactsListByDateDesc, sortMessages } from '../utils/algo.js'
+import { getFriendList, getUserFriendsFromDb } from '../redisStore/redisClient.js'
 
 const chatRouter = express.Router()
 
@@ -77,9 +78,9 @@ chatRouter.get('/contacts', async (req, res) => {
     // const msg_sent = await pool.execute("select reciver, MAX(sent_at) as latest_msg from messages where sender = ? group by reciver order by latest_msg", [id])
     // // console.log(msg_recived, msg_sent)
     // const contacts = sortContactsListByDateDesc(msg_recived[0], msg_sent[0])
-    const contacts = await pool.execute('call getContacts(?)', [id])
+    const contacts = await getUserFriendsFromDb(id)
     // console.log(contacts)
-    return res.status(200).json({success: true, msg: "data fetch success!", type: "map", data: contacts[0]?.[0]})
+    return res.status(200).json({success: true, msg: "data fetch success!", type: "map", data: contacts})
     } catch (error) {
         console.log("Error 🐞", error, 'error in contacts')
         console.log(req.user)
