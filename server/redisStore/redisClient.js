@@ -44,7 +44,7 @@ export const disconnectUser = async (socket_id) => {
             redis.sRem(`user_id:${user_id}`, socket_id),
             redis.del(`socket_id:${socket_id}`),
         ])
-        if (remaining == 0) {
+        if (remaining <= 1) {
             await Promise.all([redis.del(`user_id:${user_id}`), setUserStatus(user_id, 'offline')])
         }
     }
