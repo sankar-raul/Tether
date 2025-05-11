@@ -20,6 +20,7 @@ export class HeroDate extends Date {
             String(this.getMinutes()).padStart(2, '0'),
             this.toLocaleTimeString().split(' ')[1]
         ]
+        console.log(this, this.toLocaleTimeString(), 'to', this.toLocaleTimeString().split(' ')[1], 'to', `${hh}:${mm} ${ff}`)
         return `${hh}:${mm} ${ff}`
     }
 }
