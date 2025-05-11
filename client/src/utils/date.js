@@ -15,12 +15,19 @@ export class HeroDate extends Date {
         return `${dd}-${mm}-${yy}`
     }
     formatedTime() {
-        const [ hh, mm, ff ] = [
-            this.toLocaleTimeString().split(':')[0].padStart(2, '0'),
-            String(this.getMinutes()).padStart(2, '0'),
-            this.toLocaleTimeString().split(' ')[1]
-        ]
-        console.log(this, this.toLocaleTimeString(), 'to', this.toLocaleTimeString().split(' ')[1], 'to', `${hh}:${mm} ${ff}`)
+        const [ hh, mm, ff ] = this._12()
         return `${hh}:${mm} ${ff}`
+    }
+    _12() {
+        const hours = this.getHours()
+        let hh, ff
+        if (hours <= 12) {
+            hh = hours
+            ff = hours == 12 ? 'PM' : 'AM'
+        } else {
+            hh = hours - 12
+            ff = 'PM'
+        }
+        return [ String(hh).padStart(2, '0'), String(this.getMinutes()).padStart(2, '0'), ff ]
     }
 }
