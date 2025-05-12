@@ -16,14 +16,27 @@ import { PushNotification } from './PushNotification/PushNoti'
 const Contacts = () => {
     const { resizeableDiv, handleMouseDown } = useResize()
     const { currentTab } = useTabs()
+    const [ Element, setElement ] = useState(() => Chats)
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
 
+    useEffect(() => {
+        setElement(prev => {
+            switch (currentTab) {
+                case 'chat':
+                    return Chats
+                case 'call':
+                    return Calls
+                case 'settings':
+                    return Settings
+                default:
+                    return prev
+            }
+        })
+    }, [currentTab])
     return (
         <div className={styles['contacts-wraper']}>
             <div ref={resizeableDiv} className={styles['contacts']}>
-                {
-                    currentTab == 'chat' ? <Chats /> : <Calls />
-                }
+                <Element />
             </div>
             {!isMobile ? <div onMouseDown={handleMouseDown} className={styles['handle-resize']}></div> : ''}
             <AddContactsBtn />
@@ -39,6 +52,13 @@ const Calls = () => {
     )
 }
 
+const Settings = () => {
+    return (
+        <h1>
+            Settings
+        </h1>
+    )
+}
 const Chats = () => {
     const { contactMap, isLoading } = useContacts()
     const [ isVoidList, setIsVoidList ] = useState(false)

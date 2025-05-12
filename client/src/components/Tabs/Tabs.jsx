@@ -4,6 +4,7 @@ import messageIconActive from '../../assets/svg/chat/message-tab.svg'
 import messageIconPassive from '../../assets/svg/chat/chat-passive.svg'
 import HambargerPassive from '../../assets/svg/chat/ham-barger.svg'
 import CallPassive from '../../assets/svg/chat/call.svg'
+import SettingsActive from '../../assets/svg/chat/settings-active.svg'
 import callActive from '../../assets/svg/chat/call-active.svg'
 import PaintPassive from '../../assets/svg/chat/paint.svg'
 import SettingsPassive from '../../assets/svg/chat/settings.svg'
@@ -34,7 +35,7 @@ const Tabs = () => {
                 </div>
                 <div>
                     <Tab icon={{active: AboutPassive, passive: AboutPassive}} />
-                    <Tab icon={{active: SettingsPassive, passive: SettingsPassive}} />
+                    <Tab type='settings' onClick={() => handleTabs("settings")} icon={{active: SettingsActive, passive: SettingsPassive}} />
                 </div>
             </div>
         </nav>
@@ -47,7 +48,7 @@ const Tab = ({icon, active = false, type, ...args}) => {
     const [ isActive, setIsActive ] = useState(active)
 
     useEffect(() => {
-        if (type == 'chat' || type == 'call') {
+        if (type == 'chat' || type == 'call' || type == 'settings') {
             setIsActive(currentTab == type)
         } else {
             // add logic for other left section buttons
