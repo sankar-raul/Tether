@@ -9,7 +9,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import styles from './chat-contact-header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faCancel, faChevronLeft, faTrashAlt, faUser, faX, faXmark, faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
 import { useConfirm } from '../../../hook/Confirm/useConfirm'
 import useUserInfo from '../../../context/userInfo/userInfo'
 
@@ -108,11 +108,26 @@ const Menu = ({setIsShowMenu, ...props}) => {
     return (
         <>
         <div className={styles['menu']} {...props} onClick={handleClick}>
-            <button data-action='viewProfile'>View Profile</button>
-            <button data-action='clearChat'>Clear Chat</button>
-            <button data-action='addContact'>Add Contact</button>
-            <button data-action='cancel'>Cancel</button>
-            <button data-action='block' className={styles['block']}>Block</button>
+            <button data-action='viewProfile'>
+                <div><FontAwesomeIcon icon={faUser} /></div>
+                <p>View Profile</p>
+            </button>
+            <button data-action='addContact'>
+                <div><FontAwesomeIcon icon={faAdd} /></div>
+                <p>Add Contact</p>
+            </button>
+            <button data-action='clearChat'>
+                <div><FontAwesomeIcon icon={faTrashAlt} /></div>
+                <p>Clear Chat</p>
+            </button>
+            <button data-action='block' className={styles['block']}>
+                <div><FontAwesomeIcon icon={faCancel} /></div>
+                <p>Block</p>
+            </button>
+             <button data-action='cancel'>
+                <div><FontAwesomeIcon icon={faXmark} /></div>
+                <p>Dismiss</p>
+            </button>
         </div>
         <Confirm />
         </>

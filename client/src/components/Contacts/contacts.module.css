@@ -74,7 +74,6 @@
     background-color: var(--bg);
 }
 
-
 /* tab styles */
 
 .contact {
@@ -232,5 +231,15 @@
         width: 100%;
         min-width: 70px;
         max-width: none;
+        background-color: var(--contact-label-bg);
+
     }
+    .contact:hover {
+        background-color: inherit;
+    }
+    .contact:active {
+        background-color: #111;
+
+    }
+
 }
