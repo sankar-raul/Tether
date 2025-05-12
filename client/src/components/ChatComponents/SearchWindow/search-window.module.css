@@ -20,7 +20,7 @@
     /* max-height: max-content; */
     height: max-content;
     border-radius: 10px;
-    background: var( --search-container-bg);
+    background: var(--primary-bg);
     margin-left: clamp(10px, 40%, 40px);
     display: flex;
     flex-direction: column;
@@ -109,7 +109,7 @@
     overflow: hidden;
 
     &:hover {
-        background-color: var(--search-contact-hover-bg);
+        background-color: var(--contact-hover-bg);
     }
 }
 .msg-btn {
@@ -131,7 +131,7 @@
 }
 .show-user:hover .msg-btn button {
     background-color: var(--brand-color);
-    color: #fff;
+    color: var(--primary-color);
 }
 .btn-icon {
     color: var(--secondery-text);
@@ -175,7 +175,7 @@
     .search-results {
         max-width: none;
         width: 100%;
-        background: #0008;
+        background: var(--primary-bg);
         margin: 0;
         height: minmax(300, max-content);
         background-image: linear-gradient(90deg, transparent 30%, rgba(3, 36, 63, 0.18));

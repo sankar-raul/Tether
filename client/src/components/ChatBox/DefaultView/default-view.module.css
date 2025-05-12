@@ -2,7 +2,7 @@
     display: grid;
     place-items: center;
     height: 100%;
-    background-color: var(--secondery-bg);
+    background-color: var(--primary-bg);
     padding: 10px;
 }
 .container > div {

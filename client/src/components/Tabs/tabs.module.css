@@ -8,7 +8,7 @@
     padding: 0px 10px;
 }
 .tabs {
-    background-color: var(--secondery-bg);
+    background-color: var(--primary-bg);
     flex-grow: 1;
     height: 100%;
     border-radius: var(--radius-mid);
@@ -52,7 +52,10 @@
         flex-direction: row;
         justify-content: space-around;
         border-radius: 0;
-        background-color: var(--solid-bg-2);
+        background-color: var(--contact-hover-bg);
+    }
+    .tabs .tab {
+        aspect-ratio: unset;
     }
     .tabs .tab > img {
         width: 25px;
@@ -62,10 +65,12 @@
     }
     .tabs > div {
         flex-direction: row;
-        padding: 6px;
+        padding: 0px;
+        flex-grow: 1;
+        aspect-ratio: unset;
     }
     .tabs > div > div {
-        padding: 14px;
+        padding: 1rem;
     }
     .tabs > div:nth-of-type(2) > div:nth-of-type(1) {
         display: none;

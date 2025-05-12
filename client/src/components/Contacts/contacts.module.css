@@ -8,7 +8,7 @@
 }
 .contacts {
     flex-grow: 1;
-    background: var(--secondery-bg);
+    background: var(--primary-bg);
     border-radius: var(--radius-small);
     display: flex;
     flex-direction: column;
@@ -79,7 +79,8 @@
 .contact {
     width: 100%;
     /* overflow: hidden; */
-    background-color: var(--contact-label-bg);
+    /* background-color: var(--contact-label-bg); */
+    background-color: transparent;
     height: 60px;
     min-height: 60px;
     border-radius: var(--radius-small);
@@ -97,7 +98,7 @@
     }
 }
 .prevent-hover:hover {
-    background-color: var(--contact-label-bg);
+    background-color: transparent;
 }
 .contacts:has(.contact.prevent-hover) {
     overflow: hidden;
@@ -231,14 +232,13 @@
         width: 100%;
         min-width: 70px;
         max-width: none;
-        background-color: var(--contact-label-bg);
 
     }
     .contact:hover {
         background-color: inherit;
     }
     .contact:active {
-        background-color: #111;
+        background-color: var(--contact-hover-bg);
 
     }
 

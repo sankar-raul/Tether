@@ -8,37 +8,38 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-  color: #fff;
+  color: #E0E6EB;
   background: #000;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --primary-bg: #000;
-  --primary-color: #fff;
+  --app-theme-bg: #000;
+  --primary-bg: #0A0F13;
+  --primary-color: #E0E6EB;
   --secondery-bg: #66666628;
-  --secondery-text: #cccccc;
-  --chat-msg-bg: var(--secondery-bg);
+  --secondery-text: #8A98A5;
+  --chat-msg-bg: #131A21;
   --secondery-icon: #bbbbbb;
   --send-btn-shade: #77C1E3;
   --brand-color: #1B91E5;
-  --brand-bg-solid: #2877b0;
-  --brand-bg-solid-hover: #2c72a3;
+  --brand-bg-solid: #1f354e;
+  --brand-bg-solid-hover: #223e5c;
   --brand-bg: #0c47904e;
-  --solid-bg: #222;
+  --solid-bg: #121B22;
   --solid-bg-2: #181818;
   --danger-color: #E51B5E;
   --danger-bg: #72002645;
 
   --contact-label-bg: #1118;
-  --contact-hover-bg: #2226;
+  --contact-hover-bg: #0e1518;
   --search-contact-hover-bg: #3334;
-  --contact-active-bg: #3336;
-  --msg-hover-bg: #4448;
+  --contact-active-bg: #121a22;
+  --msg-hover-bg: #18212c;
   --search-container-bg: #181818;
   --shadow: #0009;
-  --skeleton-accent-color: #fff2;
+  --skeleton-accent-color: #ddd4;
 
   --cursor: pointer;
 

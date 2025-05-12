@@ -13,7 +13,7 @@
     .right-container {
         position: fixed;
         top: 0;
-        background-color: #000;
+        background-color: var(--app-theme-bg);
         width: 100%;
         height: 100%;
         z-index: 18; /* King 18 */

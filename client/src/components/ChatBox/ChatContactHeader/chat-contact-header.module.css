@@ -1,5 +1,5 @@
 .chat-nav {
-    background-color: var(--secondery-bg);
+    background-color: var(--contact-active-bg);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -182,7 +182,7 @@
     justify-content: flex-start;
 
     &:hover:not(.block) {
-        background-color: #ffffff0d;
+        background-color: #aaaaaa0d;
     }
     &.block {
         color: var(--danger-color);

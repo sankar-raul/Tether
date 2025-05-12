@@ -14,8 +14,9 @@ import useIntersectionObserver from '../../hook/useIntersectionObserver'
 import DefaultChatView from './DefaultView/DefaultView'
 import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { faClipboard, faEdit, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import ChatContactHeader from './ChatContactHeader/chatContactHeader'
+import { faCopy, faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
@@ -211,12 +212,15 @@ const MsgContextMenu = ({msg_id, chatingWith, content, rightClick}) => {
             <div onContextMenu={(e) => e.preventDefault()} onClick={() => handleDisplay(false)} style={{display: menuDisplay}} className={styles['main-context-menu']}>
                 <div ref={menuRef} style={{marginTop: `${menuPositions.top}px`, marginLeft: `${menuPositions.left}px`}} className={styles['menu']}>
                     <div onClick={handleCopy}>
+                        <FontAwesomeIcon icon={faCopy} />
                         <p>Copy</p>
                     </div>
                     <div>
+                        <FontAwesomeIcon icon={faPenToSquare} />
                         <p>Edit</p>
                     </div>
                     <div onClick={() => deleteMsg(chatingWith, msg_id)}>
+                        <FontAwesomeIcon icon={faTrashCan} />
                         <p>Delete</p>
                     </div>
                 </div>

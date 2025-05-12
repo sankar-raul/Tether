@@ -48,7 +48,7 @@ const Chats = () => {
     }, [contactMap])
     return (
         <>
-        <PushNotification />
+        {/* <PushNotification /> */}
         {
         !isLoading ? (
             <>

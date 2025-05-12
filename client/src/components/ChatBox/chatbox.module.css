@@ -5,12 +5,12 @@
     /* max-height: max-content; */
 }
 .chat-box {
-    background-color: #0ff1;
     display: grid;
     height: 100%;
     max-height: 100%;
     grid-template-rows: 60px 1fr max-content;
-    background-color: var(--secondery-bg);
+    /* background-color: var(--secondery-bg); */
+    background-color: var(--primary-bg);
     /* overflow-y: hidden; */
 }
 .msgs {
@@ -62,7 +62,7 @@
 }
 
 .message-tag > .message-body {
-    background: #232323;
+    background: var(--contact-active-bg);
     padding: 6px 55px 12px 8px;
     padding-bottom: 12px;
     padding-right: 55px;
@@ -212,9 +212,13 @@
     }
 }
 .menu > div {
-    padding: 10px 10px;
+    padding: 15px;
     width: 100%;
     cursor: var(--cursor);
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 15px;
+    align-items: center;
     /* border: 1px solid red; */
     &:hover {
         background-color: #4446;
