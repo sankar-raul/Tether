@@ -196,8 +196,16 @@ const MsgContextMenu = ({msg_id, chatingWith, content, rightClick}) => {
     useEffect(() => {
         if (menuDisplay == 'block') {
             const { offsetWidth:menuWidth, offsetHeight:menuHeight } = menuRef.current
-            // console.log(menuRef)
-            setMenuPositions({top: mousePositions.y, left: mousePositions.x - menuWidth})
+            const viewportHeight = top.innerHeight
+            const isVisible = viewportHeight - (mousePositions.y + menuHeight) >= 10
+            // console.log(viewportHeight - (mousePositions.y + menuHeight), ' dfdfedfef', viewportHeight, top.innerHeight)
+            setMenuPositions(_ => {
+                if (isVisible) {
+                    return {top: mousePositions.y, left: mousePositions.x - menuWidth}
+                } else {
+                    return {top: mousePositions.y - menuHeight, left: mousePositions.x - menuWidth}
+                }
+            })
         }
     }, [menuDisplay, mousePositions])
 
