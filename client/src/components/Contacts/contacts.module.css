@@ -81,15 +81,15 @@
     /* overflow: hidden; */
     /* background-color: var(--contact-label-bg); */
     background-color: transparent;
-    height: 60px;
-    min-height: 60px;
+    height: 65px;
+    min-height: 65px;
     border-radius: var(--radius-small);
     display: flex;
     flex-wrap: nowrap;
     position: relative;
     align-items: center;
-    gap: 7px;
-    padding: 7px;
+    gap: 8px;
+    padding: 8px;
     cursor: var(--cursor, none);
     border: 1px solid transparent;
 
@@ -233,6 +233,11 @@
         min-width: 70px;
         max-width: none;
 
+    }
+    .contact {
+        height: 65px;
+        min-height: 65px;
+        padding: 6px;
     }
     .contact:hover {
         background-color: inherit;
