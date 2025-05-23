@@ -1,7 +1,6 @@
 import pool from "../../db/pool.js"
 import { io } from "../../server.js"
-import { getIdFromUser } from "../chat.js"
-
+import { userIdToSocketId } from "../../redisStore/redisClient.js"
 export default class Msg {
     constructor() {
 
@@ -65,10 +64,10 @@ export default class Msg {
     async #delevered(msg_id, sender, reciver) {
         // console.log(msg_id, sender, "oppp")
         if (msg_id, sender) {
-            const senderSocketId = getIdFromUser(sender)
-            if (senderSocketId) {
+            const senderSocketId = await userIdToSocketId(sender)
+            if (senderSocketId.length > 0) {
             // console.log(senderSocketId)
-                io.to(senderSocketId).emit("message:status", {msg_id, tick: 2, reciver, recived_at: new Date().toISOString()})
+                senderSocketId.forEach(socketId => io.to(socketId).emit("message:status", {msg_id, tick: 2, reciver, recived_at: new Date().toISOString()}))
             }
         }
     }
