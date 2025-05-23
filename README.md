@@ -7,13 +7,14 @@
 # Preview
 > Desktop
 > ---
-![tether](https://github.com/user-attachments/assets/e8808452-353c-46a5-9cdd-772e7770f211)
+![TETHER](https://github.com/user-attachments/assets/35af52ff-86f7-4d7b-9b78-191df4e3d054)
 > 
 > Mobile
 > ---
+
 <p float="left" align='center'>
-  <img src="https://github.com/user-attachments/assets/eaaeb2b4-cfa7-4f35-8fec-8509f73dedb2" width="300" />
+  <img src="https://github.com/user-attachments/assets/2d66ca55-ba63-4c33-a666-6bb4af7d1a42" width="300" />
   &nbsp; &nbsp; &nbsp; &nbsp;
-  <img src="https://github.com/user-attachments/assets/ea7ffd0b-a8b2-4473-b0f9-2d219840bbfc" width="300" />
+  <img src="https://github.com/user-attachments/assets/89851a20-2c39-4f75-9832-5a4769094a77" width="300" />
 </p>
 
