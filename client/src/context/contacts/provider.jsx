@@ -43,7 +43,7 @@ const ContactsProvider = ({children}) => {
             // console.log(response?.data)
             if (response) {
                 response.data.forEach(contact => {
-                    contactRef.set(Number(contact.contact_id), { id: contact.contact_id, content: contact.last_message, type: contact.type, latest_msg: contact.last_interaction_time, unread: contact.unread, status: contact.status })
+                    contactRef.set(Number(contact.contact_id), { id: contact.contact_id, content: contact.last_message, type: contact.type, latest_msg: contact.last_interaction_time, unread: contact.unread, isOnline: contact.isOnline })
                     fetchContactInfo(contact.contact_id)
                 })
                 setContactMap(new Map(contactRef))
@@ -103,13 +103,13 @@ const ContactsProvider = ({children}) => {
     }, [userInfo, getContacts, isContactFetched, updateContactInfo])
 
     useEffect(() => {
-        const contactOnlineStatusChange = ({user_id, status, ...args}) => {
-            updateContactInfo(user_id, { status }, {
+        const contactStatusChanged = ({user_id, isOnline, isTyping, ...args}) => {
+            updateContactInfo(user_id, { isOnline, isTyping }, {
                 newEntry: false
             })
-            console.log(user_id, status, 'op')
+            console.log(user_id, isOnline, isTyping, 'op')
         }
-        socket.on('friend_online_status', contactOnlineStatusChange)
+        socket.on('contact_status', contactStatusChanged)
 
         return () => socket.off('friend_online_status')
     }, [updateContactInfo])

@@ -28,6 +28,7 @@ const incrementUnread = (id, value) => {
     // console.log(unreadMsgRef)
 }
 
+let timeout
 const useMsgSocket = (contactId) => {
     const [ messages, setMessages ] = useState(new Map()) // contact_id -> message_id -> message_object
     const [ seenMap, setSeenMap ] = useState(new Map()) // contact_id -> boolean
@@ -35,7 +36,18 @@ const useMsgSocket = (contactId) => {
     const { Alert } = useAlert()
     const [ isLoading, setIsLoading ] = useState({state: true, for: contactId})
     const [ nextMsgChunk, setNextMsgChunk ] = useState(new Map())
+    const [ isTyping, setIsTyping ] = useState(false)
 
+    const handleTyping = useCallback(() => {
+        setIsTyping(true)
+        clearTimeout(timeout)
+        timeout = setTimeout(() => setIsTyping(false), 1000)
+    }, [])
+
+    useEffect(() => {
+        socket.emit('isTyping', isTyping)
+        // console.log(isTyping)
+    }, [isTyping])
     const deleteMsg = (reciver, msg_id) => {
         // console.log(reciver, msg_id)
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
@@ -348,6 +360,6 @@ const useMsgSocket = (contactId) => {
             socket.off('message:deleted:all', msgDeletedAll)
         }
     }, [contactId])
-    return {messages, seenMap, sendMsg, seeMsg, deleteMsg, isLoading, loadMoreMsg, nextMsgChunk}
+    return {messages, handleTyping, seenMap, sendMsg, seeMsg, deleteMsg, isLoading, loadMoreMsg, nextMsgChunk}
 }
 export default useMsgSocket

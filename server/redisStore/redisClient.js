@@ -27,16 +27,19 @@ redis.on('error', (error) => {
     console.log("Error in redis ->", error)
 })
 
-export const connectUser = async ({user_id, socket_id} = {}) => {
+export const connectUser = async ({user_id, socket_id, socket} = {}) => {
     await Promise.all([
         redis.sAdd(`user_id:${user_id}`, socket_id),
         redis.set(`socket_id:${socket_id}`, user_id),
-        setUserStatus(user_id, "online")
+        setUserStatus({user_id, isOnline: true})
     ])
+    const contacts = await getFriendList(user_id)
+    // console.log(contacts)
+    contacts.forEach(contact_id => socket.join(`user_online_status:${contact_id}`))
     // console.log(await redis.sMembers(`user_id:${user_id}`))
 }
 
-export const disconnectUser = async (socket_id) => {
+export const disconnectUser = async ({ socket_id, socket}) => {
     const user_id = await redis.get(`socket_id:${socket_id}`)
     if (user_id) {
         const [ remaining ] = await Promise.all([
@@ -45,7 +48,7 @@ export const disconnectUser = async (socket_id) => {
             redis.del(`socket_id:${socket_id}`),
         ])
         if (remaining <= 1) {
-            await Promise.all([redis.del(`user_id:${user_id}`), setUserStatus(user_id, 'offline')])
+            await Promise.all([redis.del(`user_id:${user_id}`), setUserStatus({user_id, isOnline: false})])
         }
     }
 }
@@ -58,16 +61,17 @@ export const socketIdToUserId = async (socket_id) => {
     return await redis.get(`socket_id:${socket_id}`)
 }
 
-export const setUserStatus = async (user_id, status = 'online') => { // status -> online | offline
+export const setUserStatus = async ({user_id, isOnline = true, isTyping = false} = {}) => { // status -> online | offline
     if (!user_id) throw new Error('user_id required -> setUserStatus')
-    console.log(user_id, status)
     const payload = JSON.stringify({
         user_id,
-        status,
+        isOnline,
+        isTyping,
         timestamp: Date.now()
     })
     await pub.publish('user_status', payload)
-    if (status == 'offline')
+    redis.set(`user_status:${user_id}`, JSON.stringify({isOnline, isTyping}))
+    if (!isOnline)
         await redis.del(`user_status:${user_id}`)
     else 
         await redis.set(`user_status:${user_id}`, payload)
@@ -80,11 +84,13 @@ export const getUserStatus = async ( user_id ) => {
         return
     }
         const payload = await redis.get(`user_status:${user_id}`)
+        // console.log(payload)
         if (payload) {
-            return JSON.parse(payload)?.status
+            return JSON.parse(payload)
         } else {
-            return "offline"
+            return { isOnline: false, isTyping: false }
         }
+
 }
 export const getUserFriendsFromDb = async ( user_id ) => {
     let [ friends ] = await pool.execute('call getContacts(?)', [user_id])
@@ -93,7 +99,8 @@ export const getUserFriendsFromDb = async ( user_id ) => {
     friends = friends?.[0] || []
     for (const friend of friends) {
         const userStatus = await getUserStatus(friend.contact_id)
-        friend.status = userStatus
+        friend.isOnline = userStatus?.isOnline
+        friend.isTyping = userStatus?.isTyping
         contacts.push(friend)
         await redis.hSet(`friend_list:${user_id}`, friend.contact_id, JSON.stringify(friend))
     }
@@ -101,7 +108,7 @@ export const getUserFriendsFromDb = async ( user_id ) => {
     return contacts
 
 }
-export const getFriendList = async ( user_id ) => {
+export const getFriendList = async ( user_id, { details } = {} ) => {
     if (!user_id) throw new Error('user_name required -> getUserFriends')
     try {
         const isCached = await redis.exists(`friend_list:${user_id}`)
@@ -109,29 +116,15 @@ export const getFriendList = async ( user_id ) => {
             await getUserFriendsFromDb(user_id)
         }
         let friendList = await redis.hGetAll(`friend_list:${user_id}`)
-        return Object.keys(friendList)
+        return details ? friendList : Object.keys(friendList)
     } catch (error) {
         console.log(error, '-> getFriendList()')
     }
 }
 
-export const trigerStatusChanged = async (user_id, statusUpdateCallback) => {
-    if (!user_id || !statusUpdateCallback) throw new Error("user_id and callback is required -> trigerStatusChanged")
-    const friends = await getFriendList(user_id, {details: false})
-    friends.forEach(async friend_id => {
-        const friend_socket_id = await userIdToSocketId(friend_id)
-        friend_socket_id.length > 0 && friend_socket_id.forEach(f => statusUpdateCallback(f))
-    });
-}
-
 // subscribers
 sub.subscribe('user_status', async (message) => {
     const payload = JSON.parse(message)
-    // console.log(payload)
-    await trigerStatusChanged(payload.user_id, (friend_socket_id) => {
-        if (!friend_socket_id) return
-        io.to(friend_socket_id).emit('friend_online_status', payload)
-        return
-    })
+    io.to(`user_online_status:${payload.user_id}`).emit('contact_status', payload) // payload -> { isOnline->bool, user_id, isTyping:bool }
 })
 // do online offline functions -- TODO

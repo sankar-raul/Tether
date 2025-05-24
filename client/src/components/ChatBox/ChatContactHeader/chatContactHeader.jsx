@@ -51,11 +51,11 @@ const ChatContactHeader = ({ user }) => {
                 {
                  user.profile_pic_url ? <img className={styles['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src={user.profile_pic_url} alt={user.username} /> : <DefaultUser />
                 }
-                {user.status == 'online' ? <div className={styles['user-online-tag']}></div> : ''}
+                {user.isOnline ? <div className={styles['user-online-tag']}></div> : ''}
                 </div>
                 <div className={styles['user-wraper']}>
                     <div className={styles['username']}>{user.username || ''} {user?.id == myInfo?.id ? ' (You)' : ''}</div>
-                    <div className={styles["user-status"]}>{ user?.status || "offline"}</div>
+                    <div className={styles["user-status"]}>{ user?.isTyping ? "Typing..." : user?.isOnline ? 'online' : "offline"}</div>
                 </div>
             </div>
             <div className={styles['nav-buttons']}>

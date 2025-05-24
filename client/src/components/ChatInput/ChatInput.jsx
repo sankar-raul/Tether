@@ -5,10 +5,12 @@ import useChat from '../../context/chatSocket/chatSocket'
 import sentIcon from '../../assets/svg/chat/send.svg'
 import attachIcon from '../../assets/svg/chat/attach.svg'
 import useContacts from '../../context/contacts/contact'
+import useMsgSocket from '../../hook/useMsgSocket'
 
 const ChatInput = ({scrollRef}) => {
     const { sendMsg } = useChat()
     const inputRef = useRef(null)
+    const { handleTyping } = useMsgSocket()
     const { selectedContact } = useContacts()
     const [ text, setText ] = useState('')
     const handleInput = (e) => {
@@ -40,7 +42,7 @@ const ChatInput = ({scrollRef}) => {
               <img src={attachIcon} alt="media" />
             </div>
             <div className={styles["chat-input"]}>
-              <input className={styles['input']} ref={inputRef} autoFocus onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} autoComplete='off' />
+              <input className={styles['input']} ref={inputRef} autoFocus onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} autoComplete='off' onInput={handleTyping} />
             </div>
             <div className={styles['message-send-btn']}>
               <button type='submit'>

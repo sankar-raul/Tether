@@ -163,19 +163,23 @@ const Contact = ({ user }) => {
         // console.log(selectedContact, user.id)
         setIsActive(selectedContact === Number(user.id))
     }, [selectedContact, user])
+
+    useEffect(() => {
+        console.log(userInfo)
+    }, [userInfo])
     return (
         <div onClick={togglwActive} className={`${styles['contact']} ${isActive ? styles['active'] : ''}`}>
             <div className={styles['profile']}>
                 {
                     userInfo?.profile_pic_url ? <img src={userInfo.profile_pic_url} alt="user" /> : <DefaultUser />
                 }
-                {userInfo?.status == 'online' ? <div className={styles['user-online-tag']}></div> : ''}
+                {userInfo?.isOnline ? <div className={styles['user-online-tag']}></div> : ''}
             </div>
             <div className={styles['user-info']}>
                 <div className={styles['user-meta-data']}>
                     <div className={styles['username']}>{userInfo?.username ? `${userInfo.username}${isChatingWithMyself ? ' (You)' : ''}` : <Skeleton variant='text' width={'clamp(10px, 90%, 120px)'} height={'100%'} sx={{backgroundColor: "#6663"}} />}</div>
                     <div className={styles['last-msg']}>
-                        { lastMessage || (lastMessage === false && userInfo.bio) || <Skeleton variant='text' width={'clamp(6px, 60%, 65px)'} height={'100%'} sx={{backgroundColor: "#6663"}} /> || <Loader dotWidth={'4px'} align={'left'} color={'#888'} speed={'.4s'}/>}
+                        { userInfo.isTyping ? <span className={styles['typing']}>Typing...</span> : lastMessage || (lastMessage === false && userInfo.bio) || <Skeleton variant='text' width={'clamp(6px, 60%, 65px)'} height={'100%'} sx={{backgroundColor: "#6663"}} /> || <Loader dotWidth={'4px'} align={'left'} color={'#888'} speed={'.4s'}/>}
                     </div>
                 </div>
                 <div className={styles['user-status']}>

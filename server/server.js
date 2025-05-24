@@ -5,7 +5,7 @@ import auth from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cookie from 'cookie'
 import { Message } from './socketServices/chat.js'
-import { connectUser, disconnectUser, userIdToSocketId } from './redisStore/redisClient.js'
+import { connectUser, disconnectUser, setUserStatus, userIdToSocketId } from './redisStore/redisClient.js'
 import root from './routes/root.js'
 import { restrictedRoute, softAuthCheck } from './middleware/auth.js'
 import { getUser } from './service/auth.js'
@@ -79,7 +79,7 @@ io.use(async (socket, next) => {
     // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     socket.user = user
-    await connectUser({user_id: user.id, socket_id: socket.id})
+    await connectUser({user_id: user.id, socket_id: socket.id, socket})
     Message.sendUndelivered(socket.id, user.id)
     next()
 })
@@ -88,6 +88,10 @@ io.on('connection', async (socket) => {
     // console.log(socket.user)
     console.log(socket.user.id, "connected")
 
+    socket.on('isTyping', async (isTyping) => {
+        // console.log(isTyping, socket.user)
+        setUserStatus({user_id: socket.user?.id, isTyping: isTyping})
+    })
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
         // console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
@@ -212,7 +216,7 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('disconnect', async () => {
-        await disconnectUser(socket.id)
+        await disconnectUser({socket_id: socket.id, socket})
         console.log(socket.user.id, "disconnected")
       })
 })
