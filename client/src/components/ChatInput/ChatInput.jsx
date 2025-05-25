@@ -5,12 +5,10 @@ import useChat from '../../context/chatSocket/chatSocket'
 import sentIcon from '../../assets/svg/chat/send.svg'
 import attachIcon from '../../assets/svg/chat/attach.svg'
 import useContacts from '../../context/contacts/contact'
-import useMsgSocket from '../../hook/useMsgSocket'
 
 const ChatInput = ({scrollRef}) => {
-    const { sendMsg } = useChat()
+    const { sendMsg, handleTyping } = useChat()
     const inputRef = useRef(null)
-    const { handleTyping } = useMsgSocket()
     const { selectedContact } = useContacts()
     const [ text, setText ] = useState('')
     const handleInput = (e) => {

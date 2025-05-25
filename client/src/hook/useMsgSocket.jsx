@@ -44,10 +44,6 @@ const useMsgSocket = (contactId) => {
         timeout = setTimeout(() => setIsTyping(false), 1000)
     }, [])
 
-    useEffect(() => {
-        socket.emit('isTyping', isTyping)
-        // console.log(isTyping)
-    }, [isTyping])
     const deleteMsg = (reciver, msg_id) => {
         // console.log(reciver, msg_id)
         if (!msg_id || !reciver || !messageRef.has(reciver)) return
@@ -201,6 +197,11 @@ const useMsgSocket = (contactId) => {
         }
     }, [contactId, shiftUpContact, Alert])
 
+     useEffect(() => {
+        socket.emit('isTyping', isTyping)
+        // console.log(isTyping)
+    }, [isTyping])
+
     useEffect(() => {
         // sync messages across all this users clients
         const syncMsg = (message) => {
@@ -225,7 +226,7 @@ const useMsgSocket = (contactId) => {
         // push new message to message Map
         const msgRecived = (message) => { // op
             // console.log(message)
-            // console.log(message.id, contactId)
+            console.log(message.id, contactId, 'sankar')
             let { sender } = message
             sender = Number(sender)
             if (!messageRef.has(sender)) {

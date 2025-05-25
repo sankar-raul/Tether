@@ -111,7 +111,7 @@ const ContactsProvider = ({children}) => {
         }
         socket.on('contact_status', contactStatusChanged)
 
-        return () => socket.off('friend_online_status')
+        return () => socket.off('contact_status')
     }, [updateContactInfo])
 
     return (
