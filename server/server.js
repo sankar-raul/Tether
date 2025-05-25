@@ -24,11 +24,14 @@ const options = {
   key: fs.readFileSync('certs/key.pem'),
   cert: fs.readFileSync('certs/cert.pem')
 };
-const PORT = process.env.PORT || 443
+const PORT = process.env.PORT || 8443
 const app = express()
-const server = https.createServer(options, app)
 const DEV_MODE = process.env.DEV_MODE == 'true'
-const HOST = DEV_MODE ? '' : '0.0.0.0'
+const server = DEV_MODE ? https.createServer({
+        key: fs.readFileSync('certs/key.pem'),
+        cert: fs.readFileSync('certs/cert.pem')
+    }, app) : http.createServer(app)
+
 const allowedOrigins = ["https://192.168.0.11:443", "https://tether-xi.vercel.app"]
 app.use(cors({
     origin: (origin, callback) => {
@@ -240,6 +243,6 @@ io.on('connection', async (socket) => {
 })
 
 
-server.listen(PORT, HOST, () => {
-    console.log(`https://${HOST == '' ? 'localhost' : HOST}:${PORT}`)
+server.listen(PORT, () => {
+    console.log(`${DEV_MODE ? 'https' : 'http'}://localhost:${PORT}`)
 })
