@@ -2,7 +2,10 @@ import pool from "../db/pool.js"
 // import { setUser } from "../service/auth.js"
 import { hash, varify } from '../service/crypt.js'
 import { AccessToken, RefreshToken } from "../service/authToken.js"
+import { config } from "dotenv"
+config()
 
+const isDevMode = process.env.DEV_MODE == 'true'
 const ACCESS_TOKEN_EXPIRES_MS = 15 * 60 * 1000 // 15 minutes
 const REFRESH_TOKEN_EXPIRES_MS = 7 * 24 * 3600 * 1000 // 7 days
 export const register = async (req, res) => {
@@ -132,6 +135,7 @@ export const refreshToken = async (req, res) => {
         }
         if (tokens) {
             const [ refresh_token, access_token ] = tokens
+
             res.cookie('refresh_token', refresh_token, {
                 sameSite: 'None',
                 path: '/',

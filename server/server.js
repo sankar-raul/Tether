@@ -1,6 +1,8 @@
 import express from 'express'
 import http from 'http'
+import https from 'https'
 import { Server } from 'socket.io'
+import fs from 'fs'
 import auth from './routes/auth.js'
 import cookieParser from 'cookie-parser'
 import cookie from 'cookie'
@@ -18,17 +20,23 @@ import { AccessToken } from './service/authToken.js'
 import NotificationRoute from './routes/pushNotification.route.js'
 config()
 
-const PORT = process.env.PORT || 8080
+const options = {
+  key: fs.readFileSync('certs/key.pem'),
+  cert: fs.readFileSync('certs/cert.pem')
+};
+const PORT = process.env.PORT || 443
 const app = express()
-const server = http.createServer(app)
+const server = https.createServer(options, app)
 const DEV_MODE = process.env.DEV_MODE == 'true'
-
+const allowedOrigins = ["https://192.168.0.11:443", "https://tether-xi.vercel.app"]
 app.use(cors({
     origin: (origin, callback) => {
-        if (DEV_MODE) {
-            callback(null, origin)
+        if (DEV_MODE || !origin) {
+            callback(null, true)
+        } else if (allowedOrigins.includes(origin)) {
+            callback(null, true)
         } else {
-            callback(null, "https://tether-xi.vercel.app")
+            callback(new Error('Origin not allowed'))
         }
     },
     credentials: true
@@ -64,7 +72,15 @@ app.use((req, res) => {
 // chat logic
 export const io = new Server(server, {
     cors: {
-        origin: DEV_MODE ? ["http://localhost:5173", "http://localhost:5174", "http://localhost:4173"] : "https://tether-xi.vercel.app",
+        origin: (origin, callback) => {
+            if (DEV_MODE) {
+                callback(null, true)
+            } else if (origin == "https://tether-xi.vercel.app") {
+                callback(null, true)
+            } else {
+                callback(new Error('Operation not allowed'))
+            }
+        },
         credentials: true
       }
 })
@@ -72,6 +88,7 @@ export const io = new Server(server, {
 
 io.use(async (socket, next) => {
     const token = cookie.parse(socket.request.headers.cookie || '')?.access_token
+    console.log(token)
     if (!token) {
         return next(new Error("unauthorized!"))
     }
@@ -223,5 +240,5 @@ io.on('connection', async (socket) => {
 
 
 server.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`)
+    console.log(`https://localhost:${PORT}`)
 })
