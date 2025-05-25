@@ -92,7 +92,7 @@ export const io = new Server(server, {
 
 io.use(async (socket, next) => {
     const token = cookie.parse(socket.request.headers.cookie || '')?.access_token
-    console.log(token)
+    // console.log(token)
     if (!token) {
         return next(new Error("unauthorized!"))
     }

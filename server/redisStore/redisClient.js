@@ -6,7 +6,7 @@ config()
 
 const REDIS_SERVER = process.env.REDIS_SERVER
 const is_dev_mode = process.env.DEV_MODE == 'true'
-console.log(is_dev_mode, REDIS_SERVER)
+// console.log(is_dev_mode, REDIS_SERVER)
 
 export const pub = createClient({url: is_dev_mode ? 'redis://127.0.0.1:6379' : REDIS_SERVER})
 export const sub = pub.duplicate()
