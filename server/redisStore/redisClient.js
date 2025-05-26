@@ -36,7 +36,7 @@ export const connectUser = async ({user_id, socket_id, socket} = {}) => {
     ])
     const contacts = await getFriendList(user_id)
     // console.log(contacts)
-    contacts.forEach(contact_id => socket.join(`user_online_status:${contact_id}`))
+    contacts.forEach(contact_id => contact_id != user_id && socket.join(`user_online_status:${contact_id}`))
     // console.log(await redis.sMembers(`user_id:${user_id}`))
 }
 
