@@ -14,7 +14,7 @@ import useIntersectionObserver from '../../hook/useIntersectionObserver'
 import DefaultChatView from './DefaultView/DefaultView'
 import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClipboard, faEdit, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import ChatContactHeader from './ChatContactHeader/chatContactHeader'
 import { faCopy, faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 
@@ -84,7 +84,7 @@ const ChatBox = () => {
                         }
                        
                     </>
-                    ) : <Loader />
+                    ) : <Loader type='dotLoader' />
                 }
                 </main>
                 <ChatInput scrollRef={scrollRef}/>
@@ -107,7 +107,7 @@ const LoadMoreMsgLoader = ({contact_id}) => {
 
     return (
         <div ref={ref}>
-            <Loader />
+            <Loader type="msgLoaderSkeleton" />
         </div>
     )
 }
