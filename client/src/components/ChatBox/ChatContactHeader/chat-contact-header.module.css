@@ -209,7 +209,10 @@
         flex-grow: 1;
     }
 }
-
+.typing {
+    color: var(--brand-color);
+    filter: contrast(130%) brightness(120%);
+}
 @media (max-width: 700px) {
     .user-info {
         flex-grow: 1;

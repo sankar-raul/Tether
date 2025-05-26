@@ -179,7 +179,7 @@ const Contact = ({ user }) => {
                 <div className={styles['user-meta-data']}>
                     <div className={styles['username']}>{userInfo?.username ? `${userInfo.username}${isChatingWithMyself ? ' (You)' : ''}` : <Skeleton variant='text' width={'clamp(10px, 90%, 120px)'} height={'100%'} sx={{backgroundColor: "#6663"}} />}</div>
                     <div className={styles['last-msg']}>
-                        { userInfo.isTyping ? <span className={styles['typing']}>Typing...</span> : lastMessage || (lastMessage === false && userInfo.bio) || <Skeleton variant='text' width={'clamp(6px, 60%, 65px)'} height={'100%'} sx={{backgroundColor: "#6663"}} /> || <Loader dotWidth={'4px'} align={'left'} color={'#888'} speed={'.4s'}/>}
+                        { userInfo.isTyping ? <span className={styles['typing']}>typing...</span> : lastMessage || (lastMessage === false && userInfo.bio) || <Skeleton variant='text' width={'clamp(6px, 60%, 65px)'} height={'100%'} sx={{backgroundColor: "#6663"}} /> || <Loader dotWidth={'4px'} align={'left'} color={'#888'} speed={'.4s'}/>}
                     </div>
                 </div>
                 <div className={styles['user-status']}>

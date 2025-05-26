@@ -219,7 +219,10 @@
     margin-top: 50%;
     transform: translateY(-50%);
 }
-
+.typing {
+    color: var(--brand-color);
+    filter: contrast(130%) brightness(120%);
+}
 @media (max-width: 700px) {
     .contacts-wraper {
         /* background-color: red; */
