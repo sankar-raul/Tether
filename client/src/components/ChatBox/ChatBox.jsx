@@ -102,7 +102,7 @@ const LoadMoreMsgLoader = ({contact_id}) => {
     const { loadMoreMsg } = useChat()
 
     useEffect(() => {
-        isVisible && loadMoreMsg({id: contact_id})
+        // isVisible && loadMoreMsg({id: contact_id})
     }, [isVisible, loadMoreMsg, contact_id])
 
     return (

@@ -33,21 +33,27 @@
 }
 @keyframes opacity {
     50% {
-        opacity: .3;
+        opacity: .2;
     }
 }
 .single-msg-skeleton {
     background-color: var(--contact-active-bg);
-    height: 30px;
+    height: 40px;
     width: 70%;
+    max-width: clamp(100px, 70%, 500px);
     border-radius: 12px;
 }
-.single-msg-skeleton:nth-of-type(2n-1) {
-    height: calc(30px * 2);
+.single-msg-skeleton:nth-of-type(2n-3) {
+    height: calc(30px * 2.5);
 }
 .single-msg-skeleton:nth-of-type(3n-1) {
     align-self: flex-end;
 }
-.single-msg-skeleton:nth-of-type(2n-2) { /*change it to if needed 2n-2*/
-    width: 40%;
+.single-msg-skeleton:nth-of-type(2n-2)  { /*change it to if needed 2n-2*/
+    width: 45%;
+    max-width: clamp(100px, 45%, 300px);
+}
+.single-msg-skeleton:nth-of-type(1) {
+    width: 55%;
+    max-width: clamp(100px, 55%, 350px);
 }
