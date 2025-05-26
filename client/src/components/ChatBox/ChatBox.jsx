@@ -84,7 +84,7 @@ const ChatBox = () => {
                         }
                        
                     </>
-                    ) : <Loader type='dotLoader' />
+                    ) : <Loader type='msgLoaderSkeleton' />
                 }
                 </main>
                 <ChatInput scrollRef={scrollRef}/>
