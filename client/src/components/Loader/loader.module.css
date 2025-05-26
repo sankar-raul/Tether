@@ -48,6 +48,6 @@
 .single-msg-skeleton:nth-of-type(3n-1) {
     align-self: flex-end;
 }
-.single-msg-skeleton:nth-of-type(3n-2) { /*change it to if needed 2n-2*/
+.single-msg-skeleton:nth-of-type(2n-2) { /*change it to if needed 2n-2*/
     width: 40%;
 }
