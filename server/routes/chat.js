@@ -12,7 +12,7 @@ chatRouter.get('/messages/:contact_id', async (req, res) => {
     const { id } = req.user
     let { part } = req.query
     let { contact_id } = req.params
-    const results_per_part = 20
+    const results_per_part = 30 // message chunk
     let offset = 0
     if (part) {
         part = Number(part)
