@@ -43,13 +43,10 @@ export const connectUser = async ({user_id, socket_id, socket} = {}) => {
 export const disconnectUser = async ({ user_id, socket_id }) => {
     // const user_id = await redis.get(`socket_id:${socket_id}`)
     if (user_id) {
-        const [ remaining ] = await Promise.all([
-            redis.sCard(`user_id:${user_id}`),
-            redis.sRem(`user_id:${user_id}`, socket_id),
-            // redis.del(`socket_id:${socket_id}`),
-        ])
+        await redis.sRem(`user_id:${user_id}`, socket_id)
+        const remaining = await redis.sCard(`user_id:${user_id}`)
         console.log(remaining, "remaining")
-        if (remaining <= 1) {
+        if (remaining <= 0) {
             await Promise.all([redis.del(`user_id:${user_id}`), setUserStatus({user_id, isOnline: false})])
         }
     }

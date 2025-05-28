@@ -115,7 +115,7 @@ io.on('connection', async (socket) => {
     })
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
-        // console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
+        console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
         if (!ackFunc) return
         if (!reciver || !content) {
             // return io.to(socket.id).emit('message:send:error', "error")
@@ -135,6 +135,7 @@ io.on('connection', async (socket) => {
             } else {
                 reciversSocketIds.forEach(s_id => {
                     io.to(s_id).emit("message:recive", msg)
+                    console.log(s_id)
                 })
                 ackFunc(msg)
             }
