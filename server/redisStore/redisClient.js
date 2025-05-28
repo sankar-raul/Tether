@@ -31,7 +31,7 @@ redis.on('error', async (error) => {
 export const connectUser = async ({user_id, socket_id, socket} = {}) => {
     await Promise.all([
         redis.sAdd(`user_id:${user_id}`, socket_id),
-        redis.set(`socket_id:${socket_id}`, user_id),
+        // redis.set(`socket_id:${socket_id}`, user_id),
         setUserStatus({user_id, isOnline: true})
     ])
     const contacts = await getFriendList(user_id)
@@ -40,14 +40,15 @@ export const connectUser = async ({user_id, socket_id, socket} = {}) => {
     // console.log(await redis.sMembers(`user_id:${user_id}`))
 }
 
-export const disconnectUser = async ({ socket_id, socket}) => {
-    const user_id = await redis.get(`socket_id:${socket_id}`)
+export const disconnectUser = async ({ user_id, socket_id }) => {
+    // const user_id = await redis.get(`socket_id:${socket_id}`)
     if (user_id) {
         const [ remaining ] = await Promise.all([
             redis.sCard(`user_id:${user_id}`),
             redis.sRem(`user_id:${user_id}`, socket_id),
-            redis.del(`socket_id:${socket_id}`),
+            // redis.del(`socket_id:${socket_id}`),
         ])
+        console.log(remaining, "remaining")
         if (remaining <= 1) {
             await Promise.all([redis.del(`user_id:${user_id}`), setUserStatus({user_id, isOnline: false})])
         }
@@ -58,25 +59,34 @@ export const userIdToSocketId = async (user_id) => {
     return await redis.sMembers(`user_id:${user_id}`)
 }
 
-export const socketIdToUserId = async (socket_id) => {
-    return await redis.get(`socket_id:${socket_id}`)
-}
+// export const socketIdToUserId = async (socket_id) => {
+//     return await redis.get(`socket_id:${socket_id}`)
+// } // not needed
 
-export const setUserStatus = async ({user_id, isOnline = true, isTyping = false} = {}) => { // status -> online | offline
+export const setUserStatus = async ({user_id, isOnline = true, isTyping = false, to} = {}) => { // status -> online | offline
     if (!user_id) throw new Error('user_id required -> setUserStatus')
-    const payload = JSON.stringify({
-        user_id,
-        isOnline,
-        isTyping,
-        timestamp: Date.now()
-    })
-    await pub.publish('user_status', payload)
-    redis.set(`user_status:${user_id}`, JSON.stringify({isOnline, isTyping}))
-    if (!isOnline)
-        await redis.del(`user_status:${user_id}`)
-    else 
-        await redis.set(`user_status:${user_id}`, payload)
-
+    let payload = null
+    try {
+        if (to) {
+            const reciver_socket_ids = await userIdToSocketId(to)
+            reciver_socket_ids.forEach(socket_id => io.to(socket_id).emit("typing-status", { user_id, isTyping }))
+        } else {
+            payload = JSON.stringify({
+                user_id,
+                isOnline,
+                timestamp: Date.now()
+            })
+            await pub.publish('user_status', payload)
+        }
+        // redis.set(`user_status:${user_id}`, JSON.stringify({isOnline, isTyping}))
+        if (!isOnline)
+            await redis.del(`user_status:${user_id}`)
+        else {
+            payload && await redis.set(`user_status:${user_id}`, payload)
+        }
+    } catch (error) {
+        console.log(error, "Errorrvndfjanlfajsbasd  dhfha dn")
+    }
 }
 
 export const getUserStatus = async ( user_id ) => {

@@ -9,7 +9,7 @@ const LoaderOptions = {
 }
 
 export const Loader = ({type, ...props}) => {
-    console.log(type)
+    // console.log(type)
     const SelectedLoader = LoaderOptions[type] || (() => {})
     return <SelectedLoader {...props} />
 }

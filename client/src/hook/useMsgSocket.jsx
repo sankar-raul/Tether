@@ -196,11 +196,14 @@ const useMsgSocket = (contactId) => {
             }
         }
     }, [contactId, shiftUpContact, Alert])
+    const emitTypingStatus = useCallback((typing) => {
+        socket.emit('isTyping', {isTyping: typing, chatingWith: contactId})
+    }, [contactId])
 
      useEffect(() => {
-        socket.emit('isTyping', isTyping)
         // console.log(isTyping)
-    }, [isTyping])
+        emitTypingStatus(isTyping)
+    }, [isTyping, emitTypingStatus])
 
     useEffect(() => {
         // sync messages across all this users clients
@@ -226,7 +229,7 @@ const useMsgSocket = (contactId) => {
         // push new message to message Map
         const msgRecived = (message) => { // op
             // console.log(message)
-            console.log(message.id, contactId, 'sankar')
+            // console.log(message.id, contactId, 'sankar')
             let { sender } = message
             sender = Number(sender)
             if (!messageRef.has(sender)) {
@@ -340,6 +343,14 @@ const useMsgSocket = (contactId) => {
         const waitedMessages = (messages) => { // done
             messages.forEach(msgRecived)
         }
+
+        // track user typing status
+        const typingStatus = ({user_id, isTyping}) => {
+            // console.log(user_id, isTyping, "drgsgar")
+            updateContactInfo(user_id, { isTyping }, {
+                newEntry: false
+            })
+        }
         // listen for messages
         socket.on('waited:messages', waitedMessages)
         socket.on('message:recive', msgRecived)
@@ -349,6 +360,7 @@ const useMsgSocket = (contactId) => {
         socket.on('message:edited', msgEdited)
         socket.on('message:status', msgStatus)
         socket.on('message:deleted:all', msgDeletedAll)
+        socket.on('typing-status', typingStatus)
         return () => {
             // removing message events
             socket.off('waited:messages', waitedMessages)
@@ -359,6 +371,7 @@ const useMsgSocket = (contactId) => {
             socket.off('message:edited', msgEdited)
             socket.off('message:status', msgStatus)
             socket.off('message:deleted:all', msgDeletedAll)
+            socket.off('typing-status', typingStatus)
         }
     }, [contactId])
     return {messages, handleTyping, seenMap, sendMsg, seeMsg, deleteMsg, isLoading, loadMoreMsg, nextMsgChunk}

@@ -54,7 +54,7 @@ const ContactsProvider = ({children}) => {
 
     const updateContactInfo = useCallback((id, data = {}, {newEntry = true}={}) => {
         id = Number(id)
-        console.log(id, data, newEntry)
+        // console.log(id, data, newEntry)
         if (contactRef.has(id)) {
             contactRef.set(id, {...contactRef.get(id), ...data, id})
         } else {
@@ -103,11 +103,10 @@ const ContactsProvider = ({children}) => {
     }, [userInfo, getContacts, isContactFetched, updateContactInfo])
 
     useEffect(() => {
-        const contactStatusChanged = ({user_id, isOnline, isTyping, ...args}) => {
-            updateContactInfo(user_id, { isOnline, isTyping }, {
+        const contactStatusChanged = ({user_id, isOnline, ...args}) => {
+            updateContactInfo(user_id, { isOnline  }, {
                 newEntry: false
             })
-            console.log(user_id, isOnline, isTyping, 'op')
         }
         socket.on('contact_status', contactStatusChanged)
 

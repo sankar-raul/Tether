@@ -109,9 +109,9 @@ io.on('connection', async (socket) => {
     // console.log(socket.user)
     console.log(socket.user.id, "connected")
 
-    socket.on('isTyping', async (isTyping) => {
-        // console.log(isTyping, socket.user)
-        setUserStatus({user_id: socket.user?.id, isTyping: isTyping})
+    socket.on('isTyping', async ({ isTyping, chatingWith }) => {
+        console.log(isTyping, chatingWith)
+        await setUserStatus({user_id: socket.user?.id, isTyping: isTyping, to: chatingWith})
     })
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
@@ -237,8 +237,8 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('disconnect', async () => {
-        await disconnectUser({socket_id: socket.id, socket})
-        console.log(socket.user.id, "disconnected")
+        await disconnectUser({user_id: socket.user.id, socket_id: socket.id})
+        console.log(socket.id, "disconnected")
       })
 })
 

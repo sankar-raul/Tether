@@ -165,7 +165,7 @@ const Contact = ({ user }) => {
     }, [selectedContact, user])
 
     useEffect(() => {
-        console.log(userInfo)
+        // console.log(userInfo)
     }, [userInfo])
     return (
         <div onClick={togglwActive} className={`${styles['contact']} ${isActive ? styles['active'] : ''}`}>
