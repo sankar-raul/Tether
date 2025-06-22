@@ -79,7 +79,7 @@ select * from users;
 -- truncate table refresh_tokens; -- run for all logout
 -- delete
 
-update users set profile_pic_url = 'https://i.ibb.co/21fRf62D/user.png' where id <> 90000;
+update users set profile_pic_url = 'https://www.shutterstock.com/image-photo/closeup-portrait-fluffy-purebred-cat-260nw-2447243735.jpg' where id = 1;
 
 CREATE INDEX idx_messages_reciver_sender_tick ON messages(id, reciver, sender, tick);
 show index from messages;

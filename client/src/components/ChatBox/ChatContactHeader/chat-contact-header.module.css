@@ -82,6 +82,8 @@
     height: 100%;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center center;
 }
 .user-wraper {
     /* background-color: red; */

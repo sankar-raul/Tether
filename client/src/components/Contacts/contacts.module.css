@@ -154,6 +154,7 @@
     height: 100%;
     aspect-ratio: inherit;
     object-fit: cover;
+    object-position: center center;
     border-radius: 50%;
 }
 .contact > .user-info {
