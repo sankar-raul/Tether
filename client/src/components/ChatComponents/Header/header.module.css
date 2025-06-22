@@ -30,6 +30,16 @@
     height: 60%;
     place-self: center;
     padding: 0px 5px;
+
+    & > img {
+        overflow: hidden;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center center;
+        cursor: var(--cursor);
+    }
 }
 .search-wraper {
     width: clamp(300px, 60%, 600px);

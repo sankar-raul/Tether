@@ -104,7 +104,7 @@ export const ShowUser = ({info, skeleton, animationDelay = 0, className = '', ..
     return (
         <div className={`${styles['show-user']} ${className}`} onClick={startTethering} {...props}>
             <div className={styles['show-user-info']}>
-                <div className={styles['avatar']}>{ skeleton ? <Skeleton variant='circular' height='40px' width='40px' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : <DefaultUser />}</div>
+                <div className={styles['avatar']}>{ skeleton ? <Skeleton variant='circular' height='40px' width='40px' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : info.profile_pic_url ? <img src={info.profile_pic_url} alt="profile_pic" /> : <DefaultUser />}</div>
                 {/* <div className={styles['avatar']}>ava</div> */}
                 <div>
                     <div className={styles['username']}>{skeleton ? <Skeleton variant='text' width='clamp(20px, 40%, 100px)' height='85%' sx={{background: 'var(--skeleton-accent-color)', animationDelay: animationDelay}} /> : info?.username || 'username'}</div>

@@ -164,6 +164,16 @@
 .show-user-info > .avatar {
     display: grid;
     place-items: center;
+
+    &>img {
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center center;
+        cursor: var(--cursor);
+    }
 }
 
 @media (max-width: 700px) {

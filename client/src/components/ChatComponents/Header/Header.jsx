@@ -8,9 +8,12 @@ import { DefaultUser } from '../../DefaultUser/DefaultUser'
 import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import useUserInfo from '../../../context/userInfo/userInfo'
 
 const Header = () => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)'})
+    const { userInfo } = useUserInfo()
+// console.log(userInfo)
 
     return (
         <div className={styles.header}>
@@ -20,7 +23,7 @@ const Header = () => {
                 <Search />
             </SearchProvider>
             <div className={styles['user']}>
-                <DefaultUser />
+                {userInfo?.profile_pic_url ? <img src={userInfo.profile_pic_url} alt="profile_photo" /> : <DefaultUser />}
             </div>
         </div>
     )

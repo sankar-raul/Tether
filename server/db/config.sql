@@ -1,7 +1,7 @@
 show databases;
 create database if not exists tether;
 use tether;
-SET SQL_SAFE_UPDATES = 1;
+-- SET SQL_SAFE_UPDATES = 1;
 
 create table if not exists users (
 	id bigint auto_increment primary key,
