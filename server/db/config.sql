@@ -78,8 +78,15 @@ select * from users;
 -- delete from users where id = 19;
 -- truncate table refresh_tokens; -- run for all logout
 -- delete
-select * from messages order by sent_at desc;
-delete from users where id = 19;
+
+update users set profile_pic_url = 'https://i.ibb.co/21fRf62D/user.png' where id <> 90000;
+
+CREATE INDEX idx_messages_reciver_sender_tick ON messages(id, reciver, sender, tick);
+show index from messages;
+CREATE INDEX idx_recent_interactions_owner ON recent_interactions(owner_id);
+CREATE INDEX idx_users_email on users(email);
+select * from messages order by sent_at desc limit 1000;
+
 select sender, MAX(sent_at) as latest_msg from messages where reciver = 2 group by sender order by latest_msg;
 select reciver, MAX(sent_at) as latest_msg from messages where sender = 2 group by reciver order by latest_msg;
 select * from messages where sender = 1 and reciver = 2 order by sent_at desc limit 20;

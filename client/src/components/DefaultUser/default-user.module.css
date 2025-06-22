@@ -1,27 +1,28 @@
 .default-user {
     height: 100%;
     aspect-ratio: 1 / 1;
-    background: linear-gradient(34deg, #520de7bd, transparent, #ff0713b8), linear-gradient(-54deg, #0611a7ab, transparent, #ffff00ca);
+    /* background: linear-gradient(34deg, #520de7bd, transparent, #ff0713b8), linear-gradient(-54deg, #0611a7ab, transparent, #ffff00ca); */
     border-radius: 50%;
     border: none;
     outline: none;
     overflow: hidden;
-    filter: contrast(233%);
+    /* filter: contrast(233%); */
     cursor: pointer;
     transition: transform .2s ease;
+    box-shadow: 1px 0px 15px 0px rgba(255, 255, 255, 0.1);
 }
 .default-user > img {
     object-fit: cover;
     max-height: 100%;
     border: none;
-    opacity: .6;
-    filter: brightness(534%) contrast(800%);
+    /* opacity: .6; */
+    filter: brightness(134%) contrast(470%);
     transition: .1s ease;
 }
 .default-user:hover > img {
-    opacity: .7;
-    transform: rotate(-24deg);
+    /* opacity: .7; */
+    transform: rotate(-34deg);
 }
 .default-user:hover {
-    transform: rotate(24deg);
+    transform: rotate(34deg);
 }

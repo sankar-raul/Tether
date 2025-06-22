@@ -39,18 +39,38 @@ delimiter ;
 
 drop procedure if exists getContacts;
 
-delimiter //
-create procedure getContacts(userId bigint)
-begin
-	-- declare unread int default 20;
---     select unread;
-    -- select count(*) as unread from messages where sender = ? and reciver = ? and tick in (1, 2)
-	select contact_id, last_interaction_time, type, last_message, (select count(*) as unread from messages where sender = contact_id and reciver = userId and tick in (1, 2)) as unread
-	from recent_interactions
-	where owner_id = userId
-	order by last_interaction_time desc;
-end //
-delimiter ;
+DELIMITER //
+
+CREATE PROCEDURE getContacts(IN userId BIGINT)
+BEGIN
+    SELECT 
+        r.contact_id, 
+        r.last_interaction_time, 
+        r.type, 
+        r.last_message, 
+        IFNULL(m.unread, 0) AS unread
+    FROM 
+        recent_interactions r
+    LEFT JOIN (
+        SELECT 
+            sender, 
+            COUNT(*) AS unread
+        FROM 
+            messages
+        WHERE 
+            tick IN (1, 2)
+            AND reciver = userId
+        GROUP BY 
+            sender
+    ) m ON r.contact_id = m.sender
+    WHERE 
+        r.owner_id = userId
+    ORDER BY 
+        r.last_interaction_time DESC;
+END //
+
+DELIMITER ;
+
 
 -- auth refresh token
 drop procedure if exists new_refresh_token;
@@ -89,7 +109,7 @@ delimiter ;
 
 -- its simple documentation
 -- call newInteraction(2, 1, current_timestamp(), 'added', null); -- call in message send, recive, add contact 
--- call getContacts(1); -- call to get all contacts in order by last interaction desc
+ call getContacts(1); -- call to get all contacts in order by last interaction desc
 -- call addContact(1, 10, "Vai"); -- call to add contact with a nickname
 
 -- auth related 
@@ -97,3 +117,4 @@ delimiter ;
 -- call delete_refresh_token(refresh_token char(64)) -- delete refresh token
 
 ## its to hardddddddddd 😩😵‍💫😩🤯
+
