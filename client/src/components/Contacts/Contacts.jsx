@@ -12,31 +12,31 @@ import { Skeleton } from '@mui/material'
 import { AddContact, AddContactsBtn } from './AddContact/AddContact'
 import { useMediaQuery } from 'react-responsive'
 import { PushNotification } from './PushNotification/PushNoti'
-
-const Contacts = () => {
+import SettingsTab from '../SettingsTab/Settings'
+const Contacts = ({children}) => {
     const { resizeableDiv, handleMouseDown } = useResize()
     const { currentTab } = useTabs()
     const [ Element, setElement ] = useState(() => Chats)
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
 
-    useEffect(() => {
-        setElement(prev => {
-            switch (currentTab) {
-                case 'chat':
-                    return Chats
-                case 'call':
-                    return Calls
-                case 'settings':
-                    return Settings
-                default:
-                    return prev
-            }
-        })
-    }, [currentTab])
+    // useEffect(() => {
+    //     setElement(prev => {
+    //         switch (currentTab) {
+    //             case 'chat':
+    //                 return Chats
+    //             case 'call':
+    //                 return Calls
+    //             case 'settings':
+    //                 return SettingsTab
+    //             default:
+    //                 return prev
+    //         }
+    //     })
+    // }, [currentTab])
     return (
         <div className={styles['contacts-wraper']}>
             <div ref={resizeableDiv} className={styles['contacts']}>
-                <Element />
+                {children}
             </div>
             {!isMobile ? <div onMouseDown={handleMouseDown} className={styles['handle-resize']}></div> : ''}
             <AddContactsBtn />
@@ -45,21 +45,14 @@ const Contacts = () => {
 }
 export default Contacts
 
-const Calls = () => {
+export const Calls = () => {
 
     return (
         <h1>Calls</h1>
     )
 }
 
-const Settings = () => {
-    return (
-        <h1>
-            Settings
-        </h1>
-    )
-}
-const Chats = () => {
+export const Chats = () => {
     const { contactMap, isLoading } = useContacts()
     const [ isVoidList, setIsVoidList ] = useState(false)
 
@@ -67,7 +60,7 @@ const Chats = () => {
         setIsVoidList(!contactMap.size)
     }, [contactMap])
     return (
-        <>
+        <div className={styles['chats-conatct-list-wraper']}>
         {/* <PushNotification /> */}
         {
         !isLoading ? (
@@ -82,7 +75,7 @@ const Chats = () => {
             </>
         ): <Loader type={'skeleton'} count={20} className={styles['contact'] + ' ' + styles['prevent-hover']} />
         }
-        </>
+        </div>
     )
 }
 

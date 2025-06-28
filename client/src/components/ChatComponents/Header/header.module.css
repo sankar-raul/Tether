@@ -20,11 +20,15 @@
     }
 }
 .app-name {
-    font-family: 'Vampiro One', serif;
+    font-family: 'Allura', serif;
     padding: 0px 5px;
-    letter-spacing: -2px;
     display: flex;
     align-items: center;
+
+    & > h1 {
+        color: #fff;
+        font-size: 30px;
+    }
 }
 .user {
     height: 60%;

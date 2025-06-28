@@ -1,0 +1,99 @@
+.settings-tab-container {
+    /* border: 1px solid red; */
+    display: flex;
+    height: 100%;
+    padding-inline: 16px;
+    padding-top: 16px;
+    flex-direction: column;
+    gap: 10px;
+}
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: max-content;
+    padding: 24px;
+    background: var(--primary-bg);
+    border-radius: 18px;
+    /* background-color: red; */
+    /* border: 1px solid #fff; */
+}
+.profile-container > div:nth-child(1) {
+    display: flex;
+    justify-content: right;
+
+    & > img {
+        height: 22px;
+        aspect-ratio: 1 / 1;
+    }
+}
+.profile-container > * {
+    /* border: 1px solid magenta; */
+}
+.profile-container > div:nth-child(2) {
+    display: grid;
+    place-items: center;
+
+    & > div {
+        width: 122px;
+        overflow: hidden;
+
+        & > img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    }
+}
+.profile-container > div:nth-child(3) {
+    padding: 10px;
+    padding-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+
+    & > div {
+        text-align: center;
+
+        &:nth-child(1) {
+            font-size: 1rem;
+        }
+        &:nth-child(2) {
+            font-size: 0.688rem;
+        }
+    }
+}
+.settings-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: 8px;
+}
+.settings-btn {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: var(--primary-bg);
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: var(--cursor);
+}
+.settings-btn > div:nth-child(1) {
+    height: 22px;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+}
+.settings-btn > div:nth-child(2) {
+    flex-grow: 1;
+}
+.settings-btn > div:nth-child(3) {
+    padding: 10px;
+    & > img {
+        height: 20px;
+        aspect-ratio: 1 / 1;
+    }
+}

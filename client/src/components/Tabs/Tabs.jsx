@@ -12,6 +12,7 @@ import AboutPassive from '../../assets/svg/chat/about.svg'
 import { useCallback, useEffect, useState } from 'react'
 import useTabs from '../../context/Tabs/tabs'
 import { useMediaQuery } from 'react-responsive'
+import { Link } from 'react-router-dom'
 
 const Tabs = () => {
     const { setCurrentTab } = useTabs()
@@ -27,11 +28,11 @@ const Tabs = () => {
                 <div>
                     <Tab icon={{active: HambargerPassive, passive: HambargerPassive}} />
                     <Tab type='chat' onClick={() => handleTabs("chat")} icon={{active: messageIconActive, passive: messageIconPassive}}/>
-                    <Tab type='call' onClick={() => handleTabs("call")} icon={{active: callActive, passive: CallPassive}} />
+                    <Tab type='calls' onClick={() => handleTabs("calls")} icon={{active: callActive, passive: CallPassive}} />
                 </div>
                 <div>
                     <Tab icon={{active: PaintPassive, passive: PaintPassive}} />
-                    {isMobile ? <Tab type='call' onClick={() => handleTabs("call")} icon={{active: callActive, passive: CallPassive}} /> : ''}
+                    {isMobile ? <Tab type='calls' onClick={() => handleTabs("calls")} icon={{active: callActive, passive: CallPassive}} /> : ''}
                 </div>
                 <div>
                     <Tab icon={{active: AboutPassive, passive: AboutPassive}} />
@@ -48,7 +49,7 @@ const Tab = ({icon, active = false, type, ...args}) => {
     const [ isActive, setIsActive ] = useState(active)
 
     useEffect(() => {
-        if (type == 'chat' || type == 'call' || type == 'settings') {
+        if (type == 'chat' || type == 'calls' || type == 'settings') {
             setIsActive(currentTab == type)
         } else {
             // add logic for other left section buttons
@@ -56,9 +57,12 @@ const Tab = ({icon, active = false, type, ...args}) => {
     }, [currentTab, type])
 
     return (
+        <Link className={styles['tab-wraper']} to={`/chat${type=='chat'?'':'/'+type}`}>
         <div {...args} className={`${styles["tab"]} ${isActive ? styles['active'] : ''}`}>
             <img src={isActive ? icon?.active : icon?.passive} alt="tab" />
         </div>
+        </Link>
+
     )
 }
 Tab.propTypes = {

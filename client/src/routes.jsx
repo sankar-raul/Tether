@@ -7,6 +7,8 @@ import ChatLayout from "./pages/ChatLayout/ChatLayout"
 import Chat from "./pages/Chat/Chat"
 import { ProtectedRoute } from "./hook/authSecurity"
 import ContactsProvider from './context/contacts/provider'
+import SettingsTab from "./components/SettingsTab/Settings"
+import { Calls, Chats } from "./components/Contacts/Contacts"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -21,14 +23,18 @@ export const router = createBrowserRouter(
 
             <Route path="*" element={<h1>Not Found!</h1>}/>
         </Route>
-        <Route path="/chat" element={(
+        <Route path="/chat/*" element={(
             <ProtectedRoute>
                 <ContactsProvider>
                     <ChatLayout />
                 </ContactsProvider>
             </ProtectedRoute>
             )}>
-            <Route index element={<Chat />} />
+            <Route index element={<Chats />} />
+            <Route path="settings">
+                <Route index element={<SettingsTab />}/>
+            </Route>
+            <Route path="calls" element={<Calls />} />
         </Route>
         </>
     )

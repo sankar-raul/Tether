@@ -6,9 +6,12 @@
     gap: 1px;
     max-width: 100%;
 }
+.chats-conatct-list-wraper {
+    background: var(--primary-bg);
+    height: 100%;
+}
 .contacts {
     flex-grow: 1;
-    background: var(--primary-bg);
     border-radius: var(--radius-small);
     display: flex;
     flex-direction: column;

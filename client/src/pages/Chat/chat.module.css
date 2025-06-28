@@ -1,3 +1,11 @@
+
+.left-side {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    /* grid-area: left-container; */
+}
+
 .chat-view {
     /* display: flex; */
     /* flex-wrap: nowrap; */
@@ -13,4 +21,12 @@
     .chat-view {
         grid-template-columns: 1fr;
     }
+    .left-side {
+        /* background-color: red; */
+        min-width: 0px;
+        flex-direction: column;
+        flex-flow: column-reverse;
+        justify-content: space-between;
+        gap: 2px;
+    }  
 }

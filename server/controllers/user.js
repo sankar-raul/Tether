@@ -2,8 +2,8 @@ import pool from "../db/pool.js"
 
 export const userRoot = async (req, res) => {
     if (req.user) {
-        const [data, _] = await pool.execute('select profile_pic_url from users where id = ?', [req.user?.id])
-        req.user.profile_pic_url = data[0]?.profile_pic_url
+        const [data, _] = await pool.execute('select profile_pic_url, username, email, bio from users where id = ?', [req.user?.id])
+        req.user = {...req.user, ...data[0]}
         return res.status(200).json({success: true, user: req.user, msg: "success"})
     } else {
         return res.status(401).json({success: false, msg: "access denied!"})
