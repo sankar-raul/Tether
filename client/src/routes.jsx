@@ -4,11 +4,13 @@ import Login from "./pages/Login/Login"
 import SignUp from "./pages/SignUp/SignUp"
 import Layout from "./pages/Layout/Layout"
 import ChatLayout from "./pages/ChatLayout/ChatLayout"
-import Chat from "./pages/Chat/Chat"
 import { ProtectedRoute } from "./hook/authSecurity"
 import ContactsProvider from './context/contacts/provider'
 import SettingsTab from "./components/SettingsTab/Settings"
 import { Calls, Chats } from "./components/Contacts/Contacts"
+import ChatChildlayout from './pages/ChatLayout/ChatChildLayout'
+import ChatBox from "./components/ChatBox/ChatBox"
+import DefaultChatView from "./components/ChatBox/DefaultView/DefaultView"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,11 +32,21 @@ export const router = createBrowserRouter(
                 </ContactsProvider>
             </ProtectedRoute>
             )}>
-            <Route index element={<Chats />} />
-            <Route path="settings">
-                <Route index element={<SettingsTab />}/>
+            <Route index element={<ChatChildlayout CurrentTabComponent={Chats} />} />
+            <Route path="c" element={<ChatChildlayout CurrentTabComponent={Chats} />}>
+                <Route index element={<ChatBox />} />
             </Route>
-            <Route path="calls" element={<Calls />} />
+
+            <Route path="settings" element={<ChatChildlayout CurrentTabComponent={SettingsTab} />}>
+                <Route index element={<DefaultChatView />}/>
+                <Route path="edit-profile" element={<h1>Profile Settings</h1>} />
+                <Route path="accounts" element={<h1>Accounts Settings</h1>} />
+                <Route path="themes" element={<h1>Theme Settings</h1>} />
+                <Route path="sessions" element={<h1>Manage Sessions</h1>} />
+                <Route path="*" element={<h1>Invalid Path</h1>} />
+            </Route>
+            <Route path="calls" element={<ChatChildlayout CurrentTabComponent={Calls} />} />
+            <Route path="*" element={<h1>Page Not Found!</h1>} />
         </Route>
         </>
     )

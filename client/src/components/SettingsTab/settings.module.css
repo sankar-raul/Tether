@@ -2,8 +2,8 @@
     /* border: 1px solid red; */
     display: flex;
     height: 100%;
-    padding-inline: 16px;
-    padding-top: 16px;
+    padding-inline: 0px;
+    padding-top: 0px;
     flex-direction: column;
     gap: 10px;
 }
@@ -69,31 +69,64 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-block: 8px;
+    padding-block: 4px;
+    background-color: var(--primary-bg);
+
 }
 .settings-btn {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    background-color: var(--primary-bg);
     align-items: center;
-    padding: 10px 20px;
-    border-radius: 12px;
+    padding: 10px 4px;
+
+    padding-left: 16px;
+    border-radius: 8px;
     cursor: var(--cursor);
+
+    &:hover {
+        background-color: var(--contact-hover-bg);
+    }
 }
 .settings-btn > div:nth-child(1) {
     height: 22px;
     aspect-ratio: 1 / 1;
     display: grid;
     place-items: center;
+
+    & > img {
+        height: 80%;
+        aspect-ratio: 1 / 1;
+    }
 }
 .settings-btn > div:nth-child(2) {
     flex-grow: 1;
 }
 .settings-btn > div:nth-child(3) {
-    padding: 10px;
-    & > img {
-        height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    & > svg {
+        width: 20px;
+        padding: 8px 10px;
+        object-fit: contain;
         aspect-ratio: 1 / 1;
+    }
+}
+
+@media (max-width: 700px) {
+    .settings-tab-container {
+        padding-inline: 8px;
+        padding-top: 8px;
+    }
+    .settings-btn {
+
+        &:hover {
+            background-color: var(--primary-bg);
+        }
+        &:active {
+            background-color: var(--contact-hover-bg);
+        }
     }
 }

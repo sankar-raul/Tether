@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faCancel, faChevronLeft, faTrashAlt, faUser, faX, faXmark, faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
 import { useConfirm } from '../../../hook/Confirm/useConfirm'
 import useUserInfo from '../../../context/userInfo/userInfo'
+import useSmartNavigate from '../../../hook/useSmartNavigate'
 
 
 const ChatContactHeader = ({ user }) => {
@@ -20,10 +21,14 @@ const ChatContactHeader = ({ user }) => {
     const [ isShowMenu, setIsShowMenu ] = useState(false)
     const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
     const { userInfo:myInfo } = useUserInfo()
+    const navigate = useSmartNavigate()
 
     const closeChat = useCallback(() => {
-        isMobile && setSelectedContact(0)
-    }, [setSelectedContact, isMobile])
+        if (isMobile) {
+            setSelectedContact(0)
+            navigate('/chat')
+        }
+    }, [setSelectedContact, isMobile, navigate])
     
     const handleMoreMenu = useCallback((e) => {
         e?.stopPropagation()

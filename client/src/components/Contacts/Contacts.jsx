@@ -13,6 +13,8 @@ import { AddContact, AddContactsBtn } from './AddContact/AddContact'
 import { useMediaQuery } from 'react-responsive'
 import { PushNotification } from './PushNotification/PushNoti'
 import SettingsTab from '../SettingsTab/Settings'
+import useSmartNavigate from '../../hook/useSmartNavigate'
+import { useLocation } from 'react-router-dom'
 const Contacts = ({children}) => {
     const { resizeableDiv, handleMouseDown } = useResize()
     const { currentTab } = useTabs()
@@ -87,13 +89,29 @@ const Contact = ({ user }) => {
     const [ lastMessage, setLastMessage ] = useState(null)
     const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
     const { userInfo:localUserInfo } = useUserInfo()
+    const location = useLocation()
+    const navigate = useSmartNavigate()
 
+
+    
     const togglwActive = useCallback(() => {
         setSelectedContact(prev => {
-            return prev == user?.id ? 0 : Number(user?.id)
+            if (prev == user?.id) {
+                navigate('/chat')
+                return 0
+            } else {
+                navigate('/chat/c')
+                return Number(user?.id)
+            }
         })
-    }, [user, setSelectedContact])
+    }, [user, setSelectedContact, navigate])
     
+    useEffect(() => {
+        if (location.pathname == '/chat') {
+            setSelectedContact(0)
+        } 
+    }, [location, setSelectedContact])
+
     // const lastMsg = useCallback(async () => {
     //     if (lastMessage || !userInfo?.id) return
     //     const [ res, error ] = await apiRequest(`/chat/lastMessage/${userInfo?.id}`)

@@ -1,0 +1,24 @@
+@property --x {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 4px;
+}
+.switch-parent {
+    background-color: var(--secondery-bg);
+    /* padding: 4px; */
+    width: 40px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    padding: 4px;
+    border-radius: 40px;
+    & > div {
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        background-color: var(--brand-color);
+        border-radius: 50%;
+    }
+}
+.switch-parent.on {
+    justify-content: right;
+}

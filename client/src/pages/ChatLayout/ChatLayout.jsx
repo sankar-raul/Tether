@@ -8,8 +8,10 @@ import NavAndContact from '../../components/NavAndContacts/NavAndContacts'
 import RightContainer from '../../components/RightContainer/RightContainer'
 import Contacts from '../../components/Contacts/Contacts'
 import Tabs from '../../components/Tabs/Tabs'
+import { useState } from 'react'
 
 const ChatLayout = () => {
+    const [ isHideRightContainer, setIsHideRightContainer ] = useState(true)
 
     return (
         <main className={styles['chat-layout']}>
@@ -17,7 +19,7 @@ const ChatLayout = () => {
         <SocketProvider>
         <TabsProvider>
         <Header />
-            <section className={styles['chat-view']}>
+            {/* <section className={styles['chat-view']}>
                 <ResizeableAsideProvider>
                 <aside className={styles['left-side']}>
                 <Tabs />
@@ -27,7 +29,8 @@ const ChatLayout = () => {
                 </aside>
                 </ResizeableAsideProvider>
                 <RightContainer />
-            </section>
+            </section> */}
+            <Outlet context={{isHideRightContainer, setIsHideRightContainer}}/>
         </TabsProvider>
         </SocketProvider>
         </main>

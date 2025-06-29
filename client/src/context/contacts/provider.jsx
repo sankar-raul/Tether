@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import useUserInfo from "../userInfo/userInfo"
 import apiRequest from '../../hook/apiRequest'
 import socket from "../../utils/chatSocket"
+// import useSmartNavigate from "../../hook/useSmartNavigate"
 
 let contactRef = new Map()
 
@@ -14,6 +15,7 @@ const ContactsProvider = ({children}) => {
     const [ isContactFetched, setIsContactFetched ] = useState(false)
     const [ isLoading, setIsLoading ] = useState(true)
     const [ isOpenSearch, setIsOpenSearch ] = useState(false)
+    // const navigate = useSmartNavigate()
 
     const fetchContactInfo = useCallback(async (id) => {
         if ( !id || contactRef.get(id)?.username) return
@@ -95,6 +97,7 @@ const ContactsProvider = ({children}) => {
         return contactMap.get(id)
     }, [contactMap])
 
+ 
 
     useEffect(() => {
         if (userInfo) {

@@ -9,32 +9,33 @@ import useContacts from "../../context/contacts/contact"
 import { useEffect, useState } from "react"
 
 
-const RightContainer = () => {
+const RightContainer = ({children, isHidden}) => {
     const { currentTab } = useTabs()
     const { selectedContact } = useContacts()
     const [ Element, setElement ] = useState(() => ChatBox)
 
-    useEffect(() => {
-        console.log(currentTab)
-        setElement(_ => {
-            switch (currentTab) {
-                case 'chat':
-                    return ChatBox
-                case 'call':
-                    return CallBox
-                case 'settings':
-                    return Settings
-                default:
-                    return _
-            }
-        })
-    }, [currentTab])
-
+    // useEffect(() => {
+    //     console.log(currentTab)
+    //     setElement(_ => {
+    //         switch (currentTab) {
+    //             case 'chat':
+    //                 return ChatBox
+    //             case 'call':
+    //                 return CallBox
+    //             case 'settings':
+    //                 return Settings
+    //             default:
+    //                 return _
+    //         }
+    //     })
+    // }, [currentTab])
+    console.log(isHidden)
     return (
         <MessageProvider>
             <ChatProvider>
-                <div className={`${styles[`right-container`]} ${!selectedContact ? styles['hide']: ''}`}>
-                    <Element />
+                <div className={`${styles[`right-container`]} ${isHidden ? styles['hide']: ''}`}>
+                {/* <div className={`${styles[`right-container`]}`}> */}
+                    {children}
                 </div>
             </ChatProvider>
         </MessageProvider>
