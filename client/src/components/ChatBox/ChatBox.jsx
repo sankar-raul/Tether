@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import ChatContactHeader from './ChatContactHeader/chatContactHeader'
 import { faCopy, faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+import useSmartNavigate from '../../hook/useSmartNavigate'
 
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
@@ -26,7 +27,9 @@ const ChatBox = () => {
     const scrollRef = useRef(null)
     const [ nextChunk, setNextChunk ] = useState(null)
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
-    
+    const navigate = useSmartNavigate()
+
+
     useEffect(() => {
         const chat = []
         messages.get(Number(selectedContact))?.forEach((item, key) => {
@@ -61,6 +64,9 @@ const ChatBox = () => {
             scrollRef.current.scrollIntoView()
         
     }, [scrollRef, selectedContact, isMobile])
+    useEffect(() => {
+        !selectedContact && navigate('/chat')
+    }, [selectedContact, navigate])
     return (
         <>
             <section className={styles[`chat-container`]}>

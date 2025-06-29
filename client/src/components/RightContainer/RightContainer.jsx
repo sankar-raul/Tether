@@ -13,7 +13,7 @@ const RightContainer = ({children, isHidden}) => {
     const { currentTab } = useTabs()
     const { selectedContact } = useContacts()
     const [ Element, setElement ] = useState(() => ChatBox)
-
+    
     // useEffect(() => {
     //     console.log(currentTab)
     //     setElement(_ => {
@@ -29,7 +29,7 @@ const RightContainer = ({children, isHidden}) => {
     //         }
     //     })
     // }, [currentTab])
-    console.log(isHidden)
+    // console.log(isHidden)
     return (
         <MessageProvider>
             <ChatProvider>
