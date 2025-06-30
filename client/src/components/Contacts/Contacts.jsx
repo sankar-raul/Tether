@@ -62,7 +62,7 @@ export const Chats = () => {
         setIsVoidList(!contactMap.size)
     }, [contactMap])
     return (
-        <div className={styles['chats-conatct-list-wraper']}>
+        <div className={styles['chats-contact-list-wraper']}>
         {/* <PushNotification /> */}
         {
         !isLoading ? (

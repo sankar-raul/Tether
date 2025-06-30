@@ -5,10 +5,12 @@ import useChat from '../../context/chatSocket/chatSocket'
 import sentIcon from '../../assets/svg/chat/send.svg'
 import attachIcon from '../../assets/svg/chat/attach.svg'
 import useContacts from '../../context/contacts/contact'
+import { useMediaQuery } from 'react-responsive'
 
 const ChatInput = ({scrollRef}) => {
     const { sendMsg, handleTyping } = useChat()
     const inputRef = useRef(null)
+    const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const { selectedContact } = useContacts()
     const [ text, setText ] = useState('')
     const handleInput = (e) => {
@@ -24,15 +26,16 @@ const ChatInput = ({scrollRef}) => {
         focusInput()
         const messageContent = text.trim()
         if (messageContent.length > 0) {
-          scrollRef?.current.scrollIntoView()
+            scrollRef?.current.scrollIntoView()
             setText('')
             sendMsg(messageContent)
+            setTimeout(() => scrollRef?.current.scrollIntoView(), 1000) // its personal
         }
     }, [sendMsg, scrollRef, text, focusInput])
 
     useEffect(() => {
-      selectedContact && focusInput()
-    }, [selectedContact, focusInput])
+      isMobile || selectedContact && focusInput()
+    }, [selectedContact, focusInput, isMobile])
     return (
         <div className={styles['msg-send-bar']}>
           <form onSubmit={send} className={styles['msg-send-bar-wraper']}>
@@ -40,7 +43,7 @@ const ChatInput = ({scrollRef}) => {
               <img src={attachIcon} alt="media" />
             </div>
             <div className={styles["chat-input"]}>
-              <input className={styles['input']} ref={inputRef} autoFocus onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} autoComplete='off' onInput={handleTyping} />
+              <input className={styles['input']} ref={inputRef} onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} autoComplete='off' onInput={handleTyping} />
             </div>
             <div className={styles['message-send-btn']}>
               <button type='submit'>
