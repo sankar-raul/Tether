@@ -11,6 +11,10 @@ import { Calls, Chats } from "./components/Contacts/Contacts"
 import ChatChildlayout from './pages/ChatLayout/ChatChildLayout'
 import ChatBox from "./components/ChatBox/ChatBox"
 import DefaultChatView from "./components/ChatBox/DefaultView/DefaultView"
+import ProfileSettings from "./components/Setttings/ProfileSettings/ProfileSettings"
+import AccountSettings from "./components/Setttings/AccountSettings/AccountSettings"
+import ThemeSettings from "./components/Setttings/ThemeSettings/AccountSettings"
+import SessionSettings from "./components/Setttings/SessionSettings/AccountSettings"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -39,10 +43,10 @@ export const router = createBrowserRouter(
 
             <Route path="settings" element={<ChatChildlayout CurrentTabComponent={SettingsTab} />}>
                 <Route index element={<DefaultChatView />}/>
-                <Route path="edit-profile" element={<h1>Profile Settings</h1>} />
-                <Route path="accounts" element={<h1>Accounts Settings</h1>} />
-                <Route path="themes" element={<h1>Theme Settings</h1>} />
-                <Route path="sessions" element={<h1>Manage Sessions</h1>} />
+                <Route path="edit-profile" element={<ProfileSettings />} />
+                <Route path="accounts" element={<AccountSettings />} />
+                <Route path="themes" element={<ThemeSettings />} />
+                <Route path="sessions" element={<SessionSettings />} />
                 <Route path="*" element={<h1>Invalid Path</h1>} />
             </Route>
             <Route path="calls" element={<ChatChildlayout CurrentTabComponent={Calls} />} />
