@@ -36,7 +36,6 @@
 
     & > div {
         width: 122px;
-        overflow: hidden;
 
         & > img {
             width: 100%;

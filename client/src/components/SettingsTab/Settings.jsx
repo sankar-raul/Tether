@@ -12,6 +12,7 @@ import { faChevronRight, faUser } from '@fortawesome/free-solid-svg-icons'
 import useSwitch from '../../hook/Switch/useSwitch'
 import useSmartNavigate from '../../hook/useSmartNavigate'
 import { useCallback } from 'react'
+import { DefaultUser } from '../DefaultUser/DefaultUser'
 
 
 const SettingsTab = () => {
@@ -25,7 +26,7 @@ const SettingsTab = () => {
                 </div>
                 <div>
                     <div>
-                        <img src={userInfo?.profile_pic_url} alt="" />
+                        { userInfo?.profile_pic_url ? <img src={userInfo?.profile_pic_url} alt="" /> : <DefaultUser /> }
                     </div>
                 </div>
                 <div>
