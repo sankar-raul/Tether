@@ -21,14 +21,13 @@ const ChatContactHeader = ({ user }) => {
     const [ isShowMenu, setIsShowMenu ] = useState(false)
     const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
     const { userInfo:myInfo } = useUserInfo()
-    const navigate = useSmartNavigate()
+    // const navigate = useSmartNavigate()
 
     const closeChat = useCallback(() => {
         if (isMobile) {
             setSelectedContact(0)
-            navigate('/chat')
         }
-    }, [setSelectedContact, isMobile, navigate])
+    }, [setSelectedContact, isMobile])
     
     const handleMoreMenu = useCallback((e) => {
         e?.stopPropagation()

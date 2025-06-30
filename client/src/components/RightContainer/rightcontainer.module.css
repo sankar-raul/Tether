@@ -18,8 +18,10 @@
         height: 100%;
         z-index: 18; /* King 18 */
         /* pointer-events: none; */
+        transition: transform .3s ease;
     }
     .right-container.hide {
-        display: none;
+        /* display: none; */
+        transform: translateX(100%);
     }
 }

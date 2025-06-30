@@ -13,7 +13,7 @@ import { AddContact, AddContactsBtn } from './AddContact/AddContact'
 import { useMediaQuery } from 'react-responsive'
 import { PushNotification } from './PushNotification/PushNoti'
 import SettingsTab from '../SettingsTab/Settings'
-import useSmartNavigate from '../../hook/useSmartNavigate'
+// import useSmartNavigate from '../../hook/useSmartNavigate'
 import { useLocation } from 'react-router-dom'
 const Contacts = ({children}) => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -90,21 +90,21 @@ const Contact = ({ user }) => {
     const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
     const { userInfo:localUserInfo } = useUserInfo()
     const location = useLocation()
-    const navigate = useSmartNavigate()
+    // const navigate = useSmartNavigate()
 
 
     
     const togglwActive = useCallback(() => {
         setSelectedContact(prev => {
             if (prev == user?.id) {
-                navigate('/chat')
+                // navigate('/chat')
                 return 0
             } else {
-                navigate('/chat/c')
+                // navigate('/chat/c')
                 return Number(user?.id)
             }
         })
-    }, [user, setSelectedContact, navigate])
+    }, [user, setSelectedContact])
     
     useEffect(() => {
         if (location.pathname == '/chat') {

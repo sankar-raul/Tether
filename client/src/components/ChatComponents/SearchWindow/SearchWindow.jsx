@@ -89,17 +89,18 @@ const LoadMore = () => {
 }
 
 export const ShowUser = ({info, skeleton, animationDelay = 0, className = '', ...props}) => {
-    const { setSelectedContact, updateContactInfo } = useContacts()
+    const { setSelectedContact, updateContactInfo, openChat } = useContacts()
     const { setIsSearchFocused } = useSearch() || {}
 
     const startTethering = useCallback(() => {
         if (skeleton) return
         updateContactInfo(info.id, info)
         setSelectedContact(info.id)
+        // openChat(info.id)
         setIsSearchFocused(false)
         // shiftUpContact(info.id, {})
         // console.log('first')
-    }, [info, updateContactInfo, setSelectedContact, setIsSearchFocused, skeleton])
+    }, [info, updateContactInfo, setIsSearchFocused, skeleton, setSelectedContact])
 
     return (
         <div className={`${styles['show-user']} ${className}`} onClick={startTethering} {...props}>

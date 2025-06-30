@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import styles from './useSwitch.module.css'
 
 export default function useSwitch({isOn=false, acentColor, ...props}={}) {

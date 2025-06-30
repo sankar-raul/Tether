@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import useUserInfo from "../userInfo/userInfo"
 import apiRequest from '../../hook/apiRequest'
 import socket from "../../utils/chatSocket"
-// import useSmartNavigate from "../../hook/useSmartNavigate"
+import useSmartNavigate from "../../hook/useSmartNavigate"
+import { useLocation } from "react-router-dom"
 
 let contactRef = new Map()
-
 const ContactsProvider = ({children}) => {
     const [ selectedContact, setSelectedContact ] = useState(null)
     const { userInfo } = useUserInfo()
@@ -15,7 +15,25 @@ const ContactsProvider = ({children}) => {
     const [ isContactFetched, setIsContactFetched ] = useState(false)
     const [ isLoading, setIsLoading ] = useState(true)
     const [ isOpenSearch, setIsOpenSearch ] = useState(false)
-    // const navigate = useSmartNavigate()
+    const navigate = useSmartNavigate()
+    // const location = useLocation()
+
+    // const openChat = useCallback((contact_id) => {
+    //     setSelectedContact(contact_id)
+    //     navigate('/chat/c')
+    // }, [navigate])
+
+    const closeChat = () => {
+        setSelectedContact(0)
+        navigate('/chat')
+    }
+
+    useEffect(() => {
+        console.log(selectedContact)
+        if (selectedContact) {
+            navigate('/chat/c')
+        }
+    }, [selectedContact]) // its personal
 
     const fetchContactInfo = useCallback(async (id) => {
         if ( !id || contactRef.get(id)?.username) return
@@ -117,7 +135,7 @@ const ContactsProvider = ({children}) => {
     }, [updateContactInfo])
 
     return (
-        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading, fetchContactInfo, setIsOpenSearch, isOpenSearch}}>
+        <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading, fetchContactInfo, setIsOpenSearch, isOpenSearch, closeChat}}>
             {children}
         </contactsContext.Provider>
     )

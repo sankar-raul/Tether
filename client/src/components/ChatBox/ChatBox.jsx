@@ -65,6 +65,7 @@ const ChatBox = () => {
         
     }, [scrollRef, selectedContact, isMobile])
     useEffect(() => {
+        // console.log(selectedContact)
         !selectedContact && navigate('/chat')
     }, [selectedContact, navigate])
     return (
