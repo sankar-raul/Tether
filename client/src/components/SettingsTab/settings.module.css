@@ -14,7 +14,7 @@
     height: max-content;
     padding: 24px;
     background: var(--primary-bg);
-    border-radius: 18px;
+    border-radius: 8px;
     /* background-color: red; */
     /* border: 1px solid #fff; */
 }
@@ -67,20 +67,18 @@
 .settings-list-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-block: 4px;
     background-color: var(--primary-bg);
-
+    border-radius: 8px;
+    overflow: hidden;
 }
 .settings-btn {
     display: flex;
     justify-content: space-between;
     gap: 10px;
     align-items: center;
-    padding: 10px 4px;
-
+    padding: 14px 4px;
     padding-left: 16px;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     cursor: var(--cursor);
 
     &:hover {
@@ -91,15 +89,16 @@
     height: 22px;
     aspect-ratio: 1 / 1;
     display: grid;
-    place-items: center;
-
+    place-items: center;    
     & > img {
         height: 80%;
         aspect-ratio: 1 / 1;
+        opacity: .7;
     }
 }
 .settings-btn > div:nth-child(2) {
     flex-grow: 1;
+    color: #c4cdd5;
 }
 .settings-btn > div:nth-child(3) {
     display: flex;
@@ -111,6 +110,7 @@
         padding: 8px 10px;
         object-fit: contain;
         aspect-ratio: 1 / 1;
+        color: var(--secondery-text);
     }
 }
 .logout-btn {
