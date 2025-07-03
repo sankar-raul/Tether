@@ -3,6 +3,7 @@ import { userInfoContext } from './userInfo'
 import { useCallback, useEffect, useState } from 'react'
 import apiRequest from '../../hook/apiRequest'
 import useTokenWorker from '../../backgroundWorker/hooks/useTokenWorker'
+import socket from '../../utils/chatSocket'
 
 const UserInfoProvider = ({ children }) => {
     const [ userInfo, setUserInfo ] = useState(null)
@@ -13,6 +14,7 @@ const UserInfoProvider = ({ children }) => {
     const logout = useCallback(() => {
         setIsLoggedIn(false)
         setUserInfo(null)
+        socket.disconnect()
     }, [])
 
     const getUserInfo = useCallback(async () => {
