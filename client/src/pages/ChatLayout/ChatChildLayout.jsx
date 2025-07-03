@@ -6,7 +6,7 @@ import styles from './chatlayout.module.css'
 import RightContainer from '../../components/RightContainer/RightContainer'
 import DefaultChatView from '../../components/ChatBox/DefaultView/DefaultView'
 
-const chatChildlayout = ({CurrentTabComponent}) => {
+const chatChildlayout = ({CurrentTabComponent, hideContactBtn = false}) => {
     const outlet = useOutlet()
     const location = useLocation()
 
@@ -15,7 +15,7 @@ const chatChildlayout = ({CurrentTabComponent}) => {
             <ResizeableAsideProvider>
             <aside className={styles['left-side']}>
             <Tabs />
-            <Contacts>
+            <Contacts hideContactBtn={hideContactBtn}>
                 <CurrentTabComponent />
             </Contacts>
             </aside>

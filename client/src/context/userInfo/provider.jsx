@@ -10,6 +10,11 @@ const UserInfoProvider = ({ children }) => {
     const [ accessToken, setAccessToken ] = useState(null)
     const [ access_token, handleCanRefresh, { isValid, msg } ] = useTokenWorker()
     
+    const logout = useCallback(() => {
+        setIsLoggedIn(false)
+        setUserInfo(null)
+    }, [])
+
     const getUserInfo = useCallback(async () => {
         if (!isloggedIn) {
             if (isValid === null) return
@@ -47,7 +52,7 @@ const UserInfoProvider = ({ children }) => {
     //     console.log(isloggedIn)
     // }, [isloggedIn])
     return (
-        <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn, accessToken}}>
+        <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn, accessToken, logout}}>
             {children}
         </userInfoContext.Provider>
     )

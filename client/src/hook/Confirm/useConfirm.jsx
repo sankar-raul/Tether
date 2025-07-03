@@ -16,20 +16,23 @@ export const useConfirm = () => {
     const stopPropagation = useCallback((e) => {
         e.stopPropagation()
     }, [])
-    const Confirm =  useCallback(() => isShow ? 
-        <div className={styles['container']}>
+    const hideConfirm = useCallback(() => {
+        setIsShow(false)
+    }, [])
+    const Confirm =  useCallback(({msg='Confirm Action', primaryAction = 'Confirm', seconderyAction = 'Cancel'}) => isShow ? 
+        <div onClick={hideConfirm} className={styles['container']}>
             <div className={styles['confirm-bar']} onClick={stopPropagation}>
                 <div className={styles['title-msg']}>
-                    <p>Delete all messages</p>
+                    <p>{msg}</p>
                 </div>
                 <div className={styles['actions']}>
-                    <button onClick={handleHide}>Cancel</button>
-                    <button onClick={handleConfirm}>Confirm</button>
+                    <button onClick={handleHide}>{seconderyAction}</button>
+                    <button onClick={handleConfirm}>{primaryAction}</button>
                 </div>
             </div>
         </div>
         : ''
-    , [isShow, handleHide, handleConfirm, stopPropagation])
+    , [isShow, handleHide, handleConfirm, stopPropagation, hideConfirm])
 
     return { Confirm, isConfirmed, setIsShow }
 }

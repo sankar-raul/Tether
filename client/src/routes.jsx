@@ -41,7 +41,7 @@ export const router = createBrowserRouter(
                 <Route index element={<ChatBox />} />
             </Route>
 
-            <Route path="settings" element={<ChatChildlayout CurrentTabComponent={SettingsTab} />}>
+            <Route path="settings" element={<ChatChildlayout CurrentTabComponent={SettingsTab} hideContactBtn={true} />}>
                 <Route index element={<DefaultChatView />}/>
                 <Route path="edit-profile" element={<ProfileSettings />} />
                 <Route path="accounts" element={<AccountSettings />} />

@@ -53,7 +53,9 @@ class Refresh_Token {
     }
     async delete(refresh_token) { // delete the old refresh token
         if (!refresh_token) throw new Error('refresh token required in delete method')
-        await pool.execute('call delete_refresh_token(?)', [refresh_token])
+        const encryptedToken = crypto.createHash('sha256').update(refresh_token).digest('hex') // 💪
+        await pool.execute('call delete_refresh_token(?)', [encryptedToken])
+        console.log("delete refresh token", refresh_token)
         return
     }
     async get(refresh_token) { // retrive and return the data about that refresh token holder

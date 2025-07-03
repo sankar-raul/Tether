@@ -12,7 +12,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faCancel, faChevronLeft, faTrashAlt, faUser, faX, faXmark, faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
 import { useConfirm } from '../../../hook/Confirm/useConfirm'
 import useUserInfo from '../../../context/userInfo/userInfo'
-import useSmartNavigate from '../../../hook/useSmartNavigate'
 
 
 const ChatContactHeader = ({ user }) => {

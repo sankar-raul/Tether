@@ -15,37 +15,27 @@ import { PushNotification } from './PushNotification/PushNoti'
 import SettingsTab from '../SettingsTab/Settings'
 // import useSmartNavigate from '../../hook/useSmartNavigate'
 import { useLocation } from 'react-router-dom'
-const Contacts = ({children}) => {
+
+const Contacts = ({children, hideContactBtn = false}) => {
     const { resizeableDiv, handleMouseDown } = useResize()
     const { currentTab } = useTabs()
-    const [ Element, setElement ] = useState(() => Chats)
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
 
-    // useEffect(() => {
-    //     setElement(prev => {
-    //         switch (currentTab) {
-    //             case 'chat':
-    //                 return Chats
-    //             case 'call':
-    //                 return Calls
-    //             case 'settings':
-    //                 return SettingsTab
-    //             default:
-    //                 return prev
-    //         }
-    //     })
-    // }, [currentTab])
     return (
         <div className={styles['contacts-wraper']}>
             <div ref={resizeableDiv} className={styles['contacts']}>
                 {children}
             </div>
             {!isMobile ? <div onMouseDown={handleMouseDown} className={styles['handle-resize']}></div> : ''}
-            <AddContactsBtn />
+            { !hideContactBtn ? <AddContactsBtn /> : ''}
         </div>
     )
 }
 export default Contacts
+Contacts.propTypes = {
+    children: PropTypes.node,
+    hideContactBtn: PropTypes.bool
+}
 
 export const Calls = () => {
 

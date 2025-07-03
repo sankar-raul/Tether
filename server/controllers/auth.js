@@ -73,10 +73,15 @@ export const login = async (req, res) => {
         res.status(500).json({success: false, msg: "internal server error"})
     }
 }
-export const logout = (req, res) => {
-    res.clearCookie('refresh_token', { path: '/' })
-    res.clearCookie('access_token', { path: '/' })
-    res.status(200).json({success: true, msg: 'logout'})
+export const logout = async (req, res) => {
+    const { refresh_token } = req.cookies
+    if (refresh_token)
+        await RefreshToken.delete(refresh_token)
+    else
+        return res.status(401).json({success: false, msg: 'access denied'})
+    res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
+    res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
+    res.status(200).json({success: true, msg: 'logout success'})
 }
 
 export const update = async (req, res) => {

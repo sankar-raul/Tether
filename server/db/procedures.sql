@@ -101,7 +101,7 @@ begin
 end //
 delimiter ;
 
-
+-- select * from refresh_tokens;
 
 
 
