@@ -70,6 +70,7 @@
     background-color: var(--primary-bg);
     border-radius: 8px;
     overflow: hidden;
+    min-height: max-content;
 }
 .settings-btn {
     display: flex;
