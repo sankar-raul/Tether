@@ -103,7 +103,7 @@ delimiter ;
 
 -- select * from refresh_tokens;
 
-
+-- truncate table refresh_tokens;
 
 
 
