@@ -27,12 +27,13 @@
     padding: 0 5px;
     gap: 1px;
     scroll-behavior: smooth;
-     background-image: url('/doodle/pattern-10.svg');
+    background-image: url('/doodle/pattern-10.svg');
     background-color: transparent;
     background-repeat: repeat;
     background-attachment: fixed;
     /* background-blend-mode: overlay; */
     background-size: contain;
+    background-position: bottom;
   
     &::-webkit-scrollbar {
         width: 4px;
@@ -238,6 +239,9 @@
     .message-text {
         user-select: none;
         cursor: initial;
+    }
+    .msgs {
+        background-size: cover;
     }
     .message-tag:hover > .msg-context-menu {
         display: none;
