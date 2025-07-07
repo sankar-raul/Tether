@@ -38,6 +38,7 @@
     width: 20px;
     -webkit-user-drag: none;
     user-select: none;
+    pointer-events: none;
 }
 .tabs .tab.active  {
     background-color: var(--brand-bg);
