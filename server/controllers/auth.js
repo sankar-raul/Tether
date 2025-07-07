@@ -115,8 +115,8 @@ export const deleteUser = async (req, res) => {
     try {
         const data = await pool.execute("delete from users where id = ? and password = ?", [id, password])
         if (data[0].affectedRows == 1) {
-            res.clearCookie('access_token', { path: '/' })
-            res.clearCookie('refresh_token', { path: '/' })
+            res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
+            res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
             return res.status(200).json({success: true, msg: "account deleted!"})
         }
         else
@@ -134,8 +134,8 @@ export const refreshToken = async (req, res) => {
         if (!old_refresh_token) return res.status(401).json({ success: false, msg: 'no auth' })
         const tokens = await RefreshToken.refresh(old_refresh_token)
         if (tokens == 'invalid token') {
-            res.clearCookie('access_token', { path: '/' })
-            res.clearCookie('refresh_token', { path: '/' })
+            res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
+            res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
             return res.status(401).json({ success: false, msg: 'no auth' }) // access denied!
         }
         if (tokens) {

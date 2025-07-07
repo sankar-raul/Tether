@@ -15,6 +15,7 @@ import ProfileSettings from "./components/Setttings/ProfileSettings/ProfileSetti
 import AccountSettings from "./components/Setttings/AccountSettings/AccountSettings"
 import ThemeSettings from "./components/Setttings/ThemeSettings/AccountSettings"
 import SessionSettings from "./components/Setttings/SessionSettings/AccountSettings"
+import Test from "./pages/test/test"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -52,6 +53,7 @@ export const router = createBrowserRouter(
             <Route path="calls" element={<ChatChildlayout CurrentTabComponent={Calls} />} />
             <Route path="*" element={<h1>Page Not Found!</h1>} />
         </Route>
+        <Route path="/test" element={<Test />} />
         </>
     )
 )

@@ -29,7 +29,6 @@ const ContactsProvider = ({children}) => {
     }
 
     useEffect(() => {
-        console.log(selectedContact)
         if (selectedContact) {
             navigate('/chat/c')
         }

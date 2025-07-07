@@ -1,0 +1,11 @@
+.test {
+    background-image: url('/doodle/pattern-10.svg'), linear-gradient(-45deg, rgba(218, 39, 158, 0.367), rgba(5, 32, 186, 0.318));
+    background-color: transparent;
+    height: 100dvh;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-blend-mode: overlay;
+    background-size: contain;
+    opacity: .5;
+    
+}

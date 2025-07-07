@@ -27,7 +27,13 @@
     padding: 0 5px;
     gap: 1px;
     scroll-behavior: smooth;
-
+     background-image: url('/doodle/pattern-10.svg');
+    background-color: transparent;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    /* background-blend-mode: overlay; */
+    background-size: contain;
+  
     &::-webkit-scrollbar {
         width: 4px;
     }

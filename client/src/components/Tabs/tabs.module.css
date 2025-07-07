@@ -19,7 +19,7 @@
     padding: 6px 10px;
 }
 .tab-wraper {
-
+    cursor: var(--cursor);
 }
 .tabs > div {
     display: flex;
@@ -33,7 +33,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: var(--cursor);
 }
 .tabs .tab > img {
     width: 20px;
