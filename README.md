@@ -10,6 +10,8 @@
 ![Macbook-Air-tether-xi vercel app-9x3ocg653k15_r](https://github.com/user-attachments/assets/6f2313a7-e281-4483-b8a6-6e37683fad4d)
 > 
 > Mobile
-> ---  
-![Xiaomi-12-tether-xi vercel app-55href_5797geu](https://github.com/user-attachments/assets/b4412eed-5c8d-4e61-84a4-3c83b4a4e13b)
+> ---
 
+<p align='center'>
+<img src='https://github.com/user-attachments/assets/b4412eed-5c8d-4e61-84a4-3c83b4a4e13b' width='300'>
+</p>
