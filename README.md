@@ -7,14 +7,9 @@
 # Preview
 > Desktop
 > ---
-![TETHER](https://github.com/user-attachments/assets/35af52ff-86f7-4d7b-9b78-191df4e3d054)
+![Macbook-Air-tether-xi vercel app-9x3ocg653k15_r](https://github.com/user-attachments/assets/6f2313a7-e281-4483-b8a6-6e37683fad4d)
 > 
 > Mobile
-> ---
-
-<p float="left" align='center'>
-  <img src="https://github.com/user-attachments/assets/2d66ca55-ba63-4c33-a666-6bb4af7d1a42" width="300" />
-  &nbsp; &nbsp; &nbsp; &nbsp;
-  <img src="https://github.com/user-attachments/assets/89851a20-2c39-4f75-9832-5a4769094a77" width="300" />
-</p>
+> ---  
+![Xiaomi-12-tether-xi vercel app-55href_5797geu](https://github.com/user-attachments/assets/b4412eed-5c8d-4e61-84a4-3c83b4a4e13b)
 
