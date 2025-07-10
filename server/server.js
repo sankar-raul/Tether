@@ -244,6 +244,7 @@ io.on('connection', async (socket) => {
 })
 
 
-server.listen(PORT, () => {
-    console.log(`${DEV_MODE ? 'https' : 'http'}://localhost:${PORT}`)
-})
+// server.listen(PORT, () => {
+//     console.log(`${DEV_MODE ? 'https' : 'http'}://localhost:${PORT}`)
+// })
+export default app
