@@ -69,7 +69,7 @@ export const login = async (req, res) => {
             return res.status(401).json({success: false, msg: "incorrect password!"})
         }
     } catch (error) {
-        console.log("Error: 🐞how", error)
+        console.log("Error: 🐞how in auth.js", error)
         res.status(500).json({success: false, msg: "internal server error"})
     }
 }

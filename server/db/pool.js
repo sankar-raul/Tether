@@ -5,6 +5,7 @@ import path from 'path';
 
 // Load environment variables
 config();
+console.log("pull start")
 
 // Create a MySQL connection pool
 const pool = createPool({
@@ -14,5 +15,6 @@ const pool = createPool({
     port: Number(process.env.DBPORT) || 3306,
     database: process.env.DB,
 });
+console.log("pull")
 
 export default pool;

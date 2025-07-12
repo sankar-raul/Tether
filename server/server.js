@@ -20,10 +20,6 @@ import { AccessToken } from './service/authToken.js'
 import NotificationRoute from './routes/pushNotification.route.js'
 config()
 
-const options = {
-  key: fs.readFileSync('certs/key.pem'),
-  cert: fs.readFileSync('certs/cert.pem')
-};
 const PORT = process.env.PORT || 8443
 const app = express()
 const DEV_MODE = process.env.DEV_MODE == 'true'
