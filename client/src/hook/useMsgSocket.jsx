@@ -4,6 +4,7 @@ import apiRequest from "./apiRequest"
 import useContacts from "../context/contacts/contact"
 import NotifyTone from "../utils/notificationSound"
 import useAlert from "../context/alert/Alert"
+import useUserInfo from "../context/userInfo/userInfo"
 
 const messageRef = new Map() // contact_id -> local_id -> message_object
 const unreadMsgRef = new Map() // contact_id -> int
@@ -37,6 +38,7 @@ const useMsgSocket = (contactId) => {
     const [ isLoading, setIsLoading ] = useState({state: true, for: contactId})
     const [ nextMsgChunk, setNextMsgChunk ] = useState(new Map())
     const [ isTyping, setIsTyping ] = useState(false)
+    const { isloggedIn } = useUserInfo()
 
     const handleTyping = useCallback(() => {
         setIsTyping(true)
@@ -204,6 +206,18 @@ const useMsgSocket = (contactId) => {
         // console.log(isTyping)
         emitTypingStatus(isTyping)
     }, [isTyping, emitTypingStatus])
+
+    useEffect(() => {
+        if (!isloggedIn) {
+            messageRef.clear()
+            setMessages(new Map())
+            unreadMsgRef.clear()
+            msgIdToLocalIdRef.clear()
+            nextMsgChunkEndpoint.clear()
+            setNextMsgChunk(new Map())
+            setSeenMap(new Map())
+        }
+    }, [isloggedIn])
 
     useEffect(() => {
         // sync messages across all this users clients

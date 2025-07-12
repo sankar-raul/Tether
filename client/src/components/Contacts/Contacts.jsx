@@ -79,11 +79,9 @@ const Contact = ({ user }) => {
     const [ lastMessage, setLastMessage ] = useState(null)
     const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
     const { userInfo:localUserInfo } = useUserInfo()
-    const location = useLocation()
+    // const location = useLocation()
     // const navigate = useSmartNavigate()
 
-
-    
     const togglwActive = useCallback(() => {
         setSelectedContact(prev => {
             if (prev == user?.id) {
@@ -96,11 +94,12 @@ const Contact = ({ user }) => {
         })
     }, [user, setSelectedContact])
     
-    useEffect(() => {
-        if (location.pathname == '/chat') {
-            setSelectedContact(0)
-        } 
-    }, [location, setSelectedContact])
+    // useEffect(() => {
+    //     console.log(location.pathname)
+    //     if (location.pathname == '/chat') {
+    //         setSelectedContact(0)
+    //     }
+    // }, [location, setSelectedContact])
 
     // const lastMsg = useCallback(async () => {
     //     if (lastMessage || !userInfo?.id) return

@@ -94,10 +94,11 @@ export const ShowUser = ({info, skeleton, animationDelay = 0, className = '', ..
 
     const startTethering = useCallback(() => {
         if (skeleton) return
+        console.log(info)
+        setIsSearchFocused(false)
         updateContactInfo(info.id, info)
         setSelectedContact(info.id)
         // openChat(info.id)
-        setIsSearchFocused(false)
         // shiftUpContact(info.id, {})
         // console.log('first')
     }, [info, updateContactInfo, setIsSearchFocused, skeleton, setSelectedContact])

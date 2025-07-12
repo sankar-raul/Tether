@@ -35,13 +35,13 @@ const SettingsTab = () => {
             ;(async () => {
                 const [ logoutResponse, error ] = await apiRequest('/auth/logout')
                 if (error) {
-                    Alert({msg: "Something went wrong!", type:'error'})
+                    Alert({message: "Something went wrong!", type:'error'})
                     setIsSigningOut(false)
                 } else {
                     setIsSigningOut(false)
                     logout()
                     logoutResponse?.success && navigate('/login')
-                    Alert({msg: "Loogged out", type:'info'})
+                    Alert({message: "Loogged out", type:'info'})
                 }
             })()
         }

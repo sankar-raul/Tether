@@ -10,13 +10,13 @@ import { useLocation } from "react-router-dom"
 let contactRef = new Map()
 const ContactsProvider = ({children}) => {
     const [ selectedContact, setSelectedContact ] = useState(null)
-    const { userInfo } = useUserInfo()
+    const { userInfo, isloggedIn } = useUserInfo()
     const [ contactMap, setContactMap ] = useState(new Map())
     const [ isContactFetched, setIsContactFetched ] = useState(false)
     const [ isLoading, setIsLoading ] = useState(true)
     const [ isOpenSearch, setIsOpenSearch ] = useState(false)
     const navigate = useSmartNavigate()
-    // const location = useLocation()
+    const location = useLocation()
 
     // const openChat = useCallback((contact_id) => {
     //     setSelectedContact(contact_id)
@@ -27,12 +27,6 @@ const ContactsProvider = ({children}) => {
         setSelectedContact(0)
         navigate('/chat')
     }
-
-    useEffect(() => {
-        if (selectedContact) {
-            navigate('/chat/c')
-        }
-    }, [selectedContact]) // its personal
 
     const fetchContactInfo = useCallback(async (id) => {
         if ( !id || contactRef.get(id)?.username) return
@@ -77,6 +71,7 @@ const ContactsProvider = ({children}) => {
         if (contactRef.has(id)) {
             contactRef.set(id, {...contactRef.get(id), ...data, id})
         } else {
+            // console.log(newEntry)
             newEntry && contactRef.set(id, {...data, id})
             // console.log(contactRef)
         }
@@ -132,6 +127,27 @@ const ContactsProvider = ({children}) => {
 
         return () => socket.off('contact_status')
     }, [updateContactInfo])
+
+    useEffect(() => {
+        // console.log(selectedContact)
+        if (selectedContact) {
+            navigate('/chat/c')
+        }
+    }, [selectedContact]) // its personal
+
+    useEffect(() => {
+        if (location.pathname == '/chat') {
+            setSelectedContact(0)
+        }
+    }, [location, setSelectedContact])
+
+    useEffect(() => {
+        if (!isloggedIn) {
+            contactRef.clear()
+            setContactMap(new Map())
+            setSelectedContact(0)
+        }
+    }, [isloggedIn])
 
     return (
         <contactsContext.Provider value={{selectedContact, setSelectedContact, shiftUpContact, getContactInfo, contactMap, updateContactInfo, isLoading, fetchContactInfo, setIsOpenSearch, isOpenSearch, closeChat}}>
