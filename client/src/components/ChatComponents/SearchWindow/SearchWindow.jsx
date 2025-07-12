@@ -95,7 +95,6 @@ export const ShowUser = ({info, skeleton, animationDelay = 0, className = '', ..
     const startTethering = useCallback(() => {
         if (skeleton) return
         updateContactInfo(info.id, info)
-        console.log(info.id, search)
         setSelectedContact(info.id)
         // openChat(info.id)
         setIsSearchFocused(false)
