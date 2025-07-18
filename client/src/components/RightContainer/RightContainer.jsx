@@ -10,9 +10,9 @@ import { useEffect, useState } from "react"
 
 
 const RightContainer = ({children, isHidden}) => {
-    const { currentTab } = useTabs()
-    const { selectedContact } = useContacts()
-    const [ Element, setElement ] = useState(() => ChatBox)
+    // const { currentTab } = useTabs()
+    // const { selectedContact } = useContacts()
+    // const [ Element, setElement ] = useState(() => ChatBox)
     
     // useEffect(() => {
     //     console.log(currentTab)

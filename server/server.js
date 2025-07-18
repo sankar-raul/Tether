@@ -87,7 +87,8 @@ export const io = new Server(server, {
 
 
 io.use(async (socket, next) => {
-    const token = cookie.parse(socket.request.headers.cookie || '')?.access_token
+    // const token = cookie.parse(socket.request.headers.cookie || '')?.access_token
+    const token = socket.handshake.auth.token
     // console.log(token)
     if (!token) {
         return next(new Error("unauthorized!"))
@@ -106,7 +107,7 @@ io.on('connection', async (socket) => {
     console.log(socket.user.id, "connected")
 
     socket.on('isTyping', async ({ isTyping, chatingWith }) => {
-        console.log(isTyping, chatingWith)
+        // console.log(isTyping, chatingWith)
         await setUserStatus({user_id: socket.user?.id, isTyping: isTyping, to: chatingWith})
     })
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat

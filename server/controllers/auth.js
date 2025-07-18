@@ -21,19 +21,19 @@ export const register = async (req, res) => {
     const [ data ] = await pool.execute("insert into users (email, username, password) value (?, ?, ?)", [email, username, hashedPassword])
     const [ refresh_token, access_token ] = await RefreshToken.issue(data.insertId)
 
-    res.cookie('refresh_token', refresh_token, {
-        sameSite: 'None',
-        path: '/',
-        secure: true,
-        maxAge: REFRESH_TOKEN_EXPIRES_MS
-    })
-    res.cookie("access_token", access_token, {
-        sameSite: 'None',
-        path: '/',
-        secure: true,
-        maxAge: ACCESS_TOKEN_EXPIRES_MS
-    })
-    return res.status(201).json({success: true, msg: "success"})
+    // res.cookie('refresh_token', refresh_token, {
+    //     sameSite: 'None',
+    //     path: '/',
+    //     secure: true,
+    //     maxAge: REFRESH_TOKEN_EXPIRES_MS
+    // })
+    // res.cookie("access_token", access_token, {
+    //     sameSite: 'None',
+    //     path: '/',
+    //     secure: true,
+    //     maxAge: ACCESS_TOKEN_EXPIRES_MS
+    // })
+    return res.status(201).json({success: true, msg: "success", auth_credentials: { access_token, refresh_token }})
 } catch (error) {
     console.log("Error:", error)
     return res.status(500).json({success: false, msg: "internal server error!"})
@@ -52,19 +52,19 @@ export const login = async (req, res) => {
         const isAuthenticated = await varify(password, tuples[0].password)
         if (isAuthenticated) {
             const [ refresh_token, access_token ] = await RefreshToken.issue(tuples[0].id)
-            res.cookie('refresh_token', refresh_token, {
-                sameSite: 'None',
-                path: '/',
-                secure: true,
-                maxAge: REFRESH_TOKEN_EXPIRES_MS
-            })
-            res.cookie("access_token", access_token, {
-                sameSite: 'None',
-                path: '/',
-                secure: true,
-                maxAge: ACCESS_TOKEN_EXPIRES_MS
-            })
-            return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id, username: tuples[0].username}})
+            // res.cookie('refresh_token', refresh_token, {
+            //     sameSite: 'None',
+            //     path: '/',
+            //     secure: true,
+            //     maxAge: REFRESH_TOKEN_EXPIRES_MS
+            // })
+            // res.cookie("access_token", access_token, {
+            //     sameSite: 'None',
+            //     path: '/',
+            //     secure: true,
+            //     maxAge: ACCESS_TOKEN_EXPIRES_MS
+            // })
+            return res.status(200).json({success: true, msg: "logged in", data: {id: tuples[0].id, username: tuples[0].username}, auth_credentials: { refresh_token, access_token }})
         } else {
             return res.status(401).json({success: false, msg: "incorrect password!"})
         }
@@ -79,8 +79,8 @@ export const logout = async (req, res) => {
         await RefreshToken.delete(refresh_token)
     else
         return res.status(401).json({success: false, msg: 'access denied'})
-    res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
-    res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
+    // res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
+    // res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
     res.status(200).json({success: true, msg: 'logout success'})
 }
 
@@ -115,8 +115,8 @@ export const deleteUser = async (req, res) => {
     try {
         const data = await pool.execute("delete from users where id = ? and password = ?", [id, password])
         if (data[0].affectedRows == 1) {
-            res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
-            res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
+            // res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
+            // res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
             return res.status(200).json({success: true, msg: "account deleted!"})
         }
         else
@@ -130,30 +130,31 @@ export const deleteUser = async (req, res) => {
 export const refreshToken = async (req, res) => {
     // 💪💪💪💪💪💪😎
     try {
-        const { refresh_token: old_refresh_token } = req.cookies
+        const { refresh_token: old_refresh_token } = req.body
+        
         if (!old_refresh_token) return res.status(401).json({ success: false, msg: 'no auth' })
         const tokens = await RefreshToken.refresh(old_refresh_token)
         if (tokens == 'invalid token') {
-            res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
-            res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
+            // res.clearCookie('refresh_token', { path: '/', sameSite: 'None', secure: true})
+            // res.clearCookie('access_token', { path: '/', sameSite: 'None', secure: true})
             return res.status(401).json({ success: false, msg: 'no auth' }) // access denied!
         }
         if (tokens) {
             const [ refresh_token, access_token ] = tokens
 
-            res.cookie('refresh_token', refresh_token, {
-                sameSite: 'None',
-                path: '/',
-                secure: true,
-                maxAge: REFRESH_TOKEN_EXPIRES_MS
-            })
-            res.cookie("access_token", access_token, {
-                sameSite: 'None',
-                path: '/',
-                secure: true,
-                maxAge: ACCESS_TOKEN_EXPIRES_MS
-            })
-            return res.status(200).json({success: true, msg: 'refreshed', access_token: access_token}) // success
+            // res.cookie('refresh_token', refresh_token, {
+            //     sameSite: 'None',
+            //     path: '/',
+            //     secure: true,
+            //     maxAge: REFRESH_TOKEN_EXPIRES_MS
+            // })
+            // res.cookie("access_token", access_token, {
+            //     sameSite: 'None',
+            //     path: '/',
+            //     secure: true,
+            //     maxAge: ACCESS_TOKEN_EXPIRES_MS
+            // })
+            return res.status(200).json({success: true, msg: 'refreshed', access_token, refresh_token}) // success
         }
         return res.end('📍')
     } catch (error) {

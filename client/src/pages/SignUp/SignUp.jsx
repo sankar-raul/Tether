@@ -2,10 +2,10 @@ import { Link, useNavigate } from "react-router-dom"
 import NetBackground from "../../components/NetBackground/NetBackground"
 import styles from './signup.module.css'
 import { useCallback, useEffect } from "react"
-import apiRequest from "../../hook/apiRequest"
 import { useForm } from "react-hook-form"
 import useUserInfo from "../../context/userInfo/userInfo"
 import useAlert from "../../context/alert/Alert"
+import { signup } from "../../hook/auth"
 
 const SignUp = () => {
     const navigate = useNavigate()
@@ -14,11 +14,8 @@ const SignUp = () => {
         email: ''
     }})
     const { Alert } = useAlert();
-    const signup = useCallback(async (formData) => {
-        const [ data, error ] = await apiRequest('/auth/register', {
-            method: "POST",
-            body: formData
-        })
+    const _signup = useCallback(async (formData) => {
+        const [ data, error ] = await signup({formData})
         if (data) {
             // console.log(data)
             if (data.success) {
@@ -60,7 +57,7 @@ const SignUp = () => {
                         Sign Up
                     </h1>
                     <form onSubmit={(e) => {
-                        handleSubmit(signup)(e)
+                        handleSubmit(_signup)(e)
                         showFeedBack()
                     }} className={styles.form}>
 

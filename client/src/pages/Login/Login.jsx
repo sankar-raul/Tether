@@ -7,6 +7,7 @@ import apiRequest from '../../hook/apiRequest'
 import { useForm } from 'react-hook-form'
 import useUserInfo from '../../context/userInfo/userInfo'
 import useAlert from '../../context/alert/Alert'
+import { login } from '../../hook/auth'
 
 const Login = () => {
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({
@@ -18,12 +19,9 @@ const Login = () => {
     const { setIsLoggedIn, isloggedIn } = useUserInfo()
     const navigate = useNavigate()
 
-    const login = useCallback(async (formData) => {
+    const _login = useCallback(async (formData) => {
         // console.log(formData)
-        const [ data, error ] = await apiRequest('/auth/login', {
-            method: "POST",
-            body: formData
-        })
+        const [ data, error ] = await login({formData})
         if (data) {
             // console.log(data)
             if (data.success) {
@@ -55,7 +53,7 @@ const Login = () => {
             <h1 className={styles.wellcome}>
                 Login
             </h1>
-            <form className={styles.form} onSubmit={handleSubmit(login)}>
+            <form className={styles.form} onSubmit={handleSubmit(_login)}>
                 <div className={styles.inputBox}>
                     <div name={!errors.email ? 'true' : 'incorrect'} className={styles['input-wraper']}>
                         <input name='email' type="text" {...register("email", {required: { value: true, message: "required" }, pattern: { value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "invalid email" }})} autoComplete='email' />

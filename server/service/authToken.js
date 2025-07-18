@@ -19,8 +19,13 @@ class Access_Token {
         return newAccessToken
     }
     get(access_token) { // decrypt and return the object
-        const payload = jwt.verify(access_token, JWT_SECRET)
-        return payload
+        try {
+            const payload = jwt.verify(access_token, JWT_SECRET)
+            return payload
+        } catch (error) {
+            // console.log(error)
+            return null
+        }
     }
 }
 export const AccessToken = new Access_Token()

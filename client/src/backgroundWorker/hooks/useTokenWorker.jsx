@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { refresh } from "../workers/refresh_access_token"
+import { refreshToken } from "../../hook/auth"
 
 const REFRESH_INTERVAL = 13 * 60 * 1000
 
@@ -11,15 +11,16 @@ const useTokenWorker = () => {
     const timeoutRef = useRef()
 
     const refreshAccessToken = useCallback(async () => {
-        const { success, token, error } = await refresh()
+        const { success, error } = await refreshToken()
         // console.log(success, token, error)
         if (success) {
             // console.log(token)
-            setAccessToken(token)
+            setAccessToken(null)
             setIsValid(true)
         } else {
             if (error == 'net error') {
-                setTimeout(refreshAccessToken, 5000) // retry
+                // setTimeout(refreshAccessToken, 5000) // retry
+                refreshAccessToken()
             } else if (error == 'no auth') {
                 setIsValid(false)
             } else {
