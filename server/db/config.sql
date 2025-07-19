@@ -113,7 +113,7 @@ update users set profile_pic_url = 'https://www.shutterstock.com/image-photo/clo
 -- drop index idx_messages_reciver_sender_tick ON messages;
 -- drop index idx_recent_interactions_owner ON recent_interactions;
 -- select * from messages order by sent_at desc limit 1000;
-
+-- truncate table refresh_tokens;
 select sender, MAX(sent_at) as latest_msg from messages where reciver = 2 group by sender order by latest_msg;
 select reciver, MAX(sent_at) as latest_msg from messages where sender = 2 group by reciver order by latest_msg;
 select * from messages where sender = 1 and reciver = 2 order by sent_at desc limit 20;
