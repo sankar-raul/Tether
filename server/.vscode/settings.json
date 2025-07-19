@@ -1,0 +1,10 @@
+{
+    "vcpkg.target.defaultTriplet": "arm-neon-android",
+    "vcpkg.target.hostTriplet": "arm-neon-android",
+    "vcpkg.target.useManifest": false,
+    "vcpkg.target.useStaticLib": false,
+    "cmake.configureArgs": [
+        "-DVCPKG_MANIFEST_MODE=OFF",
+        "-DVCPKG_TARGET_TRIPLET=arm-neon-android"
+    ]
+}
