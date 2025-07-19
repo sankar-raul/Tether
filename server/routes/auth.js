@@ -15,13 +15,13 @@ auth.put('/update/:what', restrictedRoute, update)
 
 
 auth.put('/forgot', (req, res) => {
-    res.end("ok") // need to work on it
+    res.end("working on it 😵‍💫") // need to work on it
 })
 
 // used for token refreshing
 auth.post('/refresh_token', refreshToken)
 
-auth.get('/logout', logout)
+auth.post('/logout', logout)
 // api endpoint to delete user -> DELETE /auth/delete
 auth.delete('/delete', restrictedRoute, deleteUser)
 

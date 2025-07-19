@@ -5,7 +5,7 @@ import { useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import useUserInfo from "../../context/userInfo/userInfo"
 import useAlert from "../../context/alert/Alert"
-import { signup } from "../../hook/auth"
+import useAuth from "../../context/auth/auth.context"
 
 const SignUp = () => {
     const navigate = useNavigate()
@@ -13,7 +13,8 @@ const SignUp = () => {
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({defaultValues: {
         email: ''
     }})
-    const { Alert } = useAlert();
+    const { signup } = useAuth()
+    const { Alert } = useAlert()
     const _signup = useCallback(async (formData) => {
         const [ data, error ] = await signup({formData})
         if (data) {

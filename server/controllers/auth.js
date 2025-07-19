@@ -74,7 +74,7 @@ export const login = async (req, res) => {
     }
 }
 export const logout = async (req, res) => {
-    const { refresh_token } = req.cookies
+    const { refresh_token } = req.body
     if (refresh_token)
         await RefreshToken.delete(refresh_token)
     else

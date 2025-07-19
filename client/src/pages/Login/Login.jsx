@@ -7,7 +7,7 @@ import apiRequest from '../../hook/apiRequest'
 import { useForm } from 'react-hook-form'
 import useUserInfo from '../../context/userInfo/userInfo'
 import useAlert from '../../context/alert/Alert'
-import { login } from '../../hook/auth'
+import useAuth from '../../context/auth/auth.context'
 
 const Login = () => {
     const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm({
@@ -15,6 +15,7 @@ const Login = () => {
             email: ''
         }
     })
+    const { login } = useAuth()
     const { Alert } = useAlert()
     const { setIsLoggedIn, isloggedIn } = useUserInfo()
     const navigate = useNavigate()
@@ -27,7 +28,7 @@ const Login = () => {
             if (data.success) {
                 setIsLoggedIn(true)
                 navigate('/chat')
-                Alert({message: "Wellcome Back " + data?.data?.username + '!', type: 'info'});
+                Alert({message: "Wellcome " + data?.data?.username + '!', type: 'info'});
             }
         } else {
             // console.log(error)
@@ -38,7 +39,7 @@ const Login = () => {
             }
             Alert({message: error.msg, type: 'error'})
         }
-    }, [ navigate, setError, setIsLoggedIn, Alert ])
+    }, [ navigate, setError, setIsLoggedIn, Alert, login ])
 
     useEffect(() => {
         // console.log(isloggedIn)

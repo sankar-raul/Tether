@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { refreshToken } from "../../hook/auth"
+import Auth from "../../hook/auth"
 
 const REFRESH_INTERVAL = 13 * 60 * 1000
 
@@ -11,7 +11,7 @@ const useTokenWorker = () => {
     const timeoutRef = useRef()
 
     const refreshAccessToken = useCallback(async () => {
-        const { success, error } = await refreshToken()
+        const { success, error } = await Auth.refreshToken()
         // console.log(success, token, error)
         if (success) {
             // console.log(token)

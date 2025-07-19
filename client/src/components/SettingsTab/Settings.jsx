@@ -14,9 +14,10 @@ import useSmartNavigate from '../../hook/useSmartNavigate'
 import { useCallback, useEffect, useState } from 'react'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
 import { useConfirm } from '../../hook/Confirm/useConfirm'
-import socket from '../../utils/chatSocket'
-import apiRequest from '../../hook/apiRequest'
+// import socket from '../../utils/chatSocket'
+// import apiRequest from '../../hook/apiRequest'
 import useAlert from '../../context/alert/Alert'
+import useAuth from '../../context/auth/auth.context'
 
 const SettingsTab = () => {
     const { userInfo } = useUserInfo()
@@ -24,8 +25,8 @@ const SettingsTab = () => {
     const [ isSigningOut, setIsSigningOut ] = useState(false)
     const { Alert } = useAlert()
     const navigate = useSmartNavigate()
-    const { logout } = useUserInfo()
-
+    const { logout:_logout } = useUserInfo()
+    const { logout } = useAuth()
     const handleLogout = () => {
         setIsShow(true)
     }
@@ -33,22 +34,35 @@ const SettingsTab = () => {
         if (isConfirmed) {
             setIsSigningOut(true)
             ;(async () => {
-                const [ logoutResponse, error ] = await apiRequest('/auth/logout')
+                const [ logoutResponse, error ] = await logout()
                 if (error) {
                     Alert({message: "Something went wrong!", type:'error'})
                     setIsSigningOut(false)
                 } else {
                     setIsSigningOut(false)
-                    logout()
+                    _logout()
                     logoutResponse?.success && navigate('/login')
-                    Alert({message: "Loogged out", type:'info'})
+                    Alert({message: "Logged out", type:'info'})
                 }
             })()
         }
     }, [isConfirmed])
 
+    useEffect(() => {
+        console.log(isSigningOut)
+    }, [isSigningOut])
+
     return (
+        <>
         <section className={styles['settings-tab-container']}>
+            <div className={`${styles["signing-out-banner"]} ${isSigningOut ? styles['show'] : ''}`}>
+                <div>
+                    <div></div>
+                </div>
+                <div>
+                    <div>Signing Out</div>
+                </div>
+            </div>
             <div className={styles['profile-container']}>
                 <div>
                     <Link to={'edit-profile'}><img src={editPen} alt="edit_profile" /></Link>
@@ -78,6 +92,7 @@ const SettingsTab = () => {
             </div>
             <Confirm primaryAction='Logout' seconderyAction='Dismiss' msg='Log out from your device' />
         </section>
+        </>
     )
 }
 export default SettingsTab
