@@ -1,5 +1,6 @@
 import axios from "axios"
 import apiRequest, { backend_uri } from "./apiRequest"
+import socket from "../utils/chatSocket"
 
 class AuthController {
     constructor() {
@@ -63,6 +64,10 @@ class AuthController {
                 const { refresh_token, access_token } = data
                 localStorage.setItem('refresh_token', refresh_token)
                 localStorage.setItem('access_token', access_token)
+                if (socket.connected) {
+                    socket.disconnect()
+                }
+                socket.connect()
                 return {success: true}
             } else {
                 // console.log(error.msg)

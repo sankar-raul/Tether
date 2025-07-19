@@ -18,15 +18,11 @@ const AuthProvider = ({children}) => {
         const [ signupResponse, error ] = await Auth.signup({formData})
         return [ signupResponse, error ]
     }, [])
-    const refreshToken = useCallback(async () => {
-        const response = await Auth.refreshToken()
-        return response
-    }, [])
     useEffect(() => {
 
     }, [])
     return (
-        <AuthContext.Provider value={{isLoggedin, logout, login, signup, refreshToken}}>
+        <AuthContext.Provider value={{isLoggedin, logout, login, signup}}>
             {children}
         </AuthContext.Provider>
     )
