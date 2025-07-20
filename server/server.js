@@ -122,6 +122,7 @@ io.on('connection', async (socket) => {
         const reciversSocketIds = await userIdToSocketId(reciver)
         // console.log(reciversSocketIds)
         let msg
+        console.log(reciversSocketIds, "me")
         if (reciversSocketIds.length > 0) {
             msg = await Message.pushMessage({ sender, reciver, content, tick: 2, sent_at })
             if (sender == reciver) {
@@ -133,7 +134,7 @@ io.on('connection', async (socket) => {
             } else {
                 reciversSocketIds.forEach(s_id => {
                     io.to(s_id).emit("message:recive", msg)
-                    console.log(s_id)
+                    console.log(s_id, "op")
                 })
                 ackFunc(msg)
             }
@@ -143,6 +144,7 @@ io.on('connection', async (socket) => {
             ackFunc(msg)
         }
         const sendersSocketIds = await userIdToSocketId(sender)
+        console.log(sendersSocketIds, "senderSocketIds")
         sendersSocketIds.forEach(s_id => {
         if (s_id != socket.id) {
             io.to(s_id).emit("message:sync", msg)
