@@ -49,22 +49,27 @@
     padding: 10px;
     padding-bottom: 0px;
 }
-
+@property --resize-bar-bg-color {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: transparent;
+}
 .handle-resize {
     width: 10px;
     border-radius: var(--radius-mid);
     cursor: ew-resize;
     transition-duration: .2s;
     position: relative;
-    --bg: var(--solid-bg);
-    /* background-color: blue; */
+    --resize-bar-bg-color: var(--solid-bg);
+    transition: --resize-bar-bg-color .1s ease;
 
     &:hover {
         opacity: 1;
-        --bg: #444;
+        --resize-bar-bg-color: #16222c;
     }
     &:active {
-        --bg: var(--brand-color);
+        opacity: .8;
+        --resize-bar-bg-color: var(--brand-color);
     }
 }
 
@@ -75,7 +80,7 @@
     height: 100%;
     left: 50%;
     transform: translate(-50%);
-    background-color: var(--bg);
+    background-color: var(--resize-bar-bg-color);
 }
 
 /* tab styles */

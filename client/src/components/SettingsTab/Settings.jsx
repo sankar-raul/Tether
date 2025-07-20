@@ -48,10 +48,6 @@ const SettingsTab = () => {
         }
     }, [isConfirmed])
 
-    useEffect(() => {
-        console.log(isSigningOut)
-    }, [isSigningOut])
-
     return (
         <>
         <section className={styles['settings-tab-container']}>
