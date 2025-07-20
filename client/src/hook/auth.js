@@ -65,9 +65,13 @@ class AuthController {
                 localStorage.setItem('refresh_token', refresh_token)
                 localStorage.setItem('access_token', access_token)
                 if (socket.connected) {
+                    socket.once('disconnect', () => {
+                        socket.connect()
+                    })
                     socket.disconnect()
+                } else {
+                    socket.connect()
                 }
-                socket.connect()
                 return {success: true}
             } else {
                 // console.log(error.msg)
