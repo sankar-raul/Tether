@@ -27,7 +27,7 @@
     padding: 0 5px;
     gap: 1px;
     scroll-behavior: smooth;
-    background-image: url('/doodle/pattern-10.svg');
+    background-image: var(--chat-doodle-svg, url('/doodle/pattern-10.svg'));
     background-color: transparent;
     background-repeat: repeat;
     background-attachment: fixed;
@@ -111,8 +111,13 @@
     }
     & > .message-body {
         background-color: var(--brand-bg-solid);
+        color: var(--chat-my-msg-color);
+
         &:hover {
             background-color: var(--brand-bg-solid-hover);
+        }
+        & .message-status {
+            color: var(--chat-my-msg-secondery-color);
         }
     }
 }

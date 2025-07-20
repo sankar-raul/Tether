@@ -126,6 +126,7 @@
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     padding: 10px;
+    filter: var(--icon-dark-filter);
 
     &.disabled {
         pointer-events: none;
