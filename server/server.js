@@ -144,7 +144,7 @@ io.on('connection', async (socket) => {
             ackFunc(msg)
         }
         const sendersSocketIds = await userIdToSocketId(sender)
-        console.log(sendersSocketIds, "senderSocketIds")
+        // console.log(sendersSocketIds, "senderSocketIds")
         sendersSocketIds.forEach(s_id => {
         if (s_id != socket.id) {
             io.to(s_id).emit("message:sync", msg)
@@ -237,7 +237,7 @@ io.on('connection', async (socket) => {
         }
     })
 
-    socket.on('disconnect', async () => {
+    socket.once('disconnect', async () => {
         await disconnectUser({user_id: socket.user.id, socket_id: socket.id})
         console.log(socket.id, "disconnected")
       })
@@ -245,5 +245,5 @@ io.on('connection', async (socket) => {
 
 
 server.listen(PORT, () => {
-    console.log(`${DEV_MODE ? 'https' : 'http'}://localhost:${PORT}`)
+    console.log(`http://localhost:${PORT}`)
 })
