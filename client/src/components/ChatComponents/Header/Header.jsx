@@ -52,7 +52,7 @@ const Search = () => {
         <div className={`${styles['search-wraper']} ${isSearchFocused ? styles['search-focused'] : ''}`}>
         <form onSubmit={search} onClick={(e) => e.stopPropagation()} className={styles['search-box']} onFocus={() => setIsSearchFocused(true)}>
             <div className={`${styles['search-input-wraper']} ${isSearchFocused ? styles['search-focused'] : ''}`}>
-                <input ref={searchRef} className={styles['search-input']} type="text" placeholder='search for an user' value={searchValue} onInput={handleSearchInput} />
+                <input ref={searchRef} className={styles['search-input']} type="text" placeholder='search for an new contact' value={searchValue} onInput={handleSearchInput} />
             </div>
             <button onClick={() => isMobile ? setIsSearchFocused(true) : {}} type='submit' className={styles['search-button']}>
                 <img src={searchIcon} alt="search" />

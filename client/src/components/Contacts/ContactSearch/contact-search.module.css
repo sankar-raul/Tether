@@ -1,0 +1,6 @@
+.search-contact-container {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background-color: var(--primary-bg);
+}

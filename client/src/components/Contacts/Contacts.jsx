@@ -15,6 +15,7 @@ import { PushNotification } from './PushNotification/PushNoti'
 import SettingsTab from '../SettingsTab/Settings'
 // import useSmartNavigate from '../../hook/useSmartNavigate'
 import { useLocation } from 'react-router-dom'
+import SearchMyContacts from './ContactSearch/contactSearch'
 
 const Contacts = ({children, hideContactBtn = false}) => {
     const { resizeableDiv, handleMouseDown } = useResize()
@@ -54,6 +55,7 @@ export const Chats = () => {
     return (
         <div className={styles['chats-contact-list-wraper']}>
         {/* <PushNotification /> */}
+        <SearchMyContacts />
         {
         !isLoading ? (
             <>
