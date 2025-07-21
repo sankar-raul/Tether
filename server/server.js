@@ -237,7 +237,7 @@ io.on('connection', async (socket) => {
         }
     })
 
-    socket.once('disconnect', async () => {
+    socket.on('disconnect', async () => {
         await disconnectUser({user_id: socket.user.id, socket_id: socket.id})
         console.log(socket.id, "disconnected")
       })
