@@ -72,6 +72,7 @@ class AuthController {
                     socket.disconnect()
                 } else {
                     // socket.connect()
+                    // its personal
                 }
                 return {success: true}
             } else {
