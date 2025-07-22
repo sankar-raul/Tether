@@ -98,6 +98,7 @@ io.use(async (socket, next) => {
     // console.log(token)
     if (!user) return next(new Error("unauthorized!"))
     socket.user = user
+    console.log(await userIdToSocketId(socket.user.id))
     await connectUser({user_id: user.id, socket_id: socket.id, socket})
     Message.sendUndelivered(socket.id, user.id)
     next()
@@ -106,7 +107,6 @@ io.use(async (socket, next) => {
 io.on('connection', async (socket) => {
     // console.log(socket.user)
     console.log(socket.id, "connected")
-    console.log(await userIdToSocketId(socket.user.id))
     socket.on('isTyping', async ({ isTyping, chatingWith }) => {
         // console.log(isTyping, chatingWith)
         await setUserStatus({user_id: socket.user?.id, isTyping: isTyping, to: chatingWith})
