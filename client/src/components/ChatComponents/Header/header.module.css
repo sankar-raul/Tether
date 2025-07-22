@@ -146,7 +146,8 @@
         min-height: 40px;
     }
     .header {
-        background-color: var(--contact-hover-bg);
+        /* background-color: var(--contact-hover-bg); */
+        background: var(--primary-bg);
     }
     .search-wraper {
         flex-grow: 1;

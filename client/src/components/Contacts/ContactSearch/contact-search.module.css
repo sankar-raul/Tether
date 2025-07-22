@@ -1,6 +1,61 @@
 .search-contact-container {
     position: sticky;
     top: 0;
-    z-index: 3;
+    z-index: 1;
     background-color: var(--primary-bg);
+    padding: 6px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contact-search {
+    display: flex;
+    /* align-items: center; */
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: var(--secondery-bg);
+    border-radius: var(--radius-big);
+    padding: 6px 12px;
+    font-size: 15px;
+    caret-color: #fff;
+    color: var(--primary-color);
+    outline: 2px solid var(--solid-bg-2);
+    gap: 4px;
+
+    &:hover {
+        outline: 2px solid var(--solid-bg);
+    }
+    &:focus {
+        outline: 2px solid var(--brand-color);
+        
+    }
+    &::spelling-error {
+        text-decoration: none;
+    }
+}
+.contact-search > input {
+    letter-spacing: 1px;
+    height: 100%;
+    flex-grow: 1;
+    outline: none;
+    border: none;
+    background-color: transparent;
+
+    &::placeholder {
+        color: #888;
+    }
+}
+.contact-search > .search-icon {
+    /* border: 1px solid red; */
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+}
+.contact-search > .search-icon > img {
+    opacity: 0.6;
+    height: 70%;
 }
