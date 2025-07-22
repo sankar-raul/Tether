@@ -64,6 +64,7 @@ class AuthController {
                 const { refresh_token, access_token } = data
                 localStorage.setItem('refresh_token', refresh_token)
                 localStorage.setItem('access_token', access_token)
+                console.log("refresh")
                 if (socket.connected) {
                     socket.once('disconnect', () => {
                         socket.connect()

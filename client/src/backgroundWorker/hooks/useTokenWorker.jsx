@@ -19,7 +19,7 @@ const useTokenWorker = () => {
             setIsValid(true)
         } else {
             if (error == 'net error') {
-                // setTimeout(refreshAccessToken, 5000) // retry
+                setTimeout(refreshAccessToken, 5000) // retry
                 refreshAccessToken()
             } else if (error == 'no auth') {
                 setIsValid(false)

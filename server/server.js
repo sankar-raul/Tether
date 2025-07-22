@@ -106,7 +106,7 @@ io.use(async (socket, next) => {
 io.on('connection', async (socket) => {
     // console.log(socket.user)
     console.log(socket.user.id, "connected")
-
+    console.log(await userIdToSocketId(socket.user.id))
     socket.on('isTyping', async ({ isTyping, chatingWith }) => {
         // console.log(isTyping, chatingWith)
         await setUserStatus({user_id: socket.user?.id, isTyping: isTyping, to: chatingWith})
