@@ -14,7 +14,9 @@ const UserInfoProvider = ({ children }) => {
     const logout = useCallback(() => {
         setIsLoggedIn(false)
         setUserInfo(null)
-        socket.disconnect()
+        if (socket.connected) {
+            socket.disconnect()
+        }
     }, [])
 
     const getUserInfo = useCallback(async () => {

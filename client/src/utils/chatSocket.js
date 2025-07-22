@@ -10,6 +10,7 @@ const socket = io(backend_uri, {
         callback({
             token: localStorage.getItem('access_token')
         })
-    }
+    },
+    autoConnect: false
 })
 export default socket
