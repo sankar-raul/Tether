@@ -17,7 +17,7 @@ const Login = () => {
     })
     const { login } = useAuth()
     const { Alert } = useAlert()
-    const { setIsLoggedIn, isloggedIn } = useUserInfo()
+    const { setIsLoggedIn, isloggedIn, connectSocket } = useUserInfo()
     const navigate = useNavigate()
 
     const _login = useCallback(async (formData) => {
@@ -27,6 +27,7 @@ const Login = () => {
             // console.log(data)
             if (data.success) {
                 setIsLoggedIn(true)
+                connectSocket()
                 navigate('/chat')
                 Alert({message: "Wellcome " + data?.data?.username + '!', type: 'info'});
             }
