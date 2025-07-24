@@ -18,7 +18,11 @@ const UserInfoProvider = ({ children }) => {
             socket.disconnect()
         }
     }, [])
-
+    const connectSocket = useCallback(() => {
+        if (!socket.connected) {
+            socket.connect()
+        }
+    }, [])
     const getUserInfo = useCallback(async () => {
         if (!isloggedIn) {
             if (isValid === null) return
@@ -56,7 +60,7 @@ const UserInfoProvider = ({ children }) => {
     //     console.log(isloggedIn)
     // }, [isloggedIn])
     return (
-        <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn, accessToken, logout}}>
+        <userInfoContext.Provider value={{userInfo, isloggedIn, setIsLoggedIn, accessToken, logout, connectSocket}}>
             {children}
         </userInfoContext.Provider>
     )

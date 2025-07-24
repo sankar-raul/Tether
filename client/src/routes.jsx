@@ -16,6 +16,8 @@ import AccountSettings from "./components/Setttings/AccountSettings/AccountSetti
 import ThemeSettings from "./components/Setttings/ThemeSettings/AccountSettings"
 import SessionSettings from "./components/Setttings/SessionSettings/AccountSettings"
 import Test from "./pages/test/test"
+import SignUpLayout from "./pages/SignUp/signupLayout/signupLayout"
+import Varify from "./pages/SignUp/varify/varify"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -25,7 +27,10 @@ export const router = createBrowserRouter(
 
             </Route>
             <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
+            <Route path="signup" element={<SignUpLayout />} >
+                <Route index element={<SignUp />} />
+                <Route path="varify/:otp_token" element={<Varify />} />
+            </Route>
             <Route path="forgot" element={<>forgot password</>} />
 
             <Route path="*" element={<h1>Not Found!</h1>}/>

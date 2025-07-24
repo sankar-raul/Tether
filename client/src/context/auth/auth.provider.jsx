@@ -18,11 +18,15 @@ const AuthProvider = ({children}) => {
         const [ signupResponse, error ] = await Auth.signup({formData})
         return [ signupResponse, error ]
     }, [])
+    const varifyOtp = useCallback(async ({otp, otp_token}) => {
+        const [ otpCheckResponse, error ] = await Auth.varifyOtp({otp, otp_token})
+        return [ otpCheckResponse, error ]
+    }, [])
     useEffect(() => {
 
     }, [])
     return (
-        <AuthContext.Provider value={{isLoggedin, logout, login, signup}}>
+        <AuthContext.Provider value={{isLoggedin, logout, login, signup, varifyOtp}}>
             {children}
         </AuthContext.Provider>
     )

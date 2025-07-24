@@ -1,19 +1,28 @@
 show databases;
 create database if not exists tether;
 use tether;
--- SET SQL_SAFE_UPDATES = 1;
+SET SQL_SAFE_UPDATES = 0;
 
 create table if not exists users (
 	id bigint auto_increment primary key,
-    username varchar(50) not null,
+    username varchar(50) not null unique,
     email varchar(255) unique,
     password varchar(100) not null,
 	isLoggedIn boolean default 0,
     profile_pic_url varchar(255),
     bio varchar(255),
-    
-    index idx_username (username)
+    fullname varchar(30) not null,
+    index idx_username (username),
+    index idx_username_f_name (username, fullname)
 );
+-- create index idx_username_f_name on users (username, fullname);
+select * from users;
+-- delete from messages where sender > 2 or reciver > 2;
+-- delete from recent_interactions where owner_id > 2 or contact_id > 2;
+-- delete from users where id > 2;
+-- truncate table refresh_tokens;
+-- alter table users modify column username varchar(30) not null unique;
+-- alter table users add column fullname varchar(30) not null default 'User';
 -- drop index idx_users on users;
 -- create index idx_user on users (username);
 create table if not exists messages (

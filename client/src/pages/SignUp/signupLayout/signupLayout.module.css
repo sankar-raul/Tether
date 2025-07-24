@@ -1,0 +1,12 @@
+.sign-layout {
+    width: clamp(300px, 70%, 600px);
+    background: var(--app-theme-bg); /**/
+    border: 1px solid #fff2;
+    min-height: 300px;
+    box-shadow: 0px 0px 10px 1px #000;
+    margin: 0 auto;
+    margin-top: 70px;
+    padding: 30px 20px;
+    user-select: none;
+    animation: float-in 0.5s ease 1;
+}

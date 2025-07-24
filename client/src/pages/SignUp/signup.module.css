@@ -1,19 +1,9 @@
-.login {
-    background: #000;
-    width: clamp(300px, 70%, 600px);
-    border: 1px solid #fff2;
-    min-height: 300px;
-    box-shadow: 0px 0px 10px 1px #000;
-    margin: 0 auto;
-    margin-top: 70px;
+.signup {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    padding: 30px 20px;
     gap: 20px;
-    user-select: none;
-    animation: float-in 1s ease 1;
 }
 @keyframes float-in {
     from {
@@ -33,6 +23,9 @@
 }
 .form {
     width: clamp(200px, 80%, 450px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .inputBox {
     height: 60px;
@@ -50,8 +43,8 @@
     display: flex;
     align-items: flex-end;
     border-bottom: 1px solid #fff3;
-    background-color: #ffffff0b;
     cursor: text;
+    background-color: var(--primary-bg);
 }
 .input-wraper > label {
     position: absolute;
@@ -61,20 +54,34 @@
     margin-top: -50px;
     margin-left: 2px;
     opacity: 1;
+    color: var(--secondery-text);
+}
+.input-wraper > input:placeholder-shown + label {
+        margin-top: 0px;
+        margin-left: 12px;
+
 }
 .input-wraper:has(input:focus) {
-    background-color: #fff1;
-    border-bottom: 1px solid #ffffffb3;
+    background-color: var(--secondery-bg);
+    border-bottom: 1px solid #fff4;
+    
+    & > label {
+        /* margin-top: -50px; */
+    }
 }
 .input-wraper > input {
     height: 85%;
     width: 100%;
-    padding: 6px;
+    padding: 12px;
     background: transparent;
     border: none;
-    font-size: 1.1rem;
+    font-size: .9rem;
     cursor: text !important;
-
+    letter-spacing: 1.5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    text-decoration: none;
+    color: var(--primary-color);
     &:focus {
         border: none;
         outline: none;
@@ -83,13 +90,9 @@
 .input-wraper > input::spelling-error {
     text-decoration: none;
 }
-.input-wraper > input[value=''] + label {
-    margin-left: 7px;
-    opacity: .8;
-    margin-top: 0;
-}
 .input-wraper[name="true"] {
-    border-bottom: 1px solid #1a39 !important;
+    /* border-bottom: 1px solid #1a39 !important; */
+    border-bottom: 1px solid #fff3;
 }
 .input-wraper[name="incorrect"] {
     border-bottom: 1px solid rgba(255, 49, 107, 0.834) !important;

@@ -3,23 +3,45 @@ import pool from "../db/pool.js"
 import { hash, varify } from '../service/crypt.js'
 import { AccessToken, RefreshToken } from "../service/authToken.js"
 import { config } from "dotenv"
+import { redis } from '../redisStore/redisClient.js'
+import OTP from '../service/generateOtp.js'
+import crypto from 'crypto'
 config()
 
 const isDevMode = process.env.DEV_MODE == 'true'
 const ACCESS_TOKEN_EXPIRES_MS = 15 * 60 * 1000 // 15 minutes
 const REFRESH_TOKEN_EXPIRES_MS = 7 * 24 * 3600 * 1000 // 7 days
-export const register = async (req, res) => {
-    const { email, username, password } = req.body // destructure email, username, password from request body
-    if (!email || !username || !password) // check if all required credintials are ok
+export const start_registration = async (req, res) => {
+    const { email, username, password, fullname } = req.body // destructure email, username, password from request body
+    if (!email || !username || !password || !fullname) // check if all required credintials are ok
         return res.status(400).json({success: false, msg: "email & username & password required!"})
     try {
-    const user = await pool.execute("select email from users where email = ?", [email])
-    if (user[0] != '') { // check is user with same email is exists
-        return res.status(405).json({success: false, msg: "user already exists"})
+    const [ check_email, check_username ] = await Promise.all([pool.execute("select email from users where email = ?", [email]), pool.execute('select username from users where username = ?', [username])])
+    const errors = {
+        email: check_email[0] != '',
+        username: check_username[0] != ''
+    }
+    // console.log(errors, check_username[0])
+    if (errors.email || errors.username) { // check is user with same email is exists or username is allready taken
+        const messages = []
+        errors.email && messages.push({ field: "email", msg: "Email already registered with different account" })
+        errors.username && messages.push({ field: "username", msg: "Username all ready taken" })
+        return res.status(400).json({success: false, messages})
     }
     const hashedPassword = await hash(password)
-    const [ data ] = await pool.execute("insert into users (email, username, password) value (?, ?, ?)", [email, username, hashedPassword])
-    const [ refresh_token, access_token ] = await RefreshToken.issue(data.insertId)
+    const [hashedOtp, otp] = OTP.generateOtp(6)
+    console.log("OTP sent!", otp)
+    const otp_token = crypto.createHash('sha256').update(crypto.randomUUID()).digest('hex') // 🔒
+    // store the user info to redis
+    await redis.set(`otp:${otp_token}`, hashedOtp, 'EX', 300) // 5 minutes
+    await redis.set(`signup:${otp_token}`, JSON.stringify({
+        email,
+        username,
+        fullname,
+        hashedPassword
+    }), 'EX', 600) // 10 minutes
+    // const [ data ] = await pool.execute("insert into users (email, username, password) value (?, ?, ?)", [email, username, hashedPassword])
+    // const [ refresh_token, access_token ] = await RefreshToken.issue(data.insertId)
 
     // res.cookie('refresh_token', refresh_token, {
     //     sameSite: 'None',
@@ -33,13 +55,81 @@ export const register = async (req, res) => {
     //     secure: true,
     //     maxAge: ACCESS_TOKEN_EXPIRES_MS
     // })
-    return res.status(201).json({success: true, msg: "success", auth_credentials: { access_token, refresh_token }})
+    // return res.status(201).json({success: true, msg: "success", auth_credentials: { access_token, refresh_token }})
+    return res.status(201).json({success: true, msg: "success", otp_token})
 } catch (error) {
     console.log("Error:", error)
     return res.status(500).json({success: false, msg: "internal server error!"})
 }
 }
 
+export const varifyOtp = async (req, res) => {
+    const otp_token = req.params?.otp_token
+    const { otp } = req.body
+    // console.log(otp, otp_token)
+    if (!otp_token || !otp) {
+        return res.json({
+            success: false,
+            msg: "otp required"
+        })
+    }
+    const connection = await pool.getConnection()
+    try {
+        const hashedOtp = await redis.get(`otp:${otp_token}`)
+        console.log(hashedOtp, otp)
+        if (!hashedOtp) {
+            return res.json({success: false, msg: "otp expired!"})
+        }
+        const isValid = OTP.verify(otp, hashedOtp)
+        if (isValid) {
+            console.log("otp varification success!")
+            let userInfo = await redis.get(`signup:${otp_token}`)
+            userInfo = JSON.parse(userInfo)
+            const { email, username, hashedPassword, fullname } = userInfo
+            const [ data ] = await connection.execute("insert into users (email, username, password, fullname) value (?, ?, ?, ?)", [email, username, hashedPassword, fullname])
+            const [ refresh_token, access_token ] = await RefreshToken.issue(data.insertId)
+            console.log(data)
+            await redis.del(`otp:${otp_token}`)
+            await redis.del(`signup:${otp_token}`)
+            await connection.commit()
+            return res.status(201).json({success: true, msg: "success", auth_credentials: { access_token, refresh_token }})
+        } else {
+            return res.json({
+                success: false,
+                msg: "invalid otp"
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        await connection.rollback()
+        return res.status(500).json({success: false, msg: "Internal Server Error"})
+    } finally {
+        connection.destroy()
+    }
+}
+export const resendOtp = async (req, res) => {
+    const otp_token = req.paramas?.otp_token
+    if (!otp_token) {
+        return res.json({
+            success: false,
+            msg: "invalid request"
+        })
+    }
+    try {
+    const isUserInfoExists = await redis.exists(`signup:${otp_token}`)
+    if (isUserInfoExists) {
+        const [newHashedOtp, otp] = OTP.generateOtp(6)
+        console.log("OTP sent!", otp)
+        await redis.set(`otp:${otp_token}`, newHashedOtp)
+        return res.json({success: true, otp_token: otp_token})
+    } else {
+        return res.json({success: false, msg: "session_expired"})
+    }
+} catch (error) {
+    console.log(error, "Error in ----->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resendOtp() controller")
+    return res.status(500).json({success: false, msg: "Internal Server Error"})
+}
+}
 export const login = async (req, res) => {
     const { email, password } = req.body // destructure email, password from request body
     // console.log(req.body)

@@ -6,6 +6,13 @@ class AuthController {
     constructor() {
        
     }
+    async varifyOtp({otp, otp_token}) {
+        if (!otp || !otp_token) return [null, null]
+        const [ data, error ] = await apiRequest(`/auth/varify/${otp_token}`, {data: {
+            otp,
+        }, method: "POST"})
+        return [data, error]
+    }
     async login({formData}) {
         if (!formData) return [null, {msg: "invaild formdata"}]
         const [ data, error ] = await apiRequest('/auth/login', {
@@ -36,16 +43,11 @@ class AuthController {
     }
     async signup({formData}) {
         if (!formData) return [null, {msg: "invaild formdata"}]
-        const [ data, error ] = await apiRequest('/auth/register', {
+        const [ data, error ] = await apiRequest('/auth/start_registration', {
             method: "POST",
             body: formData
         })
         // console.log(data)
-        if (data?.success) {
-            const { access_token, refresh_token } = data.auth_credentials
-            localStorage.setItem('access_token', access_token)
-            localStorage.setItem('refresh_token', refresh_token)
-        }
         return [data, error]
     }
 

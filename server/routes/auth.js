@@ -1,11 +1,13 @@
 import { Router } from "express"
-import { deleteUser, login, logout, refreshToken, register, update } from "../controllers/auth.js"
+import { deleteUser, login, logout, refreshToken, resendOtp, start_registration, update, varifyOtp } from "../controllers/auth.js"
 import { restrictedRoute } from "../middleware/auth.js"
 
 const auth = Router()
 
 // endpoint to register new user -> POST auth/register
-auth.post('/register', register)
+auth.post('/start_registration', start_registration)
+auth.post('/varify/:otp_token', varifyOtp) // POST auth/varify
+auth.post('/reesend-otp/:otp_token', resendOtp) // POST auth/varify
 
 // endpoint to login user -> POST /auth/login
 auth.post('/login', login)
