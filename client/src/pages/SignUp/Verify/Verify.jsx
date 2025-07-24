@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import styles from './varify-email.module.css'
+import styles from './verify-email.module.css'
 import { useNavigate, useParams } from 'react-router-dom'
 import useAuth from '../../../context/auth/auth.context'
 import useAlert from '../../../context/alert/Alert'
 import useUserInfo from '../../../context/userInfo/userInfo'
 
-const Varify = () => {
+const Verify = () => {
     const [ otp, setOtp ] = useState('')
     const { otp_token } = useParams()
     const { varifyOtp } = useAuth()
@@ -49,4 +49,4 @@ const Varify = () => {
     )
 }
 
-export default Varify
+export default Verify
