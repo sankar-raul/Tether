@@ -2,6 +2,7 @@ import { createClient } from 'redis'
 import { config } from 'dotenv'
 import pool from '../db/pool.js'
 import { io } from '../server.js'
+import { hash } from 'crypto'
 config()
 
 const REDIS_SERVER = process.env.REDIS_SERVER
@@ -36,7 +37,7 @@ export const connectUser = async ({user_id, socket_id, socket} = {}) => {
     ])
     const contacts = await getFriendList(user_id)
     // console.log(contacts)
-    contacts.forEach(contact_id => contact_id != user_id && socket.join(`user_online_status:${contact_id}`))
+    contacts?.forEach(contact_id => contact_id != user_id && socket.join(`user_online_status:${contact_id}`))
     // console.log(await redis.sMembers(`user_id:${user_id}`))
 }
 
@@ -100,31 +101,38 @@ export const getUserStatus = async ( user_id ) => {
         }
 
 }
-export const getUserFriendsFromDb = async ( user_id ) => {
+export const getUserFriendsFromDb = async ( user_id, { type }={}) => {
     let [ friends ] = await pool.execute('call getContacts(?)', [user_id])
     // console.log(contacts[0])
-    const contacts = []
+    const contacts = {}
+    const contactsList = []
     friends = friends?.[0] || []
     for (const friend of friends) {
         const userStatus = await getUserStatus(friend.contact_id)
         friend.isOnline = userStatus?.isOnline
         friend.isTyping = userStatus?.isTyping
-        contacts.push(friend)
-        await redis.hSet(`friend_list:${user_id}`, friend.contact_id, JSON.stringify(friend))
+        contacts[friend.contact_id] = JSON.stringify(friend)
+        contactsList.push(friend)
+        // await redis.hSet(`friend_list:${user_id}`, friend.contact_id, JSON.stringify(friend))
     }
-    await redis.expire(`friend_list:${user_id}`, 3600) // 1 hour
-    return contacts
-
+    if (contactsList.length) {
+        await redis.hSet(`friend_list:${user_id}`, contacts)
+        await redis.expire(`friend_list:${user_id}`, 3600) // 1 hour
+    }
+    return type == 'hashmap' ? contacts : contactsList
 }
 export const getFriendList = async ( user_id, { details } = {} ) => {
     if (!user_id) throw new Error('user_name required -> getUserFriends')
     try {
         const isCached = await redis.exists(`friend_list:${user_id}`)
+        let friendList = {}
         if (!isCached) {
-            await getUserFriendsFromDb(user_id)
+            friendList = await getUserFriendsFromDb(user_id, {type: 'hashmap'})
+        } else {
+            friendList = await redis.hGetAll(`friend_list:${user_id}`)
         }
-        let friendList = await redis.hGetAll(`friend_list:${user_id}`)
-        return details ? friendList : Object.keys(friendList)
+        
+        return details ? Object.values(friendList).map(data => JSON.parse(data)) : Object.keys(friendList)
     } catch (error) {
         console.log(error, '-> getFriendList()')
     }

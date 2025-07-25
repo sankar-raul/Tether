@@ -11,6 +11,8 @@ config()
 const isDevMode = process.env.DEV_MODE == 'true'
 const ACCESS_TOKEN_EXPIRES_MS = 15 * 60 * 1000 // 15 minutes
 const REFRESH_TOKEN_EXPIRES_MS = 7 * 24 * 3600 * 1000 // 7 days
+const otp_age_in_seconds = 300 // 5 minutes
+
 export const start_registration = async (req, res) => {
     const { email, username, password, fullname } = req.body // destructure email, username, password from request body
     if (!email || !username || !password || !fullname) // check if all required credintials are ok
@@ -33,13 +35,16 @@ export const start_registration = async (req, res) => {
     console.log("OTP sent!", otp)
     const otp_token = crypto.createHash('sha256').update(crypto.randomUUID()).digest('hex') // 🔒
     // store the user info to redis
-    await redis.set(`otp:${otp_token}`, hashedOtp, 'EX', 300) // 5 minutes
-    await redis.set(`signup:${otp_token}`, JSON.stringify({
+    await Promise.all([redis.set(`otp:${otp_token}`, hashedOtp),
+        redis.set(`signup:${otp_token}`, JSON.stringify({
         email,
         username,
         fullname,
         hashedPassword
-    }), 'EX', 600) // 10 minutes
+    }))])
+    await Promise.all([redis.expire(`otp:${otp_token}`, otp_age_in_seconds), // 5 minutes
+        redis.expire(`signup:${otp_token}`, 600)]) // 10 minutes])
+    
     // const [ data ] = await pool.execute("insert into users (email, username, password) value (?, ?, ?)", [email, username, hashedPassword])
     // const [ refresh_token, access_token ] = await RefreshToken.issue(data.insertId)
 
