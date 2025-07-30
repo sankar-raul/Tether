@@ -1,7 +1,6 @@
 import { createPool } from 'mysql2/promise';
 import { config } from 'dotenv';
 import fs from 'fs';
-import path from 'path';
 
 // Load environment variables
 config();
