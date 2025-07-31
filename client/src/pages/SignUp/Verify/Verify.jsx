@@ -5,6 +5,7 @@ import useAuth from '../../../context/auth/auth.context'
 import useAlert from '../../../context/alert/Alert'
 import useUserInfo from '../../../context/userInfo/userInfo'
 
+
 const Verify = () => {
     const [ otp, setOtp ] = useState('')
     const { otp_token } = useParams()
