@@ -3,22 +3,28 @@ import http from 'http'
 // import https from 'https'
 import { Server } from 'socket.io'
 // import fs from 'fs'
-import auth from './routes/auth.js'
+import auth from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
 // import cookie from 'cookie'
 import { Message } from './socketServices/chat.js'
 import { connectUser, disconnectUser, setUserStatus, userIdToSocketId } from './redisStore/redisClient.js'
-import root from './routes/root.js'
-import { restrictedRoute, softAuthCheck } from './middleware/auth.js'
+import root from './routes/root.route.js'
+import { restrictedRoute, softAuthCheck } from './middleware/auth.middleware.js'
 // import { getUser } from './service/auth.js'
 import helmet from 'helmet'
 import cors from 'cors'
 import { config } from 'dotenv'
-import user from './routes/user.js'
-import chatRouter from './routes/chat.js'
+import user from './routes/user.route.js'
+import chatRouter from './routes/chat.route.js'
 import { AccessToken } from './service/authToken.js'
 import NotificationRoute from './routes/pushNotification.route.js'
+import initMeili from './service/meilsearch/initMeilisearchData.js'
+
 config()
+
+;(async () => {
+    await initMeili()
+})()
 
 const PORT = process.env.PORT || 8080
 const app = express()
