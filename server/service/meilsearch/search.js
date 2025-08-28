@@ -8,9 +8,3 @@ export async function searchUser(query, {page, limit}) {
     })
     return results?.hits || []
 }
-
-const data = {
-    searchUser,
-}
-
-export default data
