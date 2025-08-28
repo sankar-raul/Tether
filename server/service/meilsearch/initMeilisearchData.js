@@ -5,7 +5,7 @@ export default async function initMeili() {
     try {
         console.log("Initiating meilisearch...")
         const index = meili.index("users")
-        await index.deleteAllDocuments()
+        // await index.deleteAllDocuments()
         // setting up searchable fields
         await index.updateSearchableAttributes(['username', 'fullname'])
         const BATCH_SIZE = 2
