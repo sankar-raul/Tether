@@ -70,7 +70,7 @@ export const start_registration = async (req, res) => {
 }
 }
 
-export const varifyOtp = async (req, res) => { // varify otp for signup varification
+export const verifyOtp = async (req, res) => { // varify otp for signup varification
     const otp_token = req.params?.otp_token
     const { otp } = req.body
     // console.log(otp, otp_token)
@@ -115,8 +115,8 @@ export const varifyOtp = async (req, res) => { // varify otp for signup varifica
         return res.status(500).json({success: false, msg: "Internal Server Error"})
     }
 }
-export const resendOtp = async (req, res) => {
-    const otp_token = req.paramas?.otp_token
+export const resendOtp = async (req, res) => { // for signup
+    const otp_token = req.params?.otp_token
     if (!otp_token) {
         return res.json({
             success: false,

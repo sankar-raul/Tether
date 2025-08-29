@@ -8,10 +8,21 @@ class AuthController {
     }
     async varifyOtp({otp, otp_token}) {
         if (!otp || !otp_token) return [null, null]
-        const [ data, error ] = await apiRequest(`/auth/varify/${otp_token}`, {data: {
-            otp,
-        }, method: "POST"})
+        const [ data, error ] = await apiRequest(`/auth/signup/varify/${otp_token}`, {
+            data: {
+                otp,
+            },
+             method: "POST"
+         })
         return [data, error]
+    }
+    async resendOtp(otp_token) {
+        if (!otp_token) return [null, null]
+        const [ data, error ] = await apiRequest(`/auth/signup/resend-otp/${otp_token}`, {
+            method: "POST" 
+        })
+        console.log(data, error)
+        return [ data, error ]
     }
     async login({formData}) {
         if (!formData) return [null, {msg: "invaild formdata"}]

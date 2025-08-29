@@ -18,6 +18,10 @@ const AuthProvider = ({children}) => {
         const [ signupResponse, error ] = await Auth.signup({formData})
         return [ signupResponse, error ]
     }, [])
+    const resendOtp = useCallback(async (otp_token) => {
+        const [ resendresponse, error ] = await Auth.resendOtp(otp_token)
+        return [ resendresponse, error ]
+    }, [])
     const varifyOtp = useCallback(async ({otp, otp_token}) => {
         const [ otpCheckResponse, error ] = await Auth.varifyOtp({otp, otp_token})
         return [ otpCheckResponse, error ]
@@ -26,7 +30,7 @@ const AuthProvider = ({children}) => {
 
     }, [])
     return (
-        <AuthContext.Provider value={{isLoggedin, logout, login, signup, varifyOtp}}>
+        <AuthContext.Provider value={{isLoggedin, logout, login, signup, varifyOtp, resendOtp}}>
             {children}
         </AuthContext.Provider>
     )
