@@ -7,7 +7,7 @@ import { redis } from '../redisStore/redisClient.js'
 import OTP from '../service/generateOtp.js'
 import crypto from 'crypto'
 import updateUserInfo from "../service/meilsearch/updateUserInfo.js"
-import meili from "../service/meilsearch/meili.js"
+import sendOtp from '../service/mail/sendOtp.js'
 config()
 
 const isDevMode = process.env.DEV_MODE == 'true'
@@ -34,6 +34,11 @@ export const start_registration = async (req, res) => {
     }
     const hashedPassword = await hash(password)
     const [hashedOtp, otp] = OTP.generateOtp(6)
+    await sendOtp({
+        to: email,
+        subject: "Varify Your Account",
+        text: `${otp} is your otp`
+    })
     console.log("OTP sent!", otp)
     const otp_token = crypto.createHash('sha256').update(crypto.randomUUID()).digest('hex') // 🔒
     // store the user info to redis
@@ -127,6 +132,7 @@ export const resendOtp = async (req, res) => { // for signup
     const isUserInfoExists = await redis.exists(`signup:${otp_token}`)
     if (isUserInfoExists) {
         const [newHashedOtp, otp] = OTP.generateOtp(6)
+
         console.log("OTP sent!", otp)
         await redis.set(`otp:${otp_token}`, newHashedOtp)
         return res.json({success: true, otp_token: otp_token})
