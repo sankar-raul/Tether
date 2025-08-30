@@ -10,7 +10,7 @@ const RESEND_REST_TIME = 30 // in seconds
 const Verify = () => {
     const interval = useRef(null)
     const { otp_token } = useParams()
-    const { varifyOtp, resendOtp } = useAuth()
+    const { verifyOtp, resendOtp } = useAuth()
     const { Alert } = useAlert()
     const [ resendIn, setResendIn ] = useState(RESEND_REST_TIME)
     const { setIsLoggedIn, connectSocket } = useUserInfo()
@@ -68,7 +68,7 @@ const Verify = () => {
         resendCounter()
     }, [resendCounter, otp_token, resendOtp, Alert, navigate])
 
-    const handleVarifyOtp = async (e) => {
+    const handleVerifyOtp = async (e) => {
         e.preventDefault()
         setVerifyStatus('default')
         const otp = otpDigits.join('')
@@ -81,7 +81,7 @@ const Verify = () => {
             return
         }
         setIsVeryFing(true)
-        const [ data, error ] = await varifyOtp({otp, otp_token})
+        const [ data, error ] = await verifyOtp({otp, otp_token})
         setIsVeryFing(false)
         // console.log(data, error)
         if (error) {
@@ -183,10 +183,10 @@ const Verify = () => {
         resendCounter()
     }, [resendCounter])
     return (
-        <form className={styles['varify-container']} onSubmit={handleVarifyOtp}>
+        <form className={styles['verify-container']} onSubmit={handleVerifyOtp}>
             <div className={styles['otp-container']}>
-                <div className={styles['varify-otp-header']}>
-                    <p>Varify your account</p>
+                <div className={styles['verify-otp-header']}>
+                    <p>Verify your account</p>
                     <p>We just sent an mail with an otp</p>
                 </div>
                 <div className={styles['otp-field']} data-status={verifyStatus}>
@@ -202,8 +202,8 @@ const Verify = () => {
                     <div className={styles['resend-otp']}>
                         { canResend ? <button onClick={handleResendOtp} type='button' className={styles['resend-btn']}>{isResending ? "resending otp..." : "resend otp" }</button> : <button>We can resend a new otp in <span>{resendIn}</span> seconds</button> }
                     </div>
-                    <div className={styles['varify-btn']}>
-                        <button type='submit' disabled={isVerifing}>{isVerifing ? "Varifying..." : "Varify OTP"}</button>
+                    <div className={styles['verify-btn']}>
+                        <button type='submit' disabled={isVerifing}>{isVerifing ? "Verifying..." : "Verify OTP"}</button>
                     </div>
                 </div>
             </div>
