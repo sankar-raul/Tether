@@ -1,4 +1,4 @@
-.varify-container {
+.verify-container {
     justify-items: center;
     display: flex;
     flex-direction: column;
@@ -7,7 +7,7 @@
     padding-block: 20px;
     padding-bottom: 40px;
 }
-.varify-otp-header {
+.verify-otp-header {
     display: flex;
     flex-direction: column;
     color: var(--primary-color);
@@ -29,7 +29,7 @@
         color: var(--primary-color) !important;
     }
 }
-.varify-btn {
+.verify-btn {
     display: flex;
     justify-content: flex-end;
 
