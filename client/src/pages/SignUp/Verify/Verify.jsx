@@ -5,7 +5,7 @@ import useAuth from '../../../context/auth/auth.context'
 import useAlert from '../../../context/alert/Alert'
 import useUserInfo from '../../../context/userInfo/userInfo'
 
-const RESEND_REST_TIME = 5 // in seconds
+const RESEND_REST_TIME = 30 // in seconds
 
 const Verify = () => {
     const interval = useRef(null)
@@ -17,6 +17,8 @@ const Verify = () => {
     const navigate = useNavigate()
     const [ canResend, setCanResend ] = useState(false)
     const [ isResending, setIsResending ] = useState(false)
+    const [ isVerifing, setIsVeryFing ] = useState(false)
+    const [ verifyStatus, setVerifyStatus ] = useState('default') // default || valid || invalid
     const [ otpDigits, setOtpDigits ] = useState(Array(6))
     const otpFieldRefs = useRef([])
     const [ focusField, setFocusField ] = useState(0)
@@ -35,9 +37,10 @@ const Verify = () => {
             })
         }, 1000)
     }, [])
-
     const handleResendOtp = useCallback(async () => {
         setIsResending(true)
+        setVerifyStatus('default')
+        otpFieldRefs.current[0].focus()
         const [ response, error ] = await resendOtp(otp_token)
         if (error) {
             Alert({
@@ -65,22 +68,28 @@ const Verify = () => {
         resendCounter()
     }, [resendCounter, otp_token, resendOtp, Alert, navigate])
 
-    const handleVarifyOtp = async () => {
+    const handleVarifyOtp = async (e) => {
+        e.preventDefault()
+        setVerifyStatus('default')
         const otp = otpDigits.join('')
         if (otp.length != 6) {
+            setVerifyStatus("invalid")
             Alert({
                 message: "Please enter a 6-digit otp",
                 type: 'error'
             })
             return
-        } 
+        }
+        setIsVeryFing(true)
         const [ data, error ] = await varifyOtp({otp, otp_token})
-        console.log(data, error)
+        setIsVeryFing(false)
+        // console.log(data, error)
         if (error) {
             console.log(error)
-            alert(error)
+            // alert(error)
         }
         if (data?.success) {
+            setVerifyStatus("valid")
             const { access_token, refresh_token } = data.auth_credentials
             localStorage.setItem('access_token', access_token)
             localStorage.setItem('refresh_token', refresh_token)
@@ -88,11 +97,13 @@ const Verify = () => {
             connectSocket()
             navigate('/chat?new=true')
         } else {
+            setVerifyStatus("invalid")
             Alert({message: data?.msg || 'something went wrong!', type:'error'})
         }
     }
 
     const handleOtpInput = useCallback((e) => {
+        setVerifyStatus('default')
         let { field } = e?.target?.dataset || {}
         let digit =  String(e.target.value?.trim()).toUpperCase()
         // console.log(digit)
@@ -172,14 +183,13 @@ const Verify = () => {
         resendCounter()
     }, [resendCounter])
     return (
-        <div className={styles['varify-container']}>
-            
+        <form className={styles['varify-container']} onSubmit={handleVarifyOtp}>
             <div className={styles['otp-container']}>
                 <div className={styles['varify-otp-header']}>
                     <p>Varify your account</p>
                     <p>We just sent an mail with an otp</p>
                 </div>
-                <div className={styles['otp-field']}>
+                <div className={styles['otp-field']} data-status={verifyStatus}>
                     {/* <input value={otp} type="text" onInput={handleInput} /> */}
                     <input autoComplete='off' onKeyDown={handleNavigate} autoCorrect='off' aria-autocomplete='off' ref={handleRefAsignment} autoCapitalize="characters" value={otpDigits.at(0) || ''} data-field={0} onChange={handleOtpInput} className={styles['otp-digit']} />
                     <input autoComplete='off' onKeyDown={handleNavigate} autoCorrect='off' aria-autocomplete='off' ref={handleRefAsignment} autoCapitalize="characters" value={otpDigits.at(1) || ''} data-field={1} onChange={handleOtpInput} className={styles['otp-digit']} />
@@ -190,14 +200,14 @@ const Verify = () => {
                 </div>
                 <div className={styles["actions"]}>
                     <div className={styles['resend-otp']}>
-                        { canResend ? <button className={styles['resend-btn']} onClick={handleResendOtp}>{isResending ? "resending otp..." : "resend otp" }</button> : <button>We can resend a new otp in <span>{resendIn}</span> seconds</button> }
+                        { canResend ? <button onClick={handleResendOtp} type='button' className={styles['resend-btn']}>{isResending ? "resending otp..." : "resend otp" }</button> : <button>We can resend a new otp in <span>{resendIn}</span> seconds</button> }
                     </div>
                     <div className={styles['varify-btn']}>
-                        <button onClick={handleVarifyOtp}>Varify OTP</button>
+                        <button type='submit' disabled={isVerifing}>{isVerifing ? "Varifying..." : "Varify OTP"}</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     )
 }
 export default Verify

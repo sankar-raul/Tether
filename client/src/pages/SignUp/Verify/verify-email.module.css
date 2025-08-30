@@ -53,6 +53,12 @@
     gap: 16px;
     flex-wrap: nowrap;
 }
+.otp-field[data-status=invalid] > .otp-digit {
+    outline: 2px solid red;
+}
+.otp-field[data-status=valid] > .otp-digit {
+    outline: 2px solid forestgreen;
+}
 .otp-digit {
     width: clamp(40px, 5vw, 56px);
     aspect-ratio: 3 / 4;
