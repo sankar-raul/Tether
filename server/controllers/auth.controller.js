@@ -129,10 +129,14 @@ export const resendOtp = async (req, res) => { // for signup
         })
     }
     try {
-    const isUserInfoExists = await redis.exists(`signup:${otp_token}`)
-    if (isUserInfoExists) {
+    const userInfo = await redis.get(`signup:${otp_token}`)
+    if (userInfo) {
         const [newHashedOtp, otp] = OTP.generateOtp(6)
-
+        await sendOtp({
+            to: userInfo.email,
+            subject: "Verify Your Account",
+            text: `${otp} is your otp`
+        })
         console.log("OTP sent!", otp)
         await redis.set(`otp:${otp_token}`, newHashedOtp)
         return res.json({success: true, otp_token: otp_token})
