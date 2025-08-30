@@ -36,7 +36,7 @@ export const start_registration = async (req, res) => {
     const [hashedOtp, otp] = OTP.generateOtp(6)
     await sendOtp({
         to: email,
-        subject: "Varify Your Account",
+        subject: "Verify Your Account",
         text: `${otp} is your otp`
     })
     console.log("OTP sent!", otp)
