@@ -29,7 +29,7 @@ export const router = createBrowserRouter(
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUpLayout />} >
                 <Route index element={<SignUp />} />
-                <Route path="varify/:otp_token" element={<Verify />} />
+                <Route path="verify/:otp_token" element={<Verify />} />
             </Route>
             <Route path="forgot" element={<>forgot password</>} />
 

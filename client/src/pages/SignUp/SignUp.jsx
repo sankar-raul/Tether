@@ -40,7 +40,7 @@ const SignUp = () => {
             const { success, otp_token } = data
             if (success) {
                 // setIsLoggedIn(true)
-                navigate(`/signup/varify/${otp_token}`)
+                navigate(`/signup/verify/${otp_token}`)
                 // Alert({message: `Hii ${formData.username}!`, type: 'info'});
             }
             // do cose is not success

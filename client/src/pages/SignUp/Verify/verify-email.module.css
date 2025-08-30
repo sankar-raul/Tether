@@ -59,13 +59,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #fff4;
+    outline: 1px solid #fff4;
+    border: none;
     background-color: var(--solid-bg);
     border-radius: 4px;
     font-size: 16px;
     text-align: center;
     font-family: inherit;
     
+    &:focus {
+        outline: 2px solid aliceblue;
+    }
 }
 .otp-container {
     width: max-content;

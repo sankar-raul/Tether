@@ -8,7 +8,7 @@ class AuthController {
     }
     async varifyOtp({otp, otp_token}) {
         if (!otp || !otp_token) return [null, null]
-        const [ data, error ] = await apiRequest(`/auth/signup/varify/${otp_token}`, {
+        const [ data, error ] = await apiRequest(`/auth/signup/verify/${otp_token}`, {
             data: {
                 otp,
             },
