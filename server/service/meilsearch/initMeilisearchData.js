@@ -8,7 +8,7 @@ export default async function initMeili() {
         // await index.deleteAllDocuments()
         // setting up searchable fields
         await index.updateSearchableAttributes(['username', 'fullname'])
-        const BATCH_SIZE = 2
+        const BATCH_SIZE = 1000
         let batch = []
         const stream = poolCB.query("select id, username, fullname, email, profile_pic_url from users").stream()
         stream.on('data', async (row) => {

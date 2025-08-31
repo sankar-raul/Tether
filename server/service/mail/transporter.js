@@ -5,14 +5,16 @@ config({
     path: '../../.env'
 })
 
-export const mailUser = process.env.MAIL_USER
-const password = process.env.MAIL_PASS
+const { MAIL_USER, MAIL_PASS, MAIL_HOST, MAIL_PORT } = process.env
+export const mailUser = MAIL_USER
 
 const transporter = createTransport({
-    service: 'gmail',
+    host: MAIL_HOST,
+    port: MAIL_PORT,
+    secure: true,
     auth: {
-        user: mailUser,
-        pass: password
+        user: MAIL_USER,
+        pass: MAIL_PASS
     }
 })
 export default transporter

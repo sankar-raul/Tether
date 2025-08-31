@@ -6,7 +6,7 @@ class AuthController {
     constructor() {
        
     }
-    async varifyOtp({otp, otp_token}) {
+    async verifyOtp({otp, otp_token}) {
         if (!otp || !otp_token) return [null, null]
         const [ data, error ] = await apiRequest(`/auth/signup/verify/${otp_token}`, {
             data: {

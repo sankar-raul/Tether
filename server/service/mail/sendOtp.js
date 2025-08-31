@@ -4,7 +4,7 @@ export default async function sendOtp({
     to, subject = "Default Subject", ...args
 }) {
     const config = {
-        from: `"Tether - Stay Connected" <${mailUser}>`,
+        from: `"Tether - Stay Connected" <raulsankar99@gmail.com>`,
         to,
         subject,
         ...args
