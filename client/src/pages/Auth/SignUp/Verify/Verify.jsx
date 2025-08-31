@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './verify-email.module.css'
 import { useNavigate, useParams } from 'react-router-dom'
-import useAuth from '../../../context/auth/auth.context'
-import useAlert from '../../../context/alert/Alert'
-import useUserInfo from '../../../context/userInfo/userInfo'
+import useAuth from '../../../../context/auth/auth.context'
+import useAlert from '../../../../context/alert/Alert'
+import useUserInfo from '../../../../context/userInfo/userInfo'
 
 const RESEND_REST_TIME = 30 // in seconds
 

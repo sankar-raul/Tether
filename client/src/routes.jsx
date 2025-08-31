@@ -1,7 +1,7 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom"
 import Home from "./pages/Home/Home"
-import Login from "./pages/Login/Login"
-import SignUp from "./pages/SignUp/SignUp"
+import Login from "./pages/Auth/Login/Login"
+import SignUp from "./pages/Auth/SignUp/SignUp"
 import Layout from "./pages/Layout/Layout"
 import ChatLayout from "./pages/ChatLayout/ChatLayout"
 import { ProtectedRoute } from "./hook/authSecurity"
@@ -16,23 +16,22 @@ import AccountSettings from "./components/Setttings/AccountSettings/AccountSetti
 import ThemeSettings from "./components/Setttings/ThemeSettings/AccountSettings"
 import SessionSettings from "./components/Setttings/SessionSettings/AccountSettings"
 import Test from "./pages/test/test"
-import SignUpLayout from "./pages/SignUp/signupLayout/signupLayout"
-import Verify from "./pages/SignUp/Verify/Verify"
+import Verify from "./pages/Auth/SignUp/Verify/Verify"
+import AuthLayout from "./pages/Auth/authLayout"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
         <>
         <Route path="/" element={<Layout />}>
-            <Route index element={<Home />}>
-
+            <Route index element={<Home />} />
+            <Route path="login" element={<AuthLayout />} >
+                <Route index element={<Login />} />
+                <Route path="forgot" element={<h1>Forgot password</h1>} />
             </Route>
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUpLayout />} >
+            <Route path="signup" element={<AuthLayout />} >
                 <Route index element={<SignUp />} />
                 <Route path="verify/:otp_token" element={<Verify />} />
             </Route>
-            <Route path="forgot" element={<>forgot password</>} />
-
             <Route path="*" element={<h1>Not Found!</h1>}/>
         </Route>
         <Route path="/chat/*" element={(
