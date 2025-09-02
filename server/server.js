@@ -250,6 +250,6 @@ io.on('connection', async (socket) => {
 })
 
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`http://localhost:${PORT}`)
 })
