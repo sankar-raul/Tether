@@ -14,9 +14,13 @@ const ChatInput = ({scrollRef}) => {
     const { selectedContact } = useContacts()
     const [ text, setText ] = useState('')
     const handleInput = (e) => {
-        setText(e.target.value)
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault()
+          send(e)
+        } else {
+          setText(String(e.target.innerText))
+        }
     }
-
     const focusInput = useCallback(() => {
       inputRef && inputRef.current.focus()
     }, [])
@@ -28,6 +32,7 @@ const ChatInput = ({scrollRef}) => {
         if (messageContent.length > 0) {
             scrollRef?.current.scrollIntoView()
             setText('')
+            inputRef.current.innerText = ''
             sendMsg(messageContent)
             setTimeout(() => scrollRef?.current.scrollIntoView(), 1000) // its personal
         }
@@ -43,7 +48,10 @@ const ChatInput = ({scrollRef}) => {
               <img src={attachIcon} alt="media" />
             </div>
             <div className={styles["chat-input"]}>
-              <input className={styles['input']} ref={inputRef} onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} autoComplete='off' onInput={handleTyping} />
+              {/* <input className={styles['input']} ref={inputRef} onChange={handleInput} type="text" placeholder='Type and Tether...' value={text} autoComplete='off' onInput={handleTyping} /> */}
+              <div aria-label='chatInput' className={styles['input']} type="text" placeholder='Type and Tether...' value={text} autoComplete='off'autoCorrect='off' onInput={handleTyping} >
+                <p className={styles['chat-input-p']} onKeyUp={handleInput} ref={inputRef} contentEditable='true' role='textbox'></p>
+              </div>
             </div>
             <div className={styles['message-send-btn']}>
               <button type='submit'>

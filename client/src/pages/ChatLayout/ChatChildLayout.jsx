@@ -27,7 +27,7 @@ const ChatChildlayout = ({CurrentTabComponent, hideContactBtn = false}) => {
     )
 }
 ChatChildlayout.propTypes = {
-    CurrentTabComponent: PropTypes.node.isRequired,
+    CurrentTabComponent: PropTypes.any,
     hideContactBtn: PropTypes.bool
 }
 export default ChatChildlayout
