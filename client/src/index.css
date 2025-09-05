@@ -104,14 +104,16 @@
 }
 html {
   height: 100%;
+  overflow: hidden;
   font-family: 'Istok Web', serif;
   letter-spacing: 1px;
   user-select: none;
+  position: relative;
   background: var(--app-theme-bg);
   color: var(--primary-color);
 }
 body, #root {
-  height: 100dvh;
+  height: 100%;
 }
 input, textarea {
   font-family: 'Istok Web', serif;

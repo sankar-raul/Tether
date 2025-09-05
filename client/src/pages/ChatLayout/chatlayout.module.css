@@ -1,5 +1,5 @@
 .chat-layout {
-    max-height: 100vh;
+    max-height: 100dvh;
     display: grid;
     grid-template-rows: 70px 1fr;
     padding: 2px;

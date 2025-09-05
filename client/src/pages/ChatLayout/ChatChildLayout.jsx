@@ -5,8 +5,8 @@ import ResizeableAsideProvider from '../../context/resizeableAside/provider'
 import styles from './chatlayout.module.css'
 import RightContainer from '../../components/RightContainer/RightContainer'
 import DefaultChatView from '../../components/ChatBox/DefaultView/DefaultView'
-
-const chatChildlayout = ({CurrentTabComponent, hideContactBtn = false}) => {
+import PropTypes from 'prop-types'
+const ChatChildlayout = ({CurrentTabComponent, hideContactBtn = false}) => {
     const outlet = useOutlet()
     const location = useLocation()
 
@@ -26,4 +26,8 @@ const chatChildlayout = ({CurrentTabComponent, hideContactBtn = false}) => {
         </section>
     )
 }
-export default chatChildlayout
+ChatChildlayout.propTypes = {
+    CurrentTabComponent: PropTypes.node.isRequired,
+    hideContactBtn: PropTypes.bool
+}
+export default ChatChildlayout
