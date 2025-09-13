@@ -1,0 +1,70 @@
+.call-controller-button {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    /* background: rgba(0, 0, 0, 0.08); */
+    display: flex;
+    justify-content: center;
+    cursor: var(--cursor);
+    align-items: center;
+    outline: 1px solid transparent;
+    position: relative;
+    transition: all .1s;
+
+    &.active:not(.danger) {
+        background-color: #00000018 !important;
+    }
+    & > div {
+        width: 32%;
+        aspect-ratio: 1 / 1;
+        display: grid;
+        place-items: center;
+
+        & > img {
+            object-fit: contain;
+            width: 100%;
+            pointer-events: none;
+        }
+    }
+    &:active {
+        opacity: .3;
+    }
+
+    &.danger {
+        background-color: var(--danger-color);
+    }
+    
+}
+@media (min-width: 700px) {
+     .call-controller-button {
+        &:not(.danger):hover {
+        outline: 1px solid rgba(255, 255, 255, .1);
+        background: #0000000a;
+        /* background: rgba(0, 0, 0, 0.2); */
+        }
+        &::before {
+                content: attr(data-label);
+                position: absolute;
+                bottom: 100%;
+                white-space: nowrap;
+                background-color: var(--primary-bg);
+                color: var(--primary-color);
+                padding: 2px 8px;
+                font-size: 12px;
+                border-radius: 12px;
+                pointer-events: none;
+                opacity: 0;
+                transition-delay: 0s;
+                transition-duration: .3s;
+        }
+        &:hover::before {
+            opacity: 1;
+            transition-delay: .3s;
+        }
+    }
+}   
+@media (max-width: 700px) {
+    .call-controller-button {
+        
+    }
+}

@@ -1,0 +1,11 @@
+.transparentVideo {
+  position: absolute;    /* float it above content */
+  top: 0;
+  left: 0;
+  width: 100vw;          /* full width */
+  height: 100vh;         /* full height */
+  object-fit: contain;   /* or 'cover' if you want edge-to-edge */
+  background: transparent;
+  opacity: .1;
+  pointer-events: none;  /* clicks pass through */
+}

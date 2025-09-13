@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faCancel, faChevronLeft, faTrashAlt, faUser, faX, faXmark, faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
 import { useConfirm } from '../../../hook/Confirm/useConfirm'
 import useUserInfo from '../../../context/userInfo/userInfo'
+import useCall from '../../../context/call/call.context'
 
 
 const ChatContactHeader = ({ user }) => {
@@ -20,7 +21,16 @@ const ChatContactHeader = ({ user }) => {
     const [ isShowMenu, setIsShowMenu ] = useState(false)
     const [ isChatingWithMyself, setIsChatingWithMyself ] = useState(false)
     const { userInfo:myInfo } = useUserInfo()
+    const { startCall } = useCall()
     // const navigate = useSmartNavigate()
+
+    const startTethering = useCallback((type) => {
+        setSelectedContact(0)
+        startCall({
+            contact_id: user?.id,
+            type: type
+        })
+    }, [startCall, user, setSelectedContact])
 
     const closeChat = useCallback(() => {
         if (isMobile) {
@@ -62,8 +72,8 @@ const ChatContactHeader = ({ user }) => {
                 </div>
             </div>
             <div className={styles['nav-buttons']}>
-                <NavBtn src={videoIcon} disabled={isChatingWithMyself}/>
-                <NavBtn src={callIcon} disabled={isChatingWithMyself} />
+                <NavBtn src={videoIcon} disabled={isChatingWithMyself} onClick={() => startTethering('video')}/>
+                <NavBtn src={callIcon} disabled={isChatingWithMyself} onClick={() => startTethering('audio')}/>
                 <NavBtn src={dotsIcon} onClick={handleMoreMenu} />
             </div>
             {isShowMenu ? <Menu setIsShowMenu={setIsShowMenu} /> : ''}
@@ -151,7 +161,7 @@ const NavBtn = ({src, disabled, onClick, ...props}) => {
 
     return (
         <div {...props} onClick={handleClick} className={`${styles['nav-btn']} ${disabled ? styles['disabled'] : ''}`}>
-            <img src={src} alt="" />
+            <img src={src} alt="call button" />
         </div>
     )
 }

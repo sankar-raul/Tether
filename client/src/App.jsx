@@ -5,6 +5,7 @@ import UserInfoProvider from './context/userInfo/provider'
 import AlertProvider from './context/alert/alertProvider'
 // import CallBox from './components/CallBox/CallBox'
 import AuthProvider from './context/auth/auth.provider'
+import CallProvider from './context/call/call.provider'
 
 
 function App() {
@@ -12,9 +13,11 @@ function App() {
   return (
     <AuthProvider>
       <UserInfoProvider>
-        <AlertProvider>
-          <RouterProvider router={router} />
-        </AlertProvider>
+        <CallProvider>
+          <AlertProvider>
+            <RouterProvider router={router} />
+          </AlertProvider>
+        </CallProvider>
         {/* <CallBox /> */}
       </UserInfoProvider>
     </AuthProvider>

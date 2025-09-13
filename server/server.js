@@ -1,8 +1,8 @@
 import express from 'express'
 import http from 'http'
-// import https from 'https'
+import https from 'https'
 import { Server } from 'socket.io'
-// import fs from 'fs'
+import fs from 'fs'
 import auth from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
 // import cookie from 'cookie'
@@ -26,16 +26,16 @@ config()
     await initMeili()
 })()
 
+const DEV_MODE = process.env.DEV_MODE == 'true'
 const PORT = process.env.PORT || 8080
 const app = express()
-const DEV_MODE = process.env.DEV_MODE == 'true'
-// const server = DEV_MODE ? https.createServer({
-//         key: fs.readFileSync('certs/key.pem'),
-//         cert: fs.readFileSync('certs/cert.pem')
-//     }, app) : http.createServer(app)
-const server = http.createServer(app)
+const server = DEV_MODE ? https.createServer({
+    key: fs.readFileSync('./localhost+1-key.pem'),
+      cert: fs.readFileSync('./localhost+1.pem'),
+    }, app) : http.createServer(app)
+// const server = http.createServer(app)
 
-const allowedOrigins = ["https://192.168.0.11:443", "https://tether-xi.vercel.app"]
+const allowedOrigins = ["https://192.168.0.11:443", "https://192.168.43.111:443", "https://tether-xi.vercel.app"]
 app.use(cors({
     origin: (origin, callback) => {
         if (DEV_MODE || !origin) {
@@ -251,5 +251,5 @@ io.on('connection', async (socket) => {
 
 
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`http://localhost:${PORT}`)
+    console.log(`${DEV_MODE ? 'https' : 'http'}://localhost:${PORT}`)
 })
