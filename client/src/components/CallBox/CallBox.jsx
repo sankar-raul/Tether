@@ -12,8 +12,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { icon } from '@fortawesome/fontawesome-svg-core'
 import CallControllButton from './CallControllButton/CallControllButton'
+import { DefaultUser } from '../DefaultUser/DefaultUser'
 
-const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded}) => {
+const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, contactInfo = {}}) => {
     const [ axis, setAxis ] = useState({left: 'auto', top: '10%', bottom: 'auto', right: '10%'}) // default state or picked from localStorage
     const myVideoRef = useRef(null)
     const remoteVideoRef = useRef(null)
@@ -105,8 +106,8 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded}) =>
     }, [stopAudio, restartAudio])
 
     const endCall = useCallback(() => {
-        stopCapturing()
         setIsCallEnded(true)
+        stopCapturing()
     }, [stopCapturing, setIsCallEnded])
 
     // useEffect(() => {
@@ -118,7 +119,6 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded}) =>
     //     if (!localVideoStream.current) return
     //     isVideo ? restartCam() : stopCam()
     // }, [isVideo, restartCam, stopCam])
-
     useEffect(() => {
         // console.log(navigator.mediaDevices.getSupportedConstraints())
         (async () => {
@@ -139,7 +139,7 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded}) =>
                                 <img src="https://www.shutterstock.com/image-photo/closeup-portrait-fluffy-purebred-cat-260nw-2447243735.jpg" alt="" />
                             </div>
                             <div className={styles['contact-data']}>
-                                <p className={styles['contact-name']}>Indrajit</p>
+                                <p className={styles['contact-name']}>{contactInfo.username}</p>
                                 <p className={styles['call-time']}>02.21</p>
                             </div>
                         </div>
@@ -153,8 +153,15 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded}) =>
                 </div>
                 <div className={styles['my-video-preview-container']}>
                     <div className={styles['my-video-parent']}>
-                        <div className={styles['my-video']}>
+                        <div data-video={isVideo ? 'on' : 'off'} className={styles['my-video']}>
                             <video ref={myVideoRef} src="/demo_nosound.mp4" loop muted autoPlay></video>
+                            { !isVideo ? <div className={styles['video-off-banner']}>
+                                <div className={styles['user-dp']}>
+                                    {
+                                        contactInfo.profile_pic_url ? <img className={styles['dp-image']} onLoad={(e) => e.target.style.display = 'block'} src={contactInfo.profile_pic_url} alt={contactInfo.username} /> : <DefaultUser />
+                                    }
+                                </div>
+                            </div> : <></> }
                         </div>
                     </div>
                 </div>

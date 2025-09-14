@@ -28,6 +28,7 @@ const ChatContactHeader = ({ user }) => {
         setSelectedContact(0)
         startCall({
             contact_id: user?.id,
+            contact_info: user,
             type: type
         })
     }, [startCall, user, setSelectedContact])

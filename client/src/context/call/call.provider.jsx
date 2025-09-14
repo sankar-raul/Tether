@@ -7,6 +7,7 @@ export default function CallProvider({children}) {
     const [ isShowCallBox, setShowCallBox ] = useState(false)
     const [ isConnected, setIsConnected ] = useState(false)
     const [ callReciverId, setCallReciverId ] = useState(null)
+    const [ contactInfo, setContactInfo ] = useState({})
 
     const handleCallEnd = useCallback((isCallEnded) => {
         setShowCallBox(!isCallEnded)
@@ -14,21 +15,23 @@ export default function CallProvider({children}) {
 
     const startCall = useCallback(({
         contact_id,
+        contact_info,
         type = 'video', // audio | video
     }) => {
         if (!contact_id) {
             console.error("contact_id can't be undefined!:-> startCall()")
             return
         }
+        setContactInfo(prev => ({...prev, ...contact_info, id: contact_id}))
         setShowCallBox(true)
     }, [])
     return (
         <CallContext.Provider value={{startCall}}>
             {children}
-            {isShowCallBox ? <CallBox setIsCallEnded={handleCallEnd} /> : <></>}
+            {isShowCallBox ? <CallBox contactInfo={contactInfo} setIsCallEnded={handleCallEnd} /> : <></>}
         </CallContext.Provider>
     )
 }
 CallProvider.propTypes = {
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
 }

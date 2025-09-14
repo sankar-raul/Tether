@@ -84,20 +84,44 @@
     overflow: hidden;
     display: flex;
     height: min(250px, 24vw);
-    min-height: 140px;
+    min-height: 100px;
     width: max-content;
     max-width: clamp(150px, 24vw, 360px);
     transform: rotateY(180deg);
 }
 .my-video {
-    & > video {
+    position: relative;
+    video {
         width: 100%;
         height: 100%;
         overflow: hidden;
+        position: relative;
         pointer-events: none;
     }
-}
+     &[data-video=off]::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        video {
+            display: hidden;
+        }
+    }
+    .video-off-banner {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: radial-gradient(circle, var(--brand-color) 1%, transparent 50%);
+        .user-dp {
+            height: min(36%, 120px);
+            min-height: 52px;
+        }
+    }
 
+}
 .call-controller-container {
     width: max-content;
     height: 84px;
