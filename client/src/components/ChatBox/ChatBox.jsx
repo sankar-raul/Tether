@@ -19,17 +19,40 @@ import ChatContactHeader from './ChatContactHeader/chatContactHeader'
 import { faCopy, faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import useSmartNavigate from '../../hook/useSmartNavigate'
 
+const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        console.log(entry)
+        console.log(entry.intersectionRatio, entry.boundingClientRect, entry.intersectionRect)
+        // alert(entry.intersectionRatio)
+    })
+}, {
+    root: null,
+    threshold: Array.from({length: 11}, (_, idx) => idx / 10)
+})
 const ChatBox = () => {
     const { selectedContact, getContactInfo } = useContacts()
     const [ chatingWith, setChatingWith ] = useState(getContactInfo(selectedContact) || {})
     const { messages, seeMsg, isLoading, nextMsgChunk } = useChat()
     const [ chats, setChats ] = useState([])
     const scrollRef = useRef(null)
+    const [ isInputFocused, setIsChatFocused ] = useState(false)
     const [ nextChunk, setNextChunk ] = useState(null)
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const navigate = useSmartNavigate()
+    const chatBoxRef = useRef(null)
+    const headerRef = useRef(null)
+    const inputAreaRef = useRef(null)
+    const adjustLayout = useCallback(() => {
+        if (!(headerRef.current && inputAreaRef.current)) {
+            return
+        }
+        const vv = window.visualViewport
+        // Keep header always at the top of the visual viewport 😵‍💫
+        headerRef.current.style.transform = `translateY(${vv.offsetTop}px)`
+        // Stick input area to bottom of visible screen 🥲
+        inputAreaRef.current.style.transform = `translateY(${vv.height + vv.offsetTop - window.innerHeight}px)`
 
-
+    }, [])
     useEffect(() => {
         const chat = []
         messages.get(Number(selectedContact))?.forEach((item, key) => {
@@ -68,13 +91,25 @@ const ChatBox = () => {
         // console.log(selectedContact)
         !selectedContact && navigate('/chat')
     }, [selectedContact, navigate])
+    useEffect(() => {
+        if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", adjustLayout)
+        window.visualViewport.addEventListener("scroll", adjustLayout)
+        adjustLayout()
+
+        return () => {
+            window.visualViewport.removeEventListener("resize", adjustLayout)
+            window.visualViewport.removeEventListener("scroll", adjustLayout)
+        }
+  }
+    }, [adjustLayout])
     return (
         <>
             <section className={styles[`chat-container`]}>
             {selectedContact != null && selectedContact != 0 ?
             <>
-            <div className={styles['chat-box']}>
-                <ChatContactHeader user={chatingWith} />
+            <div ref={chatBoxRef} className={styles['chat-box']}>
+                <ChatContactHeader headerRef={headerRef} user={chatingWith} />
                 <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
                 {
@@ -86,7 +121,7 @@ const ChatBox = () => {
                                 <MessageTag key={msg.key} msg={msg} chatingWith={chatingWith} />
                             )
                         }
-                         {
+                        {
                             nextChunk ? <LoadMoreMsgLoader contact_id={Number(selectedContact)}/> : ''
                         }
                        
@@ -94,7 +129,7 @@ const ChatBox = () => {
                     ) : <Loader type='msgLoaderSkeleton' />
                 }
                 </main>
-                <ChatInput scrollRef={scrollRef}/>
+                <ChatInput inputAreaRef={inputAreaRef} setIsChatFocused={setIsChatFocused} scrollRef={scrollRef}/>
             </div>
             </>
             : <DefaultChatView />

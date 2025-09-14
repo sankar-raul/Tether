@@ -15,7 +15,7 @@ import useUserInfo from '../../../context/userInfo/userInfo'
 import useCall from '../../../context/call/call.context'
 
 
-const ChatContactHeader = ({ user }) => {
+const ChatContactHeader = ({ user, headerRef }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const { setSelectedContact } = useContacts()
     const [ isShowMenu, setIsShowMenu ] = useState(false)
@@ -58,7 +58,7 @@ const ChatContactHeader = ({ user }) => {
     }, [user, myInfo])
 
     return (
-        <nav className={styles['chat-nav']}>
+        <nav className={styles['chat-nav']} ref={headerRef}>
             <div className={styles['user-info']}>
                 {isMobile ? <div onClick={closeChat} className={styles['back-btn']}><FontAwesomeIcon icon={faChevronLeft} fontSize={22}/></div> : '' }
                 <div className={styles['user-dp']}>
@@ -82,7 +82,8 @@ const ChatContactHeader = ({ user }) => {
     )
 }
 ChatContactHeader.propTypes = {
-    user: PropTypes.object
+    user: PropTypes.object,
+    headerRef: PropTypes.any
 }
 
 const Menu = ({setIsShowMenu, ...props}) => {

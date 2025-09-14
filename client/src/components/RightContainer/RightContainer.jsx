@@ -7,7 +7,7 @@ import { Settings } from "../SettingsTab/Settings"
 import styles from "./rightcontainer.module.css"
 import useContacts from "../../context/contacts/contact"
 import { useEffect, useState } from "react"
-
+import PropTypes from 'prop-types'
 
 const RightContainer = ({children, isHidden}) => {
     // const { currentTab } = useTabs()
@@ -40,5 +40,9 @@ const RightContainer = ({children, isHidden}) => {
             </ChatProvider>
         </MessageProvider>
     )
+}
+RightContainer.propTypes = {
+    children: PropTypes.node.isRequired,
+    isHidden: PropTypes.bool
 }
 export default RightContainer

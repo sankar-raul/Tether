@@ -7,6 +7,7 @@ const useIntersectionObserver = ({ threshold = 0.1, root = null, rootMargin = "0
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
             setIsIntersecting(entry.isIntersecting)
+            // console.log(entry)
         }, { threshold, root, rootMargin })
 
         const elementCurrent = elementRef.current
