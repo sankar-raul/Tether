@@ -13,7 +13,8 @@ import useSwitch from '../../hook/Switch/useSwitch'
 import useSmartNavigate from '../../hook/useSmartNavigate'
 import { useCallback, useEffect, useState } from 'react'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
-import { useConfirm } from '../../hook/Confirm/useConfirm'
+// import { useConfirm } from '../../hook/Confirm/useConfirm'
+import useConfirm from '../../context/confirm/confirm.context'
 // import socket from '../../utils/chatSocket'
 // import apiRequest from '../../hook/apiRequest'
 import useAlert from '../../context/alert/Alert'
@@ -21,32 +22,27 @@ import useAuth from '../../context/auth/auth.context'
 
 const SettingsTab = () => {
     const { userInfo } = useUserInfo()
-    const { Confirm, isConfirmed, setIsShow } = useConfirm()
+    const { Confirm } = useConfirm()
     const [ isSigningOut, setIsSigningOut ] = useState(false)
     const { Alert } = useAlert()
     const navigate = useSmartNavigate()
     const { logout:_logout } = useUserInfo()
     const { logout } = useAuth()
-    const handleLogout = () => {
-        setIsShow(true)
-    }
-    useEffect(() => {
-        if (isConfirmed) {
-            setIsSigningOut(true)
-            ;(async () => {
-                const [ logoutResponse, error ] = await logout()
-                if (error) {
-                    Alert({message: "Something went wrong!", type:'error'})
-                    setIsSigningOut(false)
-                } else {
-                    setIsSigningOut(false)
-                    _logout()
-                    logoutResponse?.success && navigate('/login')
-                    Alert({message: "Logged out", type:'info'})
-                }
-            })()
+    const handleLogout = async () => {
+        const isConfirmed = await Confirm({primaryAction: 'Logout', seconderyAction: 'Dismiss', msg:'Log out from your device'})
+        if (!isConfirmed) return
+        setIsSigningOut(true)
+        const [ logoutResponse, error ] = await logout()
+        if (error) {
+            Alert({message: "Something went wrong!", type:'error'})
+            setIsSigningOut(false)
+        } else {
+            setIsSigningOut(false)
+            _logout()
+            logoutResponse?.success && navigate('/login')
+            Alert({message: "Logged out", type:'info'})
         }
-    }, [isConfirmed])
+    }
 
     return (
         <>
@@ -86,7 +82,6 @@ const SettingsTab = () => {
             <div className={styles['logout-btn']}>
                 <div onClick={handleLogout}>Logout</div>
             </div>
-            <Confirm primaryAction='Logout' seconderyAction='Dismiss' msg='Log out from your device' />
         </section>
         </>
     )

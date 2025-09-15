@@ -118,6 +118,15 @@
         .user-dp {
             height: min(36%, 120px);
             min-height: 52px;
+            display: flex;
+
+            .dp-image {
+                overflow: hidden;
+                height: 100%;
+                aspect-ratio: 1 / 1;
+                object-fit: cover;
+                border-radius: 50%;
+            }
         }
     }
 
