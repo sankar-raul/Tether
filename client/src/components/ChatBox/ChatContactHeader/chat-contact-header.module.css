@@ -5,7 +5,7 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     /* position: relative; */
-    overflow: hidden;
+    /* overflow: hidden; */
     align-items: center;
     box-shadow: 0px 1px 15px 0px var(--shadow);
     z-index: 1;

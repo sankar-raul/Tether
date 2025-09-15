@@ -10,7 +10,8 @@ import PropTypes from 'prop-types'
 import styles from './chat-contact-header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faCancel, faChevronLeft, faTrashAlt, faUser, faX, faXmark, faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
-import { useConfirm } from '../../../hook/Confirm/useConfirm'
+// import { useConfirm } from '../../../hook/Confirm/useConfirm'
+import useConfirm from '../../../context/confirm/confirm.context'
 import useUserInfo from '../../../context/userInfo/userInfo'
 import useCall from '../../../context/call/call.context'
 
@@ -87,9 +88,9 @@ ChatContactHeader.propTypes = {
 }
 
 const Menu = ({setIsShowMenu, ...props}) => {
-    const { Confirm, isConfirmed, setIsShow } = useConfirm()
+    const { Confirm } = useConfirm()
     const [ interactedElement, setInteractedElement ] = useState(null)
-
+    const [ isConfirmed, setIsConfirmed ] = useState(null)
     const handleCancel = useCallback(() => {
         setIsShowMenu(false)
     }, [setIsShowMenu])
@@ -110,12 +111,14 @@ const Menu = ({setIsShowMenu, ...props}) => {
         if (validActionsRef.current?.has(action)) {
             setInteractedElement(action)
             if (action == 'clearChat' || action == 'block') {
-                setIsShow(true)
+                (async ()=> {
+                    setIsConfirmed(await Confirm())
+                })()
             } else {
                 validActionsRef.current.get(action)?.()
             }
         }
-    }, [setIsShow])
+    }, [Confirm])
 
     useEffect(() => {
         isConfirmed != null ?  setIsShowMenu(false) : ''
@@ -144,7 +147,6 @@ const Menu = ({setIsShowMenu, ...props}) => {
                 <p>Dismiss</p>
             </button>
         </div>
-        <Confirm />
         </>
     )
 }

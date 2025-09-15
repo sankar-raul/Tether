@@ -6,11 +6,13 @@ import AlertProvider from './context/alert/alertProvider'
 // import CallBox from './components/CallBox/CallBox'
 import AuthProvider from './context/auth/auth.provider'
 import CallProvider from './context/call/call.provider'
+import { ConfirmProvider } from './context/confirm/confirm.provider'
 
 
 function App() {
 
   return (
+    <ConfirmProvider>
     <AuthProvider>
       <UserInfoProvider>
         <CallProvider>
@@ -21,6 +23,7 @@ function App() {
         {/* <CallBox /> */}
       </UserInfoProvider>
     </AuthProvider>
+    </ConfirmProvider>
   )
 }
 

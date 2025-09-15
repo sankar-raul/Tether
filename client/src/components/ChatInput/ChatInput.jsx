@@ -43,11 +43,9 @@ const ChatInput = ({scrollRef, inputAreaRef}) => {
     }, [isMobile, send])
 
     const handleFocus = useCallback(() => {
-      const vv = window.visualViewport
+      // const vv = window.visualViewport
       const inputAreaHeight = inputAreaRef.current.getBoundingClientRect().height
       const scrollRefBottom = scrollRef.current.getBoundingClientRect().bottom
-      console.log(inputAreaHeight, scrollRefBottom)
-      console.log(scrollRefBottom, window.innerHeight - inputAreaHeight)
       const areaVisible = window.innerHeight - inputAreaHeight + 2
       if (scrollRefBottom < areaVisible) {
           if (!isMobile) return
