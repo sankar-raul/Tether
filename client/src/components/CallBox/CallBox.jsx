@@ -180,7 +180,7 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, con
                 </div> 
             </section>
             <div className={styles['main-video-container']}>
-                <video ref={remoteVideoRef} className={styles['main-video']} muted autoPlay={false}>
+                <video ref={remoteVideoRef} className={styles['main-video']} autoPlay>
                     Video play back is not supported by your Browser
                 </video>
             </div>

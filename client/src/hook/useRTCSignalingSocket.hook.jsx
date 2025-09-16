@@ -26,7 +26,7 @@ const useRTCPeerSignalingSocket = ({
         if (offerRes?.success) {
             const { promise, resolveFn, rejectFn } = defer() // call me if you can't figure out what is that function
             socket.once('call:answer', ({answer, contact_id}) => {
-                console.log("answer")
+                console.log("answer recived from", contact_id)
                 resolveFn({answer, contact_id})
             })
             return {success: true, answer: promise} // it's magic

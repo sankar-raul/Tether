@@ -35,17 +35,18 @@ export default function CallProvider({children}) {
         setShowCallBox(true)
         console.log("offer recived")
         await createPeerConnection({contact_id})
+        setUpPeerConnection({contact_id})
         await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer))
         const answer = await peerConnection.current.createAnswer()
         await peerConnection.current.setLocalDescription(answer)
-        const { success } = await sendAnswer({answer: peerConnection.current.localDescription, contact_id})
+        const { success } = await sendAnswer({answer: answer, contact_id})
         if (success) {
             console.log("offer recived and answer send")
         }
     }
 
     const handleIceCandidate = useCallback(({icecandidate, contact_id}) => {
-        console.log(peerConnection.current)
+        // console.log(peerConnection.current)
         if (peerConnection.current) {
             peerConnection.current.addIceCandidate(new RTCIceCandidate(icecandidate))
         } else {
@@ -53,8 +54,8 @@ export default function CallProvider({children}) {
         }
     }, [])
     const handleAnswer = useCallback(({answer, contact_id}) => {
-        console.log("answer received")
-        peerConnection.current.setRemoteDescription(answer)
+        // console.log("answer received")
+        peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer))
     }, [])
 
       const startTethering = useCallback(async ({
@@ -77,43 +78,54 @@ export default function CallProvider({children}) {
         
     }, [localVideoStream])
 
+    const setUpPeerConnection = useCallback(({contact_id}) => {
+        if (!remoteVideoStream.current) {
+            remoteVideoStream.current = new MediaStream()
+        }
+        peerConnection.current.ontrack = e => {
+            // console.log(e.track)
+            remoteVideoStream.current.addTrack(e.track)
+        }
+            setRemoteStream(remoteVideoStream.current)
+
+        localVideoStream.current.getTracks().forEach(track => {
+            peerConnection.current.addTrack(track)
+        })
+           peerConnection.current.onicecandidate = e => {
+            if (e.candidate) {
+                sendIceCandidate({contact_id: contact_id, icecandidate: e.candidate, peer: peerConnection.current})
+            }
+        }
+         pendingCandidates.current.forEach(c => { // flush pending ice candidates
+            peerConnection.current.addIceCandidate(new RTCIceCandidate(c))
+        })
+        pendingCandidates.current = []
+    }, [sendIceCandidate])
+
     const createPeerConnection = useCallback(async ({contact_id}={}) => {
         await startTethering()
         if (peerConnection.current) return
         peerConnection.current = new RTCPeerConnection(servers) // let's start the peer connection
         
-        if (!remoteVideoStream.current) {
-            remoteVideoStream.current = new MediaStream()
-        }
-        peerConnection.current.ontrack = e => {
-            // console.log(e)
-            remoteVideoStream.current.addTrack(e.track)
-        }
-            setRemoteStream(remoteVideoStream.current)
-
-        peerConnection.current.onicecandidate = e => {
-            if (e.candidate) {
-                sendIceCandidate({contact_id: contact_id, icecandidate: e.candidate, peer: peerConnection.current})
-            }
-        }
-        localVideoStream.current.getTracks().forEach(track => {
-        peerConnection.current.addTrack(track)
         // console.log(track)
-        })
-        pendingCandidates.current.forEach(c => { // flush pending ice candidates
-            peerConnection.current.addIceCandidate(new RTCIceCandidate(c))
-        })
-        pendingCandidates.current = []
-    }, [sendIceCandidate, startTethering])
+       
+    }, [startTethering])
+
+     const stopCapturing = useCallback(() => { // end call
+        if (!localVideoStream.current) return
+        localVideoStream.current?.getTracks().forEach(track => track.stop())
+        localVideoStream.current = null
+    }, [localVideoStream])
 
     const handleCallEnd = useCallback((isCallEnded, isCallEndedByContact = false) => {
         setShowCallBox(!isCallEnded)
         isCallEndedByContact || endCall({contact_id: callReciverId})
+        stopCapturing()
         peerConnection.current.close()
         peerConnection.current = null
         // localVideoStream.current = null
         remoteVideoStream.current = null
-    }, [endCall, callReciverId])
+    }, [endCall, callReciverId, stopCapturing])
 
     var callEndedByContact = useCallback(() => {
         console.log("call ended by c")
@@ -133,6 +145,7 @@ export default function CallProvider({children}) {
         setContactInfo(prev => ({...prev, ...contact_info, id: contact_id}))
         setShowCallBox(true)
         await createPeerConnection({contact_id})
+        setUpPeerConnection({contact_id})
         const offer = await peerConnection.current.createOffer()
         await peerConnection.current.setLocalDescription(offer)
         const {success, answer} = await sendOffer({contact_id, offer})
@@ -142,7 +155,7 @@ export default function CallProvider({children}) {
             console.error("Somthing went wrong. -> sendOffer() -> call.provider.jsx")
             alert("some thing went wrong please check the console...")
         }
-    }, [sendOffer, createPeerConnection, handleAnswer])
+    }, [sendOffer, createPeerConnection, handleAnswer, setUpPeerConnection])
     return (
         <CallContext.Provider value={{startCall, remoteVideoStream, localVideoStream, localStream, remoteStream}}>
             {children}
