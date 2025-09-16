@@ -4,8 +4,9 @@ import defer from '../utils/defer'
 
 const useRTCPeerSignalingSocket = ({
     onOffer,
-    onIceCandidate
-}) => {
+    onIceCandidate,
+    onCallEnd
+} = {}) => {
     
     const sendIceCandidate = useCallback(({
         icecandidate,
@@ -43,6 +44,14 @@ const useRTCPeerSignalingSocket = ({
         return { success: answerRes?.success }
     }, [])
 
+    const endCall = useCallback(({contact_id}) => {
+        if (!contact_id) {
+            console.log("contact_id is required --> endCall --> useRTCSignalingSocket.hook.jsx")
+            return
+        }
+        socket.emit('call:end', {contact_id})
+    }, [])
+
     useEffect(() => {
         const receiveOffer = ({
             offer, contact_id
@@ -56,19 +65,27 @@ const useRTCPeerSignalingSocket = ({
             console.log("Received an Ice Candidate")
             onIceCandidate?.({icecandidate, contact_id})
         }
+        const callEnded = ({contact_id}) => {
+            console.log("call ended")
+            onCallEnd({contact_id})
+        }
 
+        socket.on('call:end', callEnded)
         socket.on('call:offer', receiveOffer)
         socket.on('call:icecandidate', receiveIceCandidate)
         return () => {
+            socket.off('call:end', callEnded)
             socket.off('call:offer', receiveOffer)
             socket.off('call:icecandidate', receiveIceCandidate)
         }
-    }, [onOffer, onIceCandidate])
+    }, [onOffer, onIceCandidate, onCallEnd])
 
     return {
         sendOffer,
         sendAnswer,
         sendIceCandidate,
+        endCall,
+
     }
 }
 export default useRTCPeerSignalingSocket

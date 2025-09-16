@@ -20,15 +20,17 @@ export default function CallProvider({children}) {
     const peerConnection = useRef(null)
     const localVideoStream = useRef(null)
     const remoteVideoStream = useRef(null)
+    const pendingCandidates = useRef([])
     const [ remoteStream, setRemoteStream ] = useState(null)
     const [ localStream, setLocalStream ] = useState(null)
 
-    const { sendAnswer, sendOffer, sendIceCandidate } = useRTCPeerSignalingSocket({
-        onOffer: handleOffer,
-        onIceCandidate: handleIceCandidate
+    const { sendAnswer, sendOffer, sendIceCandidate, endCall } = useRTCPeerSignalingSocket({
+        onOffer: (args) => handleOffer(args),
+        onIceCandidate: (args) => handleIceCandidate(args),
+        onCallEnd: () => handleCallEnd(true, true)
     })
 
-    async function handleOffer({offer, contact_id}) {
+    const handleOffer = async ({offer, contact_id}) => {
         setCallReciverId(contact_id)
         setShowCallBox(true)
         console.log("offer recived")
@@ -41,12 +43,15 @@ export default function CallProvider({children}) {
             console.log("offer recived and answer send")
         }
     }
-    
 
-    var handleIceCandidate = ({icecandidate, contact_id}) => {
+    const handleIceCandidate = useCallback(({icecandidate, contact_id}) => {
         console.log(peerConnection.current)
-        peerConnection.current.addIceCandidate(new RTCIceCandidate(icecandidate))
-    }
+        if (peerConnection.current) {
+            peerConnection.current.addIceCandidate(new RTCIceCandidate(icecandidate))
+        } else {
+            pendingCandidates.current.push(icecandidate)
+        }
+    }, [])
     const handleAnswer = useCallback(({answer, contact_id}) => {
         console.log("answer received")
         peerConnection.current.setRemoteDescription(answer)
@@ -95,16 +100,26 @@ export default function CallProvider({children}) {
         peerConnection.current.addTrack(track)
         // console.log(track)
         })
-        console.log("ok")
+        pendingCandidates.current.forEach(c => { // flush pending ice candidates
+            peerConnection.current.addIceCandidate(new RTCIceCandidate(c))
+        })
+        pendingCandidates.current = []
     }, [sendIceCandidate, startTethering])
 
-    const handleCallEnd = useCallback((isCallEnded) => {
+    const handleCallEnd = useCallback((isCallEnded, isCallEndedByContact = false) => {
         setShowCallBox(!isCallEnded)
+        isCallEndedByContact || endCall({contact_id: callReciverId})
         peerConnection.current.close()
         peerConnection.current = null
         // localVideoStream.current = null
         remoteVideoStream.current = null
-    }, [])
+    }, [endCall, callReciverId])
+
+    var callEndedByContact = useCallback(() => {
+        console.log("call ended by c")
+        handleCallEnd(true, true) // isCallended, isCallByContact
+    }, [handleCallEnd])
+
     const startCall = useCallback(async ({
         contact_id,
         contact_info,

@@ -290,10 +290,27 @@ io.on('connection', async (socket) => {
                 io.to(socket_id).emit('call:icecandidate', {icecandidate, contact_id: sender})
             })
         } else {
-            return ackFunc({success: false, msg: 'Reciver is offline'})
+            console.log(contact_id, 'is offline')
         }
     })
-
+    socket.on('call:end', async ({contact_id}) => {
+        const { id:sender } = socket.user
+        console.log("call ended")
+        if (!contact_id) {
+            console.log("contact_id is required! -> socket event call:end")
+            return
+        } else {
+            const receiverSockerIds = await userIdToSocketId(contact_id)
+            if (receiverSockerIds.length > 0) {
+                receiverSockerIds.forEach(socket_id => {
+                    io.to(socket_id).emit('call:end', {contact_id: sender})
+                })
+                return
+            } else {
+                console.log("reciver is allready disconnected!!!! -> call:end")
+            }
+        }
+    })
     socket.on('disconnect', async () => {
         await disconnectUser({user_id: socket.user.id, socket_id: socket.id})
         console.log(socket.id, "disconnected")
