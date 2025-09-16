@@ -13,29 +13,36 @@ import PropTypes from 'prop-types'
 import { icon } from '@fortawesome/fontawesome-svg-core'
 import CallControllButton from './CallControllButton/CallControllButton'
 import { DefaultUser } from '../DefaultUser/DefaultUser'
+import useCall from '../../context/call/call.context'
 
 const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, contactInfo = {}}) => {
     const [ axis, setAxis ] = useState({left: 'auto', top: '10%', bottom: 'auto', right: '10%'}) // default state or picked from localStorage
     const myVideoRef = useRef(null)
     const remoteVideoRef = useRef(null)
-    const localVideoStream = useRef(null)
-    const remoteVideoStream = useRef(null)
     const [ isMuted, setIsMuted ] = useState(mute)
     const [ isVideo, setIsVideo ] = useState(video)
     const [ callStatus, setCallStatus ] = useState("Calling...")
     const [ callTimeStamp, setCallTimeStamp ] = useState('00.00') 
+    const { remoteVideoStream, localVideoStream, localStream, remoteStream } = useCall()
     const [ isFrontCam, setIsFrontCam ] = useState(true)
-    
+
+    const startCall = () => {
+
+    }
+
+    // *****************
+
+
     const stopCam = useCallback(() => { // stop video streaming
         if (!localVideoStream.current) return
         localVideoStream.current?.getVideoTracks().forEach(track => track.stop())
-    }, [])
+    }, [localVideoStream])
 
     const stopAudio = useCallback(() => { // mute audio
         if (!localVideoStream.current) return
         localVideoStream.current?.getAudioTracks().forEach(track => track.stop())
-    }, [])
-
+    }, [localVideoStream])
+    // console.log(remoteVideoStream.current)
     const restartCam = useCallback(async () => { // turn on video streaming
         if (!localVideoStream.current) return
         const videoStream = await navigator.mediaDevices.getUserMedia({
@@ -46,7 +53,7 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, con
         localVideoStream.current.addTrack(videoTrack)
         // myVideoRef.current.srcObject = null
         // myVideoRef.current.srcObject = localVideoStream.current
-    }, [])
+    }, [localVideoStream])
 
     const restartAudio = useCallback(async () => { // unmute audio
         if (!localVideoStream.current) return
@@ -56,32 +63,33 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, con
         const audioTrack = videoStream.getAudioTracks()[0]
         localVideoStream.current.removeTrack(localVideoStream.current.getAudioTracks()[0])
         localVideoStream.current.addTrack(audioTrack)
-    }, [])
+    }, [localVideoStream])
 
     const stopCapturing = useCallback(() => { // end call
         if (!localVideoStream.current) return
         localVideoStream.current?.getTracks().forEach(track => track.stop())
-    }, [])
+        localVideoStream.current = null
+    }, [localVideoStream])
 
-    const startTethering = useCallback(async ({
-        audio = true,
-        video= true
-    }) => {
-        if (localVideoStream.current) {
-            // console.log("recall")
-            return
-        }
-        try {
-            localVideoStream.current = await navigator.mediaDevices.getUserMedia({
-              audio: audio ? { echoCancellation: true } : false,
-              video: video ? { facingMode: "user" } : false
-            })
-            myVideoRef.current.srcObject = localVideoStream.current
-        } catch (error) {
-            console.error("CallBox.jsx --> error at startTethering()", error)
-        }
+    // const startTethering = useCallback(async ({
+    //     audio = true,
+    //     video= true
+    // }) => {
+    //     if (localVideoStream.current) {
+    //         // console.log("recall")
+    //         return
+    //     }
+    //     try {
+    //         localVideoStream.current = await navigator.mediaDevices.getUserMedia({
+    //           audio: audio ? { echoCancellation: true } : false,
+    //           video: video ? { facingMode: "user" } : false
+    //         })
+    //         myVideoRef.current.srcObject = localVideoStream.current
+    //     } catch (error) {
+    //         console.error("CallBox.jsx --> error at startTethering()", error)
+    //     }
         
-    }, [])
+    // }, [localVideoStream])
 
     const handleVideoStream = useCallback(() => {
         setIsVideo(prev => {
@@ -110,6 +118,13 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, con
         stopCapturing()
     }, [stopCapturing, setIsCallEnded])
 
+    useEffect(() => {
+        myVideoRef.current.srcObject = localStream
+    }, [localStream])
+    useEffect(() => {
+        remoteVideoRef.current.srcObject = remoteStream
+        // console.log(remoteStream)
+    }, [remoteStream])
     // useEffect(() => {
     //     if (!localVideoStream.current) return
     //     isMuted ? stopAudio() : restartAudio()
@@ -119,16 +134,6 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, con
     //     if (!localVideoStream.current) return
     //     isVideo ? restartCam() : stopCam()
     // }, [isVideo, restartCam, stopCam])
-    useEffect(() => {
-        // console.log(navigator.mediaDevices.getSupportedConstraints())
-        (async () => {
-            await startTethering({
-                audio: !mute,
-                video: video
-            })
-            myVideoRef.current.srcObject = localVideoStream.current
-        })()
-    }, [isFrontCam, startTethering, video, mute])
     return (
         <div className={styles['call-box-parent-container']}>
             <section className={styles['call-box']}>
@@ -154,7 +159,7 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, con
                 <div className={styles['my-video-preview-container']}>
                     <div className={styles['my-video-parent']}>
                         <div data-video={isVideo ? 'on' : 'off'} className={styles['my-video']}>
-                            <video ref={myVideoRef} src="/demo_nosound.mp4" loop muted autoPlay></video>
+                            <video ref={myVideoRef} muted autoPlay></video>
                             { !isVideo ? <div className={styles['video-off-banner']}>
                                 <div className={styles['user-dp']}>
                                     {
@@ -175,7 +180,7 @@ const CallBox = ({mute = false, video = true, type = 'call', setIsCallEnded, con
                 </div> 
             </section>
             <div className={styles['main-video-container']}>
-                <video ref={remoteVideoRef} className={styles['main-video']} src="/demo_nosound.mp4" muted autoPlay={false} loop>
+                <video ref={remoteVideoRef} className={styles['main-video']} muted autoPlay={false}>
                     Video play back is not supported by your Browser
                 </video>
             </div>

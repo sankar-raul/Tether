@@ -119,7 +119,7 @@ io.on('connection', async (socket) => {
     })
     socket.on("message:send", async ({reciver, content, sent_at}, ackFunc) => { // private chat
         const { id:sender } = socket.user
-        console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
+        // console.log(reciver, content, new Date(sent_at).toLocaleTimeString())
         if (!ackFunc) return
         if (!reciver || !content) {
             // return io.to(socket.id).emit('message:send:error', "error")
@@ -230,7 +230,7 @@ io.on('connection', async (socket) => {
             const res = await Message.edit({ msg_id, newContent, sender })
             if (res) {
                 // console.log(res)
-                const recivers = await userIdToSocketId(res.reciver)
+                const recivers = await userIdToSocketId(res.reciver) // [id1, id2, ...]
                 if (recivers.length > 0) {
                     // console.log(reciver)
                     recivers.forEach(s_id => {
@@ -240,6 +240,57 @@ io.on('connection', async (socket) => {
             }
         } catch (e) {
             console.log(e)
+        }
+    })
+
+    // call signalingSocket
+    socket.on('call:offer', async ({offer, contact_id}, ackFunc) => {
+        const { id:sender } = socket.user
+        console.log(contact_id, "offer", sender)
+        if (!contact_id) {
+            return ackFunc({success: false, msg: "contact_id required!"})
+        }
+        const reciversSocketIds = await userIdToSocketId(contact_id) // [id1, id2, ...]
+        if (reciversSocketIds.length > 0) {
+            reciversSocketIds.forEach(socket_id => {
+                io.to(socket_id).emit('call:offer', {offer, contact_id: sender})
+            })
+            return ackFunc({success: true, msg: "Ringing..."})
+        } else {
+            return ackFunc({success: false, msg: 'Reciver is offline'})
+        }
+    })
+    socket.on('call:answer', async ({answer, contact_id}, ackFunc) => {
+        const { id:sender } = socket.user
+        console.log(contact_id, "answer", sender)
+        if (!contact_id) {
+            return ackFunc({success: false, msg: "contact_id required!"})
+        }
+        const reciversSocketIds = await userIdToSocketId(contact_id) // [id1, id2, ...]
+        if (reciversSocketIds.length > 0) {
+            reciversSocketIds.forEach(socket_id => {
+                io.to(socket_id).emit('call:answer', {answer, contact_id: sender})
+            })
+            return ackFunc({success: true, msg: "connecting..."})
+        } else {
+            return ackFunc({success: false, msg: 'Reciver is offline'})
+        }
+    })
+
+    socket.on('call:icecandidate', async ({icecandidate, contact_id}) => {
+        const { id:sender } = socket.user
+        console.log(contact_id, "ice", sender)
+        if (!contact_id) {
+            console.log("contact_id is required!")
+            return
+        }
+        const reciversSocketIds = await userIdToSocketId(contact_id) // [id1, id2, ...]
+        if (reciversSocketIds.length > 0) {
+            reciversSocketIds.forEach(socket_id => {
+                io.to(socket_id).emit('call:icecandidate', {icecandidate, contact_id: sender})
+            })
+        } else {
+            return ackFunc({success: false, msg: 'Reciver is offline'})
         }
     })
 
