@@ -37,6 +37,7 @@ export default function CallProvider({children}) {
         await createPeerConnection({contact_id})
         setUpPeerConnection({contact_id})
         await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer))
+        setUpIceCandidate({contact_id})
         const answer = await peerConnection.current.createAnswer()
         await peerConnection.current.setLocalDescription(answer)
         const { success } = await sendAnswer({answer: answer, contact_id})
@@ -78,6 +79,14 @@ export default function CallProvider({children}) {
         
     }, [localVideoStream])
 
+    const setUpIceCandidate = useCallback(({contact_id}) => {
+           peerConnection.current.onicecandidate = e => {
+            if (e.candidate) {
+                sendIceCandidate({contact_id: contact_id, icecandidate: e.candidate, peer: peerConnection.current})
+            }
+        }
+    }, [sendIceCandidate])
+
     const setUpPeerConnection = useCallback(({contact_id}) => {
         if (!remoteVideoStream.current) {
             remoteVideoStream.current = new MediaStream()
@@ -91,16 +100,16 @@ export default function CallProvider({children}) {
         localVideoStream.current.getTracks().forEach(track => {
             peerConnection.current.addTrack(track)
         })
-           peerConnection.current.onicecandidate = e => {
-            if (e.candidate) {
-                sendIceCandidate({contact_id: contact_id, icecandidate: e.candidate, peer: peerConnection.current})
-            }
-        }
+        //    peerConnection.current.onicecandidate = e => {
+        //     if (e.candidate) {
+        //         sendIceCandidate({contact_id: contact_id, icecandidate: e.candidate, peer: peerConnection.current})
+        //     }
+        // }
          pendingCandidates.current.forEach(c => { // flush pending ice candidates
             peerConnection.current.addIceCandidate(new RTCIceCandidate(c))
         })
         pendingCandidates.current = []
-    }, [sendIceCandidate])
+    }, [])
 
     const createPeerConnection = useCallback(async ({contact_id}={}) => {
         await startTethering()
@@ -147,6 +156,7 @@ export default function CallProvider({children}) {
         await createPeerConnection({contact_id})
         setUpPeerConnection({contact_id})
         const offer = await peerConnection.current.createOffer()
+        setUpIceCandidate({contact_id})
         await peerConnection.current.setLocalDescription(offer)
         const {success, answer} = await sendOffer({contact_id, offer})
         if (success) {
@@ -155,7 +165,7 @@ export default function CallProvider({children}) {
             console.error("Somthing went wrong. -> sendOffer() -> call.provider.jsx")
             alert("some thing went wrong please check the console...")
         }
-    }, [sendOffer, createPeerConnection, handleAnswer, setUpPeerConnection])
+    }, [sendOffer, createPeerConnection, handleAnswer, setUpPeerConnection, setUpIceCandidate])
     return (
         <CallContext.Provider value={{startCall, remoteVideoStream, localVideoStream, localStream, remoteStream}}>
             {children}
