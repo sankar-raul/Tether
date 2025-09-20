@@ -86,6 +86,7 @@ create table if not exists refresh_tokens (
     index idx_refresh_token_user_id (user_id),
     index idx_refresh_token_expires_at (expires_at desc)
 );
+-- truncate table refresh_tokens;
 -- create index idx_refresh_token_user_id on refresh_tokens (user_id);
 -- create index idx_refresh_token_expires_at on refresh_tokens (expires_at desc);
 -- push notification subscription

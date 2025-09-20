@@ -35,8 +35,8 @@ export default function CallProvider({children}) {
         setShowCallBox(true)
         console.log("offer recived")
         await createPeerConnection({contact_id})
-        setUpPeerConnection({contact_id})
         await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer))
+        setUpPeerConnection({contact_id})
         setUpIceCandidate({contact_id})
         const answer = await peerConnection.current.createAnswer()
         await peerConnection.current.setLocalDescription(answer)
@@ -116,7 +116,6 @@ export default function CallProvider({children}) {
         if (peerConnection.current) return
         peerConnection.current = new RTCPeerConnection(servers) // let's start the peer connection
         
-        // console.log(track)
        
     }, [startTethering])
 
@@ -130,7 +129,7 @@ export default function CallProvider({children}) {
         setShowCallBox(!isCallEnded)
         isCallEndedByContact || endCall({contact_id: callReciverId})
         stopCapturing()
-        peerConnection.current.close()
+        peerConnection.current?.close()
         peerConnection.current = null
         // localVideoStream.current = null
         remoteVideoStream.current = null

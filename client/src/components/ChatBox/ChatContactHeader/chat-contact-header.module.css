@@ -101,7 +101,7 @@
     overflow: hidden;
 }
 .user-wraper > .username {
-   
+   overflow: hidden;
 }
 .user-wraper > .user-status {
     font-size: .8rem;

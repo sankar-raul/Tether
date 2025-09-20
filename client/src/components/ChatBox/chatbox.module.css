@@ -11,7 +11,7 @@
     grid-template-rows: 60px 1fr max-content;
     /* background-color: var(--secondery-bg); */
     background-color: var(--primary-bg);
-    /* overflow-y: hidden; */
+    overflow-y: hidden;
 }
 .msgs {
     /* overflow: hidden; */
