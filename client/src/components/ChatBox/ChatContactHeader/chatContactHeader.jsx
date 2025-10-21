@@ -14,9 +14,10 @@ import { faAdd, faCancel, faChevronLeft, faTrashAlt, faUser, faX, faXmark, faXma
 import useConfirm from '../../../context/confirm/confirm.context'
 import useUserInfo from '../../../context/userInfo/userInfo'
 import useCall from '../../../context/call/call.context'
+import { createPortal } from 'react-dom'
 
 
-const ChatContactHeader = ({ user, headerRef }) => {
+const ChatContactHeader = ({ user, headerRef, chatBoxRef }) => {
     const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
     const { setSelectedContact } = useContacts()
     const [ isShowMenu, setIsShowMenu ] = useState(false)
@@ -78,16 +79,17 @@ const ChatContactHeader = ({ user, headerRef }) => {
                 <NavBtn src={callIcon} disabled={isChatingWithMyself} onClick={() => startTethering('audio')}/>
                 <NavBtn src={dotsIcon} onClick={handleMoreMenu} />
             </div>
-            {isShowMenu ? <Menu setIsShowMenu={setIsShowMenu} /> : ''}
+            {isShowMenu ? <Menu setIsShowMenu={setIsShowMenu} chatBoxRef={chatBoxRef} /> : ''}
         </nav>
     )
 }
 ChatContactHeader.propTypes = {
     user: PropTypes.object,
-    headerRef: PropTypes.any
+    headerRef: PropTypes.object,
+    chatBoxRef: PropTypes.object
 }
 
-const Menu = ({setIsShowMenu, ...props}) => {
+const Menu = ({setIsShowMenu, chatBoxRef, ...props}) => {
     const { Confirm } = useConfirm()
     const [ interactedElement, setInteractedElement ] = useState(null)
     const [ isConfirmed, setIsConfirmed ] = useState(null)
@@ -123,8 +125,7 @@ const Menu = ({setIsShowMenu, ...props}) => {
     useEffect(() => {
         isConfirmed != null ?  setIsShowMenu(false) : ''
     }, [isConfirmed, setIsShowMenu])
-    return (
-        <>
+    return chatBoxRef.current ? createPortal(
         <div className={styles['menu']} {...props} onClick={handleClick}>
             <button data-action='viewProfile'>
                 <div><FontAwesomeIcon icon={faUser} /></div>
@@ -146,12 +147,12 @@ const Menu = ({setIsShowMenu, ...props}) => {
                 <div><FontAwesomeIcon icon={faXmark} /></div>
                 <p>Dismiss</p>
             </button>
-        </div>
-        </>
-    )
+        </div>, chatBoxRef.current
+    ) : ('')
 }
 Menu.propTypes = {
-    setIsShowMenu: PropTypes.func.isRequired
+    setIsShowMenu: PropTypes.func.isRequired,
+    chatBoxRef: PropTypes.object
 }
 
 const NavBtn = ({src, disabled, onClick, ...props}) => {

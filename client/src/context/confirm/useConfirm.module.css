@@ -2,8 +2,7 @@
     position: fixed;
     display: grid;
     place-items: center;
-    height: 100dvh;
-    width: 100dvw;
+    inset: 0;
     right: 0;
     bottom: 0;
     background-color: #0001;

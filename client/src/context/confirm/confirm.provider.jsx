@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react"
 import styles from './useConfirm.module.css'
 import { ConfirmContext } from "./confirm.context"
 import PropTypes from 'prop-types'
+import { createPortal } from "react-dom"
 
 export const ConfirmProvider = ({children}) => {
     const [ isShow, setIsShow ] = useState()
@@ -41,17 +42,19 @@ export const ConfirmProvider = ({children}) => {
         return promiseRef.current?.promise
     }, [])
     const ConfirmComponent =  useCallback(({msg='Confirm Action', primaryAction = 'Confirm', seconderyAction = 'Cancel'}) => isShow ? 
-        <div onClick={hideConfirm} className={styles['container']}>
-            <div className={styles['confirm-bar']} onClick={stopPropagation}>
-                <div className={styles['title-msg']}>
-                    <p>{msg}</p>
+        createPortal(
+            <div onClick={hideConfirm} className={styles['container']}>
+                <div className={styles['confirm-bar']} onClick={stopPropagation}>
+                    <div className={styles['title-msg']}>
+                        <p>{msg}</p>
+                    </div>
+                    <div className={styles['actions']}>
+                        <button onClick={handleHide}>{seconderyAction}</button>
+                        <button onClick={handleConfirm}>{primaryAction}</button>
+                    </div>
                 </div>
-                <div className={styles['actions']}>
-                    <button onClick={handleHide}>{seconderyAction}</button>
-                    <button onClick={handleConfirm}>{primaryAction}</button>
-                </div>
-            </div>
-        </div>
+            </div>,
+            document.getElementById('popup-container'))
         : ''
     , [isShow, handleHide, handleConfirm, stopPropagation, hideConfirm])
 

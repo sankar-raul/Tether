@@ -109,7 +109,7 @@ const ChatBox = () => {
             {selectedContact != null && selectedContact != 0 ?
             <>
             <div ref={chatBoxRef} className={styles['chat-box']}>
-                <ChatContactHeader headerRef={headerRef} user={chatingWith} />
+                <ChatContactHeader headerRef={headerRef} chatBoxRef={chatBoxRef} user={chatingWith} />
                 <main className={styles['msgs']}>
                 <div ref={scrollRef} className={styles['scroll']}>&nbsp;</div>
                 {
