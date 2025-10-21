@@ -18,6 +18,7 @@ import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import ChatContactHeader from './ChatContactHeader/chatContactHeader'
 import { faCopy, faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import useSmartNavigate from '../../hook/useSmartNavigate'
+import hightlightUrls from '../../utils/highlightUrls'
 
 const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
@@ -191,7 +192,7 @@ const MessageTag = ({msg, chatingWith}) => {
         <div className={`${styles['message-tag']} ${msg.reciver != chatingWith.id ? styles['not-me'] : styles['me']}`} key={msg.id}>
             <div className={styles['message-body']} onContextMenu={setRightClick}>
                 <div className={styles['content']} name={msg.id}>
-                    <span className={styles['message-text']}>{msg.content}</span>
+                    <span className={styles['message-text']}>{hightlightUrls(msg.content)}</span>
                 </div>
                 <div className={styles['message-status']}>
                     <div>{msgTime}</div>

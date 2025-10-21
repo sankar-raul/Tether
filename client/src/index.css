@@ -5,6 +5,15 @@
   padding: 0;
   box-sizing: border-box;
 }
+.message-url {
+  text-decoration: none;
+  color: rgb(94, 223, 226);
+
+  &:hover {
+    text-decoration: underline;
+    opacity: .9;
+  }
+}
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
