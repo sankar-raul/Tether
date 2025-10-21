@@ -8,10 +8,11 @@ export default function highlightUrls(text) {
     if (offset > lastIndex) {
       parts.push(text.slice(lastIndex, offset)); // Add normal text
     }
+
     parts.push(
       <a
         key={offset}
-        href={url}
+        href={url.startsWith('http') || url.startsWith('https') ? url : `https://${url}`}
         target="_blank"
         rel="noopener noreferrer"
         className="message-url"
