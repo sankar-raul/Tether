@@ -17,8 +17,7 @@ function App() {
       <UserInfoProvider>
         <CallProvider>
           <AlertProvider>
-            {/* <RouterProvider router={router} /> */}
-            <h1>ok</h1>
+            <RouterProvider router={router} />
           </AlertProvider>
         </CallProvider>
         {/* <CallBox /> */}
