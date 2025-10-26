@@ -10,15 +10,15 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: 'ChessGeek',
-        short_name: 'ChessGeek',
-        start_url: '/',
+        name: 'Tether',
+        short_name: 'Tether',
+        start_url: '/chat',
         display: 'standalone',
-        background_color: '#172430',
-        theme_color: '#172430',
+        background_color: '#0e1518',
+        theme_color: '#0e1518',
         icons: [
-          { src: 'logo-rounded.png', sizes: '192x192', type: 'image/png' },
-          { src: 'logo-rounded.png', sizes: '512x512', type: 'image/png' }
+          { src: 'app-logo-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'app-logo-192.png', sizes: '512x512', type: 'image/png' }
         ]
       }
     })
