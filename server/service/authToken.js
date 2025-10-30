@@ -7,7 +7,7 @@ config()
 
 const JWT_SECRET = process.env.ACCESS_TOKEN_JWT_SECRET
 const ACCESS_TOKEN_EXPIRES = '15m'
-const REFRESH_TOKEN_EXPIRES_DAY = 7 // days
+const REFRESH_TOKEN_EXPIRES_DAY = 30 // days
 
 class Access_Token {
     constructor() {
