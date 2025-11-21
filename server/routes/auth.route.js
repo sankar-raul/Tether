@@ -17,7 +17,7 @@ auth.put('/update/:what', restrictedRoute, update)
 
 
 auth.put('/forgot', (req, res) => {
-    res.end("working on it 😵‍💫") // need to work on it
+    return res.end("working on it 😵‍💫") // need to work on it
 })
 
 // used for token refreshing
